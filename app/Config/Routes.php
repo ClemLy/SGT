@@ -18,3 +18,9 @@ $routes->match(['get', 'post'], 'signup/store', 'Utilisateur\SignupController::s
 // Profil
 $routes->get('/profile', 'Utilisateur\UserController::profile', ['filter' => 'authguard']);
 $routes->post('/profile/update', 'Utilisateur\UserController::updateProfile');
+
+// Réinitialisation de mot de passe
+$routes->get('/forgot-password', 'Utilisateur\ForgotPasswordController::index');
+$routes->post('/forgot-password/send-reset-link', 'Utilisateur\ForgotPasswordController::sendResetLink');
+$routes->get('/reset-password/(:any)', 'Utilisateur\ResetPasswordController::index/$1');
+$routes->post('/reset-password/update', 'Utilisateur\ResetPasswordController::updatePassword');
