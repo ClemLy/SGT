@@ -7,7 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 // Connexion
-$routes->get('/', 'Utilisateur\SigninController::index');
+$routes->get('/', 'Utilisateur\SignupController::index');
 $routes->get('/signin', 'Utilisateur\SigninController::index');
 $routes->match(['get', 'post'], 'signin/auth', 'Utilisateur\SigninController::loginAuth');
 
