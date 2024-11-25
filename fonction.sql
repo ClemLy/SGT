@@ -24,7 +24,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
 -- Création de la fonction pour récupérer les tâches par catégorie pour un utilisateur
 CREATE OR REPLACE FUNCTION get_user_task_cate(p_id_categorie INT, p_id_user INT)
 RETURNS TABLE (
@@ -50,6 +49,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Création de la fonction pour récupérer les tâches par ordre d'échéance pour un utilisateur
 CREATE OR REPLACE FUNCTION get_user_task_by_date(p_id_user INT)
 RETURNS TABLE (
     id_tache INT,
@@ -75,7 +75,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION get_tasks_by_user_and_state(p_id_user INT, p_etat_tache VARCHAR)
+-- Ceéation de la fonction pour récupérer les tâches selon leurs statut pour un utilisateur
+CREATE OR REPLACE FUNCTION get_user_tasks_by_state(p_id_user INT, p_etat_tache VARCHAR)
 RETURNS TABLE (
     id_tache INT,
     titre VARCHAR(255),
@@ -98,4 +99,3 @@ BEGIN
         AND t.etat_tache = p_etat_tache;
 END;
 $$ LANGUAGE plpgsql;
-
