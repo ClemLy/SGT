@@ -31,7 +31,7 @@
 					'prenom_user'     => $this->request->getVar('prenom_user'),
 					'email_user'      => $this->request->getVar('email_user'),
 					'password'        => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
-					'activation_code' => bin2hex(random_bytes(16)) // Code unique
+					'activation_code' => bin2hex(random_bytes(16))
 				];
 
 				$userModel->save($data);
@@ -44,14 +44,8 @@
 				$email->setMessage('Cliquez sur ce lien pour activer votre compte : ' . site_url('activate/' . $data['activation_code']));
 				$email->send();
 
-				if ($email->send())
-				{
-					return redirect()->to('/signup')->with('message', 'Un email de vérification a été envoyé.');
-				}
-				else
-				{
-					return redirect()->to('/signup')->with('error', 'Erreur lors de l\'envoi de l\'email.');
-				}
+				return redirect()->to('/signin')->with('msg', 'Un lien d\'activation a été envoyé à votre adresse email. Veuillez vérifier votre boîte mail.');
+
 			}
 			else
 			{
@@ -75,7 +69,7 @@
 						->where('id_user', $user['id_user'])
 						->update();
 
-				return redirect()->to('/signin')->with('message', 'Votre compte a été activé avec succès.');
+				return redirect()->to('/signin')->with('msg', 'Votre compte a été activé avec succès.');
 			}
 			else
 			{

@@ -37,6 +37,13 @@
 					];
 
 					$session->set($ses_data);
+
+					if ($data['is_verified'] == 'f')
+					{
+						$session->setFlashdata('msg', 'Votre compte n\'est pas encore activé. Veuillez vérifier votre boîte mail.');
+						return redirect()->to('/signin');
+					}
+
 					return redirect()->to('/tasks');
 				}
 				else
@@ -47,7 +54,7 @@
 			}
 			else
 			{
-				$session->setFlashdata('msg', 'Email exite pas.');
+				$session->setFlashdata('msg', 'Email existe pas.');
 				return redirect()->to('/signin');
 			}
 		}

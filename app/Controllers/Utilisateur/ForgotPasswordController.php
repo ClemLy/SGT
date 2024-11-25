@@ -33,7 +33,7 @@
 
 				// Envoyer l'e-mail avec le lien de réinitialisation
 				$resetLink = site_url("reset-password/$token");
-				$message = "Cliquez sur le lien suivant pour réinitialiser MDP: $resetLink";
+				$message = "Cliquez sur le lien suivant pour réinitialiser votre mot de passe : $resetLink";
 				
 				// Utilisez la classe Email de CodeIgniter pour envoyer l'e-mail
 				$emailService = \Config\Services::email();
