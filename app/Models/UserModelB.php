@@ -6,7 +6,7 @@
 	{
 		protected $table         = 'utilisateur';
 		protected $primaryKey    = 'id_user';
-		protected $allowedFields = ['email_user', 'password', 'reset_token', 'reset_token_expiration'];
+		protected $allowedFields = ['email_user', 'password', 'reset_token', 'reset_token_exp'];
 		
 		// Autres propriétés du modèle, méthodes de validation, etc.
 		public function getUserByEmail($email)

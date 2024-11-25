@@ -28,7 +28,7 @@
 				$token = bin2hex(random_bytes(16));
 				$expiration = date('Y-m-d H:i:s', strtotime('+1 hour'));
 				$userModel->set('reset_token', $token)
-				->set('reset_token_expiration', $expiration)
+				->set('reset_token_exp', $expiration)
 				->update($user['id_user']);
 
 				// Envoyer l'e-mail avec le lien de réinitialisation

@@ -13,7 +13,7 @@
 			$userModel = new UserModelB();
 			$user      = $userModel->where('reset_token', $token)
 
-			->where('reset_token_expiration >', date('Y-m-d H:i:s'))
+			->where('reset_token_exp >', date('Y-m-d H:i:s'))
 			->first();
 
 			if ($user)
@@ -35,7 +35,7 @@
 			// Vérification de la validité du token
 			$userModelB = new UserModelB();
 			$user = $userModelB->where('reset_token', $token)
-							   ->where('reset_token_expiration >', date('Y-m-d H:i:s'))
+							   ->where('reset_token_exp >', date('Y-m-d H:i:s'))
 							   ->first();
 		
 			if ($user && $password === $confirmPassword)
@@ -52,7 +52,7 @@
 				// Mise à jour dans la table mdp via UserModelB
 				$userModelB->set('password', $hashedPassword) // Met à jour le mot de passe
 							->set('reset_token', null) // Invalider le token
-							->set('reset_token_expiration', null) // Réinitialiser l'expiration
+							->set('reset_token_exp', null) // Réinitialiser l'expiration
 							->where('email_user', $user['email_user']) // Utiliser l'email pour trouver l'enregistrement dans mdp
 							->update();
 		
