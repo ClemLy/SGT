@@ -12,3 +12,7 @@ db_name=..
 db_port=..
 
 ```
+
+```cmd
+composer require vlucas/phpdotenv
+```
