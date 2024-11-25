@@ -45,14 +45,14 @@
 				// Mise à jour dans la table users via UserModel
 				$userModel = new UserModel();
 				$userModel->set('password', $hashedPassword) // Met à jour le mot de passe
-						  ->where('email', $user['email']) // Utiliser l'email de l'utilisateur pour trouver l'enregistrement
+						  ->where('email_user', $user['email_user']) // Utiliser l'email de l'utilisateur pour trouver l'enregistrement
 						  ->update();
 		
 				// Mise à jour dans la table mdp via UserModelB
 				$userModelB->set('password', $hashedPassword) // Met à jour le mot de passe
 							->set('reset_token', null) // Invalider le token
 							->set('reset_token_expiration', null) // Réinitialiser l'expiration
-							->where('email', $user['email']) // Utiliser l'email pour trouver l'enregistrement dans mdp
+							->where('email_user', $user['email_user']) // Utiliser l'email pour trouver l'enregistrement dans mdp
 							->update();
 		
 				return 'Mot de passe réinitialisé avec succès.';

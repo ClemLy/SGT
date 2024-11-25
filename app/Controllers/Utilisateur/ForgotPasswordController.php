@@ -14,12 +14,12 @@
 
 		public function sendResetLink()
 		{
-			$email = $this->request->getPost('email');
+			$email = $this->request->getPost('email_user');
 			$userModel = new UserModelB();
-			$user = $userModel->where('email', $email)->first();
+			$user = $userModel->where('email_user', $email)->first();
 
 			// Dans la méthode sendResetLink du contrôleur ForgotPasswordController
-			$email = $this->request->getPost('email');
+			$email = $this->request->getPost('email_user');
 			echo 'Adresse e-mail soumise : ' . $email;
 
 			if ($user)

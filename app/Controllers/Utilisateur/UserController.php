@@ -20,8 +20,8 @@
 			$userModel = new UserModel();
 
 			$data = [
-				'name' => $this->request->getVar('name'),
-				'email' => $this->request->getVar('email')
+				'nom_user' => $this->request->getVar('nom_user'),
+				'email_user' => $this->request->getVar('email_user')
 			];
 
 			$userModel->update($session->get('id'), $data);

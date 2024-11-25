@@ -5,11 +5,10 @@ class UserModel extends Model
 {
 	protected $table = 'utilisateur';
 	protected $allowedFields = [
-		'name',
-		'email',
+		'nom_user',
+		'prenom_user',
+		'email_user',
 		'password',
-		'is_active',
-		'activation_code',
 		'created_at'
 	];
 	
