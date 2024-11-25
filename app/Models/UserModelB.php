@@ -5,7 +5,7 @@
 	class UserModelB extends Model
 	{
 		protected $table = 'mdp';
-		protected $primaryKey = 'id';
+		protected $primaryKey = 'id_user';
 		protected $allowedFields = ['email_user', 'password', 'reset_token', 'reset_token_expiration'];
 		
 		// Autres propriétés du modèle, méthodes de validation, etc.
