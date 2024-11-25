@@ -17,8 +17,8 @@
 
 			<form action="<?= site_url('forgot-password/send-reset-link') ?>" method="post">
 				<div class="form-group">
-					<label for="email">Email</label>
-					<input type="email" name="email" id="email" required>
+					<label for="email_user">Email</label>
+					<input type="email_user" name="email_user" id="email_user" required>
 				</div>
 				<button type="submit">Envoyer le lien de réinitialisation</button>
 			</form>

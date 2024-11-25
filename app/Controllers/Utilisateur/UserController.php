@@ -7,25 +7,20 @@
 	{
 		public function profile()
 		{
-			$session   = session();
-			$userModel = new UserModel();
-			$data['utilisateur'] = $userModel->find($session->get('id_user'));
-			echo view('Utilisateur/profile', $data);
-		}
-
-
-		public function updateProfile()
-		{
 			$session = session();
 			$userModel = new UserModel();
+			
+			// Récupère l'utilisateur connecté
+			$userId = $session->get('id_user');
+			$user   = $userModel->find($userId);
+			
+			if (!$user)
+			{
+				return redirect()->to('/signin')->with('error', 'Utilisateur non trouvé.');
+			}
 
-			$data = [
-				'nom_user'   => $this->request->getVar('nom_user'),
-				'email_user' => $this->request->getVar('email_user')
-			];
-
-			$userModel->update($session->get('id_user'), $data);
-			return redirect()->to('/profile');
+			// Passe l'utilisateur à la vue
+			return view('Utilisateur/profile', ['user' => $user]);
 		}
 	}
 ?>

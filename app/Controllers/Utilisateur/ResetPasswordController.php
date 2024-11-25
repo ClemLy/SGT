@@ -11,14 +11,14 @@
 		{
 			helper(['form']);
 			$userModel = new UserModelB();
-			$user = $userModel->where('reset_token', $token)
+			$user      = $userModel->where('reset_token', $token)
 
 			->where('reset_token_expiration >', date('Y-m-d H:i:s'))
 			->first();
 
 			if ($user)
 			{
-				return view('reset_password', ['token' => $token]);
+				return view('Utilisateur/reset_password', ['token' => $token]);
 			}
 			else
 			{
@@ -28,8 +28,8 @@
 
 		public function updatePassword()
 		{
-			$token = $this->request->getPost('token');
-			$password = $this->request->getPost('password');
+			$token           = $this->request->getPost('token');
+			$password        = $this->request->getPost('password');
 			$confirmPassword = $this->request->getPost('confirm_password');
 			
 			// Vérification de la validité du token
@@ -38,7 +38,8 @@
 							   ->where('reset_token_expiration >', date('Y-m-d H:i:s'))
 							   ->first();
 		
-			if ($user && $password === $confirmPassword) {
+			if ($user && $password === $confirmPassword)
+			{
 				// Hachage du nouveau mot de passe
 				$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 		

@@ -9,7 +9,7 @@
 		public function index()
 		{
 			helper(['form']);
-			return view('forgot_password');
+			return view('Utilisateur/forgot_password');
 		}
 
 		public function sendResetLink()
@@ -29,7 +29,7 @@
 				$expiration = date('Y-m-d H:i:s', strtotime('+1 hour'));
 				$userModel->set('reset_token', $token)
 				->set('reset_token_expiration', $expiration)
-				->update($user['id']);
+				->update($user['id_user']);
 
 				// Envoyer l'e-mail avec le lien de réinitialisation
 				$resetLink = site_url("reset-password/$token");
