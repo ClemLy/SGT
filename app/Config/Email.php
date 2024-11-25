@@ -28,22 +28,22 @@ class Email extends BaseConfig
     /**
      * SMTP Server Hostname
      */
-    public string $SMTPHost = 'smtp.mail.yahoo.com';
+    public string $SMTPHost;
 
     /**
      * SMTP Username
      */
-    public string $SMTPUser = 'XtrayShow@yahoo.fr';
+    public string $SMTPUser;
 
     /**
      * SMTP Password
      */
-    public string $SMTPPass = 'pikfsadqwjkcdpnt';
+    public string $SMTPPass;
 
     /**
      * SMTP Port
      */
-    public int $SMTPPort = 587;
+    public int $SMTPPort;
 
     /**
      * SMTP Timeout (in seconds)
@@ -118,4 +118,15 @@ class Email extends BaseConfig
      * Enable notify message from server
      */
     public bool $DSN = false;
+
+    /**
+     * Constructor to initialize dynamic properties
+     */
+    public function __construct()
+    {
+        $this->SMTPHost = env('email_host', '');
+        $this->SMTPUser = env('email_user', '');
+        $this->SMTPPass = env('email_password', '');
+        $this->SMTPPort = env('email_port', 587);
+    }
 }
