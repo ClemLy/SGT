@@ -1,5 +1,5 @@
 <?php
-
+require_once ROOTPATH . 'vendor/autoload.php';
 /*
  |--------------------------------------------------------------------------
  | ERROR DISPLAY
@@ -14,6 +14,10 @@ error_reporting(E_ALL & ~E_DEPRECATED);
 // error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
 ini_set('display_errors', '0');
 
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(ROOTPATH);
+$dotenv->load();
 /*
  |--------------------------------------------------------------------------
  | DEBUG MODE

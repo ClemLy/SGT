@@ -59,7 +59,6 @@ class Database extends Config
 
         // Configuration de la base de données par défaut
         $this->default = [
-            'DSN'        => env('db_dsn', ''),
             'hostname'   => env('db_hostname', 'localhost'),
             'username'   => env('db_username', 'root'),
             'password'   => env('db_password', ''),
@@ -75,7 +74,7 @@ class Database extends Config
             'compress'   => false,
             'strictOn'   => false,
             'failover'   => [],
-            'port'       => env('db_port', 3306),
+            'port'       => env('db_port', ''),
             'numberNative' => false,
             'dateFormat' => [
                 'date'     => 'Y-m-d',
