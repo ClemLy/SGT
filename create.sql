@@ -21,13 +21,13 @@ CREATE TABLE CATEGORIE (
 
 -- Création de la table TACHE
 CREATE TABLE TACHE (
-	id_tache          SERIAL PRIMARY KEY,
-	titre             VARCHAR(255) NOT NULL,
-	description_tache TEXT,
-	etat_tache        VARCHAR(50) NOT NULL,
-	echeance_tache    DATE,
-	id_user           INT NOT NULL,
-	id_categorie      INT,
+	id_tache          	SERIAL PRIMARY KEY,
+	titre             	VARCHAR(255) NOT NULL,
+	description_tache 	TEXT,
+    etat_tache 			VARCHAR(50) NOT NULL CHECK (etat_tache IN ('À faire', 'En cours', 'Terminée')),
+	echeance_tache    	DATE,
+	id_user           	INT NOT NULL,
+	id_categorie      	INT,
 	FOREIGN KEY (id_user)      REFERENCES UTILISATEUR(id_user) ON DELETE CASCADE,   -- Si un utilisateur est supprimé, ses tâches le sont aussi
 	FOREIGN KEY (id_categorie) REFERENCES CATEGORIE(id_categorie) ON DELETE SET NULL -- Si une catégorie est supprimée, sa valeur est NULL dans TÂCHE
 );
