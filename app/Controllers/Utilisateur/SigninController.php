@@ -37,7 +37,7 @@
 					];
 
 					$session->set($ses_data);
-					return redirect()->to('/profile');
+					return redirect()->to('/tasks');
 				}
 				else
 				{
