@@ -24,3 +24,10 @@ $routes->get('/forgot-password', 'Utilisateur\ForgotPasswordController::index');
 $routes->post('/forgot-password/send-reset-link', 'Utilisateur\ForgotPasswordController::sendResetLink');
 $routes->get('/reset-password/(:any)', 'Utilisateur\ResetPasswordController::index/$1');
 $routes->post('/reset-password/update', 'Utilisateur\ResetPasswordController::updatePassword');
+
+
+// Taches
+$routes->get('/tasks', 'Tache\TaskController::index');  
+$routes->post('task/store', 'Tache\TaskController::store');
+$routes->get('/tasks/create', 'Tache\TaskController::create'); 
+$routes->post('tasks/store', 'Tache\TaskController::store');
