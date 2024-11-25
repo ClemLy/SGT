@@ -38,18 +38,48 @@
 
 				// Envoyer l'email
 				$email = \Config\Services::email();
-				$email->setFrom('no-reply@yourdomain.com', 'Task Manager');
+				$email->setFrom('XtrayShow@yahoo.fr', 'SGT');
 				$email->setTo($data['email_user']);
-				$email->setSubject('Activate your account');
-				$email->setMessage('Click here to activate your account: ' . site_url('activate/' . $data['activation_code']));
+				$email->setSubject('Activation du compte');
+				$email->setMessage('Cliquez sur ce lien pour activer votre compte : ' . site_url('activate/' . $data['activation_code']));
 				$email->send();
 
-				return redirect()->to('/signin');
+				if ($email->send())
+				{
+					return redirect()->to('/signup')->with('message', 'Un email de vérification a été envoyé.');
+				}
+				else
+				{
+					return redirect()->to('/signup')->with('error', 'Erreur lors de l\'envoi de l\'email.');
+				}
 			}
 			else
 			{
 				$data['validation'] = $this->validator;
 				echo view('Utilisateur/signup', $data);
+			}
+		}
+
+		public function activate($activation_code)
+		{
+			$userModel = new UserModel();
+
+			// Recherche l'utilisateur avec le code d'activation
+			$user = $userModel->where('activation_code', $activation_code)->first();
+
+			if ($user)
+			{
+				// Mettre à jour l'utilisateur comme vérifié
+				$userModel->set('is_verified', true)
+						->set('activation_code', null) // Supprime le code d'activation
+						->where('id_user', $user['id_user'])
+						->update();
+
+				return redirect()->to('/signin')->with('message', 'Votre compte a été activé avec succès.');
+			}
+			else
+			{
+				return redirect()->to('/signup')->with('error', 'Lien d\'activation invalide ou expiré.');
 			}
 		}
 	}

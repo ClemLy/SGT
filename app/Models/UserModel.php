@@ -10,7 +10,9 @@ class UserModel extends Model
 		'prenom_user',
 		'email_user',
 		'password',
-		'created_at'
+		'created_at',
+		'activation_code',
+        'is_verified'
 	];
 	
 }

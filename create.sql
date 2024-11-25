@@ -12,7 +12,9 @@ CREATE TABLE UTILISATEUR (
 	nom_user    VARCHAR(100) NOT NULL,
 	password    VARCHAR(255) NOT NULL,
 	reset_token VARCHAR(255),
-	reset_token_exp TIMESTAMP
+	reset_token_exp TIMESTAMP,
+	activation_code VARCHAR(255),
+	is_verified BOOLEAN DEFAULT FALSE
 );
 
 -- Création de la table CATEGORIE

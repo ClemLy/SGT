@@ -14,6 +14,7 @@ $routes->match(['get', 'post'], 'signin/auth', 'Utilisateur\SigninController::lo
 // Inscription
 $routes->get('/signup', 'Utilisateur\SignupController::index');
 $routes->match(['get', 'post'], 'signup/store', 'Utilisateur\SignupController::store');
+$routes->get('/activate/(:any)', 'Utilisateur\SignupController::activate/$1');
 
 // Profil
 $routes->get('/profile', 'Utilisateur\UserController::profile', ['filter' => 'authguard']);
