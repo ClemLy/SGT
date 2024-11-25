@@ -33,9 +33,9 @@ CREATE TABLE TACHE (
 );
 
 -- Création de la table COMMENT
-CREATE TABLE COMMENT (
-	id_comment   SERIAL PRIMARY KEY,
-	text_comment TEXT NOT NULL,
-	id_tache     INT NOT NULL,
+CREATE TABLE COMMENTAIRE (
+	id_commentaire   	SERIAL PRIMARY KEY,
+	text_commentaire 	TEXT NOT NULL,
+	id_tache     		INT NOT NULL,
 	FOREIGN KEY (id_tache) REFERENCES TACHE(id_tache) ON DELETE CASCADE -- Si une tâche est supprimée, ses commentaires le sont aussi
 );
