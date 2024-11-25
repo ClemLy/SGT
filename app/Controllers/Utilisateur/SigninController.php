@@ -1,7 +1,8 @@
 <?php
-	namespace App\Controllers;
+	namespace App\Controllers\Utilisateur;
 	use CodeIgniter\Controller;
 	use App\Models\UserModel;
+	use App\Controllers\BaseController;
 
 	class SigninController extends BaseController
 	{
@@ -16,9 +17,9 @@
 		{
 			$session   = session();
 			$userModel = new UserModel();
-			$email     = $this->request->getVar('email');
+			$email     = $this->request->getVar('email_user');
 			$password  = $this->request->getVar('password');
-			$data      = $userModel->where('email', $email)->first();
+			$data      = $userModel->where('email_user', $email)->first();
 			
 			if($data)
 			{
@@ -28,10 +29,11 @@
 				if($authenticatePassword)
 				{
 					$ses_data = [
-						'id'         => $data['id'],
-						'name'       => $data['name'],
-						'email'      => $data['email'],
-						'isLoggedIn' => TRUE
+						'id_user'     => $data['id_user'],
+						'nom_user'    => $data['nom_user'],
+						'prenom_user' => $data['prenom_user'],
+						'email_user'  => $data['email_user'],
+						'isLoggedIn'  => TRUE
 					];
 
 					$session->set($ses_data);

@@ -22,13 +22,18 @@
 
 			<form action="<?= site_url('signup/store') ?>" method="post">
 				<div class="form-group">
-					<label for="name">Nom</label>
-					<input type="text" name="name" id="name" value="<?= set_value('name') ?>" required>
+					<label for="nom_user">Nom</label>
+					<input type="text" name="nom_user" id="nom_user" value="<?= set_value('nom_user') ?>" required>
 				</div>
 
 				<div class="form-group">
-					<label for="email">Adresse email</label>
-					<input type="email" name="email" id="email" value="<?= set_value('email') ?>" required>
+					<label for="prenom_user">Prenom</label>
+					<input type="text" name="prenom_user" id="prenom_user" value="<?= set_value('prenom_user') ?>" required>
+				</div>
+
+				<div class="form-group">
+					<label for="email_user">Adresse email</label>
+					<input type="email_user" name="email_user" id="email_user" value="<?= set_value('email_user') ?>" required>
 				</div>
 
 				<div class="form-group">

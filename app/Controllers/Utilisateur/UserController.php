@@ -1,14 +1,15 @@
 <?php
-	namespace App\Controllers;
+	namespace App\Controllers\Utilisateur;
 	use App\Models\UserModel;
+	use App\Controllers\BaseController;
 
 	class UserController extends BaseController
 	{
 		public function profile()
 		{
-			$session = session();
+			$session   = session();
 			$userModel = new UserModel();
-			$data['utilisateur'] = $userModel->find($session->get('id'));
+			$data['utilisateur'] = $userModel->find($session->get('id_user'));
 			echo view('Utilisateur/profile', $data);
 		}
 
@@ -19,11 +20,11 @@
 			$userModel = new UserModel();
 
 			$data = [
-				'name' => $this->request->getVar('name'),
-				'email' => $this->request->getVar('email')
+				'nom_user'   => $this->request->getVar('nom_user'),
+				'email_user' => $this->request->getVar('email_user')
 			];
 
-			$userModel->update($session->get('id'), $data);
+			$userModel->update($session->get('id_user'), $data);
 			return redirect()->to('/profile');
 		}
 	}

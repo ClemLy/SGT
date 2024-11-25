@@ -6,12 +6,12 @@
 	{
 		protected $table = 'mdp';
 		protected $primaryKey = 'id';
-		protected $allowedFields = ['email', 'password', 'reset_token', 'reset_token_expiration'];
+		protected $allowedFields = ['email_user', 'password', 'reset_token', 'reset_token_expiration'];
 		
 		// Autres propriétés du modèle, méthodes de validation, etc.
 		public function getUserByEmail($email)
 		{
-			return $this->where('email', $email)->first();
+			return $this->where('email_user', $email)->first();
 		}
 
 		// Ajouter d'autres méthodes de modèle en fonction de vos besoins

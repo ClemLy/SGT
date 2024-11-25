@@ -17,7 +17,7 @@
 
 				<div class="form-group">
 					<label for="email">Adresse email</label>
-					<input type="email" name="email" value="<?= $user['email'] ?>" required>
+					<input type="email" name="email" value="<?= $user['email_user'] ?>" required>
 				</div>
 
 				<button type="submit">Mettre à jour</button>
