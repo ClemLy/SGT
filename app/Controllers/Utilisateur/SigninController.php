@@ -1,7 +1,8 @@
 <?php
-	namespace App\Controllers;
+	namespace App\Controllers\Utilisateur;
 	use CodeIgniter\Controller;
 	use App\Models\UserModel;
+	use App\Controllers\BaseController;
 
 	class SigninController extends BaseController
 	{

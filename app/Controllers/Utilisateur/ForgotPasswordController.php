@@ -1,7 +1,8 @@
 <?php
-	namespace App\Controllers;
+	namespace App\Controllers\Utilisateur;
 	use CodeIgniter\Controller;
 	use App\Models\UserModelB;
+	use App\Controllers\BaseController;
 
 	class ForgotPasswordController extends Controller
 	{

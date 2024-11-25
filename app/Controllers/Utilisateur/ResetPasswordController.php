@@ -1,8 +1,9 @@
 <?php
-	namespace App\Controllers;
+	namespace App\Controllers\Utilisateur;
 	use App\Models\UserModel;
 	use App\Models\UserModelB;
 	use CodeIgniter\Controller;
+	use App\Controllers\BaseController;
 
 	class ResetPasswordController extends Controller
 	{
