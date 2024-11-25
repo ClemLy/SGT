@@ -38,4 +38,4 @@ CREATE TABLE COMMENTAIRE (
 	text_commentaire 	TEXT NOT NULL,
 	id_tache     		INT NOT NULL,
 	FOREIGN KEY (id_tache) REFERENCES TACHE(id_tache) ON DELETE CASCADE -- Si une tâche est supprimée, ses commentaires le sont aussi
-);
+); 
