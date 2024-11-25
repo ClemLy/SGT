@@ -2,11 +2,10 @@
 # DATABASE
 #--------------------------------------------------------------------
 
-CI_ENVIRONMENT = development
-db_dsn=Postgre://lc222516:01052004@woody.iut.univ-lehavre.fr:5432
-db_hostname=woody.iut.univ-lehavre.fr
-db_username=lc222516
-db_password=01052004
-db_DBDriver=MySQLi
-db_name=lc222516
-db_port=3306
+CI_ENVIRONMENT=development
+db_hostname=localhost
+db_username=..
+db_password=..
+db_DBDriver=Postgre
+db_name=..
+db_port=..
