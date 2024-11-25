@@ -22,7 +22,8 @@ ini_set('display_errors', '1');
  | prefer to not see this, set this value to false.
  */
 defined('SHOW_DEBUG_BACKTRACE') || define('SHOW_DEBUG_BACKTRACE', true);
-
+$dotenv = Dotenv\Dotenv::createImmutable(ROOTPATH);
+$dotenv->load();
 /*
  |--------------------------------------------------------------------------
  | DEBUG MODE
