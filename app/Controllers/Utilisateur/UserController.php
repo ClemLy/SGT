@@ -7,9 +7,9 @@
 	{
 		public function profile()
 		{
-			$session = session();
+			$session   = session();
 			$userModel = new UserModel();
-			$data['utilisateur'] = $userModel->find($session->get('id'));
+			$data['utilisateur'] = $userModel->find($session->get('id_user'));
 			echo view('Utilisateur/profile', $data);
 		}
 
@@ -20,11 +20,11 @@
 			$userModel = new UserModel();
 
 			$data = [
-				'nom_user' => $this->request->getVar('nom_user'),
+				'nom_user'   => $this->request->getVar('nom_user'),
 				'email_user' => $this->request->getVar('email_user')
 			];
 
-			$userModel->update($session->get('id'), $data);
+			$userModel->update($session->get('id_user'), $data);
 			return redirect()->to('/profile');
 		}
 	}

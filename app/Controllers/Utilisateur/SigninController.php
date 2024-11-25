@@ -29,11 +29,11 @@
 				if($authenticatePassword)
 				{
 					$ses_data = [
-						'id_user'         => $data['id_user'],
-						'nom_user'       => $data['nom_user'],
-						'prenom_user'       => $data['prenom_user'],
-						'email_user'      => $data['email_user'],
-						'isLoggedIn' => TRUE
+						'id_user'     => $data['id_user'],
+						'nom_user'    => $data['nom_user'],
+						'prenom_user' => $data['prenom_user'],
+						'email_user'  => $data['email_user'],
+						'isLoggedIn'  => TRUE
 					];
 
 					$session->set($ses_data);

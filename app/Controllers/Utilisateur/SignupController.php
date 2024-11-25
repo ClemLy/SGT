@@ -15,9 +15,9 @@
 		{
 			helper(['form']);
 			$rules = [
-				'nom_user'            => 'required|min_length[2]|max_length[50]',
-				'prenom_user'            => 'required|min_length[2]|max_length[50]',
-				'email_user'           => 'required|min_length[4]|max_length[100]|valid_email|is_unique[users.email]',
+				'nom_user'        => 'required|min_length[2]|max_length[50]',
+				'prenom_user'     => 'required|min_length[2]|max_length[50]',
+				'email_user'      => 'required|min_length[4]|max_length[100]|valid_email|is_unique[users.email]',
 				'password'        => 'required|min_length[4]|max_length[50]',
 				'confirmpassword' => 'matches[password]'
 			];
@@ -27,9 +27,9 @@
 				$userModel = new UserModel();
 
 				$data = [
-					'nom_user'            => $this->request->getVar('nom_user'),
-					'prenom_user'            => $this->request->getVar('prenom_user'),
-					'email_user'           => $this->request->getVar('email_user'),
+					'nom_user'        => $this->request->getVar('nom_user'),
+					'prenom_user'     => $this->request->getVar('prenom_user'),
+					'email_user'      => $this->request->getVar('email_user'),
 					'password'        => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
 					'activation_code' => bin2hex(random_bytes(16)) // Code unique
 				];
