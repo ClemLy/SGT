@@ -1,21 +1,21 @@
 -- Supprimer les tables existantes
-DROP TABLE IF EXISTS COMMENTAIRE   CASCADE;
-DROP TABLE IF EXISTS TACHE     CASCADE;
-DROP TABLE IF EXISTS CATEGORIE CASCADE;
+DROP TABLE IF EXISTS COMMENTAIRE CASCADE;
+DROP TABLE IF EXISTS TACHE       CASCADE;
+DROP TABLE IF EXISTS CATEGORIE   CASCADE;
 DROP TABLE IF EXISTS UTILISATEUR CASCADE;
 
 -- Création de la table UTILISATEUR
 CREATE TABLE UTILISATEUR (
-	id_user     SERIAL PRIMARY KEY,
-	email_user  VARCHAR(255) UNIQUE NOT NULL,
-	prenom_user VARCHAR(100) NOT NULL,
-	nom_user    VARCHAR(100) NOT NULL,
-	password    VARCHAR(255) NOT NULL,
-	reset_token VARCHAR(255),
+	id_user         SERIAL PRIMARY KEY,
+	email_user      VARCHAR(255) UNIQUE NOT NULL,
+	prenom_user     VARCHAR(100) NOT NULL,
+	nom_user        VARCHAR(100) NOT NULL,
+	password        VARCHAR(255) NOT NULL,
+	reset_token     VARCHAR(255),
 	reset_token_exp TIMESTAMP,
-	remember_token VARCHAR(255),
+	remember_token  VARCHAR(255),
 	activation_code VARCHAR(255),
-	is_verified BOOLEAN DEFAULT FALSE
+	is_verified     BOOLEAN DEFAULT FALSE
 );
 
 -- Création de la table CATEGORIE
