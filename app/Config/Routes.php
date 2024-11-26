@@ -32,3 +32,6 @@ $routes->get('/tasks', 'Tache\TaskController::index');
 $routes->post('task/store', 'Tache\TaskController::store');
 $routes->get('/tasks/create', 'Tache\TaskController::create'); 
 $routes->post('tasks/store', 'Tache\TaskController::store');
+
+// Déconnexion
+$routes->get('/logout', 'Utilisateur\LogoutController::logout');
