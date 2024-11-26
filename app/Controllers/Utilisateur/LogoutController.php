@@ -26,7 +26,7 @@
 			delete_cookie('remember_cookie');
 
 			// Rediriger vers la page de connexion
-			return redirect()->to('/signin');
+			echo "<script>window.location.href='/signin';</script>";
 		}
 	}
 ?>

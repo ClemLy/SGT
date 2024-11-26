@@ -6,6 +6,11 @@
 
 	class SigninController extends BaseController
 	{
+		public function __construct()
+		{
+			helper(['form', 'cookie']);
+		}
+		
 		public function index()
 		{
 			if (session()->get('isLoggedIn'))
@@ -16,9 +21,6 @@
 					return redirect()->to('/tasks');
 				}
 			}
-
-
-			helper(['form']);
 
 			$data = [
 				'pageTitle' => 'Connexion'
@@ -32,6 +34,7 @@
 
 		public function loginAuth()
 		{
+
 			$session   = session();
 			$userModel = new UserModel();
 			$email     = $this->request->getVar('email_user');
@@ -69,15 +72,15 @@
 					{
 						// Génère un token unique pour "Se souvenir de moi"
 						$rememberToken = bin2hex(random_bytes(16)); // Génère un token unique
-		
+
 						// Met à jour le `remember_token` dans la base de données
 						$userModel->update($data['id_user'], ['remember_token' => $rememberToken]);
-		
-						// Enregistre le token dans un cookie (expire dans 24 heures)
-						set_cookie('remember_cookie', $rememberToken, 86400, '/', '', false, true); // Expire dans 24 heures
-					}
 
-					return redirect()->to('/tasks');
+						// Définir le cookie
+						set_cookie('remember_cookie', $rememberToken, 84600);  // Cookie valide pour 24 heures
+					}
+					// Redirection après l'envoi du cookie
+					echo "<script>window.location.href='/tasks';</script>";
 				}
 				else
 				{

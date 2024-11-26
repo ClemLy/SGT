@@ -9,6 +9,8 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
+use App\Models\UserModel;
+
 /**
  * Class BaseController
  *
@@ -64,7 +66,8 @@ abstract class BaseController extends Controller
 	{
 		helper('cookie');
 		
-		$rememberToken = get_cookie('remember_cookie');
+		$request = service('request');
+		$rememberToken = $this->request->getCookie('remember_cookie');
 
 		if ($rememberToken)
 		{
@@ -88,9 +91,9 @@ abstract class BaseController extends Controller
 		}
 		else
 		{
-			delete_cookie('remember_cookie');
 			session()->set('auto_redirect', false);
 			session()->remove(['id_user', 'nom_user', 'prenom_user', 'email_user', 'isLoggedIn']);
+			delete_cookie('remember_cookie');
 		}
 	}
 }
