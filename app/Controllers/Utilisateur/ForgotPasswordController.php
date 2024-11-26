@@ -9,7 +9,14 @@
 		public function index()
 		{
 			helper(['form']);
-			return view('Utilisateur/forgot_password');
+
+			$data = [
+				'pageTitle' => 'Mot de Passe Oublié'
+			];
+		
+			echo view('commun/header', $data);
+			echo view('Utilisateur/forgot_password');
+			echo view('commun/footer');
 		}
 
 		public function sendResetLink()
@@ -39,13 +46,12 @@
 				$emailService = \Config\Services::email();
 				
 				//paramètres du mail
-				$from ='XtrayShow@yahoo.fr';
 				$to = $this->request->getPost('to');
 				$subject = $this->request->getPost('subject');
 				
 				//envoi du mail
 				$emailService->setTo($email);
-				$emailService->setFrom($from);
+				$emailService->setFrom('XtrayShow@yahoo.fr', 'SGT');
 				$emailService->setSubject('Réinitialisation de mot de passe');
 				$emailService->setMessage($message);
 				
