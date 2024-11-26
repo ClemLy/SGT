@@ -33,14 +33,6 @@ $routes->post('task/store', 'Tache\TaskController::store');
 $routes->get('/tasks/create', 'Tache\TaskController::create'); 
 $routes->post('tasks/store', 'Tache\TaskController::store');
 
-<<<<<<< HEAD
-// Déconnexion
-$routes->get('/logout', 'Utilisateur\LogoutController::logout');
-=======
-// $routes->post('/tasks/update/(:num)', 'Tache\TaskController::update/$1');
-// $routes->get('/tasks/update/(:num)', 'Tache\TaskController::update/$1');
-// $routes->get('/tasks/delete/(:num)', 'Tache\TaskController::delete/$1'); 
-
 $routes->post('tasks/update', 'Tache\TaskController::update');
 $routes->get('tasks/edit/(:num)', 'Tache\TaskController::edit/$1');
 
@@ -48,4 +40,5 @@ $routes->get('tasks/update', 'Tache\TaskController::update');
 $routes->post('tasks/edit/(:num)', 'Tache\TaskController::edit/$1');
 
 
->>>>>>> c320766f75a32c6547ea83b1d1e04fb2dce6af8c
+// Déconnexion
+$routes->get('/logout', 'Utilisateur\LogoutController::logout');
