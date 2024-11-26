@@ -47,6 +47,8 @@ h1{
 
 h3 {
     font-size: 0.6rem !important;
+    margin-bottom:0 !important;
+
 }
 
 h5{
@@ -54,6 +56,14 @@ h5{
 }
 
 p{
+    font-size: 0.5rem !important;
+    line-height: 1.7 !important;
+}
+
+small ,.date{
+    font-weight: 600 !important;
+}
+.date{
     font-size: 0.4rem !important;
 }
 
@@ -69,5 +79,14 @@ a{
 }
 
 .col-md-3{
-    min-width:31% !important;
+    min-width:32% !important;
+}
+
+button.bi-three-dots{
+    color:black; !important;
+}
+
+.align-items-center *
+{
+    margin-bottom:0 !important;
 }
