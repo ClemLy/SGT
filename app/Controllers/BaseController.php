@@ -51,17 +51,8 @@ abstract class BaseController extends Controller
 		// Do Not Edit This Line
 		parent::initController($request, $response, $logger);
 
-		// Load required helpers
-		helper('cookie');
-
 		// Automatic login if a valid "remember_token" cookie exists
 		$this->autoLogin();
-
-		if (session()->get('auto_redirect'))
-		{
-			// Si le flag est présent, on redirige vers /tasks
-			return redirect()->to('/tasks');
-		}
 	}
 
 	/**
@@ -71,6 +62,8 @@ abstract class BaseController extends Controller
 	 */
 	private function autoLogin(): void
 	{
+		helper('cookie');
+		
 		$rememberToken = get_cookie('remember_cookie');
 
 		if ($rememberToken)
@@ -92,6 +85,12 @@ abstract class BaseController extends Controller
 				// Ajoute un flag de redirection dans la session
 				session()->set('auto_redirect', true);
 			}
+		}
+		else
+		{
+			delete_cookie('remember_cookie');
+			session()->set('auto_redirect', false);
+			session()->remove(['id_user', 'nom_user', 'prenom_user', 'email_user', 'isLoggedIn']);
 		}
 	}
 }

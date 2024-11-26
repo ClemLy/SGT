@@ -74,7 +74,7 @@
 						$userModel->update($data['id_user'], ['remember_token' => $rememberToken]);
 		
 						// Enregistre le token dans un cookie (expire dans 24 heures)
-						set_cookie('remember_cookie', $rememberToken, 86400, '/', '/', false, true); // Expire dans 24 heures
+						set_cookie('remember_cookie', $rememberToken, 86400, '/', '', false, true); // Expire dans 24 heures
 					}
 
 					return redirect()->to('/tasks');
