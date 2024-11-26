@@ -32,3 +32,15 @@ $routes->get('/tasks', 'Tache\TaskController::index');
 $routes->post('task/store', 'Tache\TaskController::store');
 $routes->get('/tasks/create', 'Tache\TaskController::create'); 
 $routes->post('tasks/store', 'Tache\TaskController::store');
+
+// $routes->post('/tasks/update/(:num)', 'Tache\TaskController::update/$1');
+// $routes->get('/tasks/update/(:num)', 'Tache\TaskController::update/$1');
+// $routes->get('/tasks/delete/(:num)', 'Tache\TaskController::delete/$1'); 
+
+$routes->post('tasks/update', 'Tache\TaskController::update');
+$routes->get('tasks/edit/(:num)', 'Tache\TaskController::edit/$1');
+
+$routes->get('tasks/update', 'Tache\TaskController::update');
+$routes->post('tasks/edit/(:num)', 'Tache\TaskController::edit/$1');
+
+
