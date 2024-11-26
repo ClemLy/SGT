@@ -13,6 +13,7 @@ CREATE TABLE UTILISATEUR (
 	password    VARCHAR(255) NOT NULL,
 	reset_token VARCHAR(255),
 	reset_token_exp TIMESTAMP,
+	remember_token VARCHAR(255),
 	activation_code VARCHAR(255),
 	is_verified BOOLEAN DEFAULT FALSE
 );

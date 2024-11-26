@@ -18,6 +18,12 @@
 			<input type="password" name="password" id="password" required>
 		</div>
 
+		<div class="form-group">
+			<label for="remember">
+				<input type="checkbox" name="remember" id="remember" value="1"> Se souvenir de moi
+			</label>
+		</div>
+
 		<button type="submit">Se connecter</button>
 	</form>
 	
