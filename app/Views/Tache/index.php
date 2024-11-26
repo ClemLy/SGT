@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="fr">
+<?php echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Tâches</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"> <!-- Pour l'icône "..." -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</head>
-
+<?php require 'navbar.php' ?>
 <body>
 <script>
 function loadTaskData(taskId, titre, description, echeance, etat, categorie) {
@@ -21,15 +12,17 @@ function loadTaskData(taskId, titre, description, echeance, etat, categorie) {
     document.getElementById('edit_categorie').value = categorie;
 }
 </script>
-
-    <div class="container my-5">
+<div class="content m-3 w-100">
+    <div >
         <h1>Gestion des Tâches</h1>
 
-        <div class="row">
+        <div class="row w-100 d-flex justify-content-between">
             <!-- Colonne À Faire -->
-            <div class="col-md-4">
-                <h3>À faire</h3>
-                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#taskModal" onclick="setTaskStatus('À faire')">+</button>
+            <div class="col-md-3 task-status">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3>À faire</h3>
+                    <button class="btn mb-3" data-bs-toggle="modal" data-bs-target="#taskModal" onclick="setTaskStatus('À faire')">+</button>
+                </div>
                 <div id="tasks-to-do">
                     <?php if (!empty($tasksToDo)): ?>
                         <?php foreach ($tasksToDo as $task): ?>
@@ -63,9 +56,11 @@ function loadTaskData(taskId, titre, description, echeance, etat, categorie) {
             </div>
 
             <!-- Colonne En Cours -->
-            <div class="col-md-4">
-                <h3>En cours</h3>
-                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#taskModal" onclick="setTaskStatus('En cours')">+</button>
+            <div class="col-md-3 task-status">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3>En cours</h3>
+                    <button class="btn mb-3" data-bs-toggle="modal" data-bs-target="#taskModal" onclick="setTaskStatus('En cours')">+</button>
+                </div>
                 <div id="tasks-in-progress"> 
                     <?php if (!empty($tasksInProgress)): ?>
                         <?php foreach ($tasksInProgress as $task): ?>
@@ -99,9 +94,11 @@ function loadTaskData(taskId, titre, description, echeance, etat, categorie) {
             </div>
 
             <!-- Colonne Terminé -->
-            <div class="col-md-4">
-                <h3>Terminé</h3>
-                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#taskModal" onclick="setTaskStatus('Terminée')">+</button>
+            <div class="col-md-3 task-status">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3>Terminé</h3>
+                    <button class="btn mb-3" data-bs-toggle="modal" data-bs-target="#taskModal" onclick="setTaskStatus('Terminée')">+</button>
+                </div>
                 <div id="tasks-completed">
                     <?php if (!empty($tasksCompleted)): ?>
                         <?php foreach ($tasksCompleted as $task): ?>
@@ -230,9 +227,10 @@ function loadTaskData(taskId, titre, description, echeance, etat, categorie) {
     </div>
 </div>
 
-    </div>
+</div>
 
-<a href="<?= site_url('/logout') ?>" class="btn btn-danger">Déconnexion</a>
+</div>
+
 
 </body>
 
