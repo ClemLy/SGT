@@ -54,7 +54,7 @@
 			}
 			else
 			{
-				$session->setFlashdata('msg', 'Email existe pas.');
+				$session->setFlashdata('msg', `Cet email n'existe pas.`);
 				return redirect()->to('/signin');
 			}
 		}
