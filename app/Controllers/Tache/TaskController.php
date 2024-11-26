@@ -13,22 +13,22 @@ class TaskController extends BaseController
     {
         // Chargement des modèles
         $categoryModel = new CategoryModel();
-        $taskModel = new TaskModel();
+        $taskModel     = new TaskModel();
 
         // Récupération de toutes les catégories
         $categories = $categoryModel->findAll();
 
         // Récupération des tâches par statut
-        $tasksToDo = $taskModel->getTasksWithCategoriesByStatus('À faire');
+        $tasksToDo       = $taskModel->getTasksWithCategoriesByStatus('À faire');
         $tasksInProgress = $taskModel->getTasksWithCategoriesByStatus('En cours');
-        $tasksCompleted = $taskModel->getTasksWithCategoriesByStatus('Terminée');
+        $tasksCompleted  = $taskModel->getTasksWithCategoriesByStatus('Terminée');
 
         // Retourner la vue avec les données nécessaires
         return view('Tache/index', [
-            'categories' => $categories,
-            'tasksToDo' => $tasksToDo,
+            'categories'      => $categories,
+            'tasksToDo'       => $tasksToDo,
             'tasksInProgress' => $tasksInProgress,
-            'tasksCompleted' => $tasksCompleted
+            'tasksCompleted'  => $tasksCompleted
         ]);
     }
 
@@ -40,15 +40,16 @@ class TaskController extends BaseController
         // Validation des données du formulaire
         $validation = \Config\Services::validation();
         $validation->setRules([
-            'titre' => 'required|min_length[3]|max_length[255]',
+            'titre'             => 'required|min_length[3]|max_length[255]',
             'description_tache' => 'permit_empty|max_length[500]',
-            'echeance_tache' => 'required|valid_date',
-            'etat_tache' => 'required|in_list[À faire,En cours,Terminée]',
-            'categorie' => 'required|min_length[3]|max_length[255]',
+            'echeance_tache'    => 'required|valid_date',
+            'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',
+            'categorie'         => 'required|min_length[3]|max_length[255]',
         ]);
 
         // Vérifier la validation du formulaire
-        if (!$this->validate($validation->getRules())) {
+        if (!$this->validate($validation->getRules()))
+        {
             return redirect()->back()->with('errors', $this->validator->getErrors());
         }
 
@@ -57,24 +58,27 @@ class TaskController extends BaseController
 
         // Chercher la catégorie par titre
         $categoryModel = new CategoryModel();
-        $category = $categoryModel->where('titre_categorie', $titreCategorie)->first();
+        $category      = $categoryModel->where('titre_categorie', $titreCategorie)->first();
 
         // Si la catégorie n'existe pas, on la crée
-        if (!$category) {
+        if (!$category)
+        {
             $categoryModel->save(['titre_categorie' => $titreCategorie]);
             $idCategorie = $categoryModel->insertID();
-        } else {
+        }
+        else
+        {
             $idCategorie = $category['id_categorie'];
         }
 
         // Préparer les données de la tâche à enregistrer
         $taskData = [
-            'titre' => $this->request->getPost('titre'),
+            'titre'             => $this->request->getPost('titre'),
             'description_tache' => $this->request->getPost('description_tache'),
-            'etat_tache' => $this->request->getPost('etat_tache'),
-            'echeance_tache' => $this->request->getPost('echeance_tache'),
-            'id_user' => session()->get('id_user'),  // Utilisation de l'utilisateur connecté
-            'id_categorie' => $idCategorie, // ID de la catégorie liée à la tâche
+            'etat_tache'        => $this->request->getPost('etat_tache'),
+            'echeance_tache'    => $this->request->getPost('echeance_tache'),
+            'id_user'           => session()->get('id_user'),  // Utilisation de l'utilisateur connecté
+            'id_categorie'      => $idCategorie, // ID de la catégorie liée à la tâche
         ];
 
         // Enregistrer la tâche dans la base de données
@@ -87,54 +91,61 @@ class TaskController extends BaseController
 
     public function update()
     {
-        $taskModel = new TaskModel();
+        $taskModel     = new TaskModel();
         $categoryModel = new CategoryModel();
     
         // Récupération des données du formulaire
-        $taskId = $this->request->getPost('task_id');
-        $titre = $this->request->getPost('titre');
-        $description = $this->request->getPost('description_tache');
-        $echeance = $this->request->getPost('echeance_tache');
-        $etat = $this->request->getPost('etat_tache');
+        $taskId         = $this->request->getPost('task_id');
+        $titre          = $this->request->getPost('titre');
+        $description    = $this->request->getPost('description_tache');
+        $echeance       = $this->request->getPost('echeance_tache');
+        $etat           = $this->request->getPost('etat_tache');
         $titreCategorie = $this->request->getPost('categorie');
     
         // Validation des données
         $validation = \Config\Services::validation();
         $validation->setRules([
-            'titre' => 'required|min_length[3]|max_length[255]',
+            'titre'             => 'required|min_length[3]|max_length[255]',
             'description_tache' => 'permit_empty|max_length[500]',
-            'echeance_tache' => 'required|valid_date',
-            'etat_tache' => 'required|in_list[À faire,En cours,Terminée]',
-            'categorie' => 'required|min_length[3]|max_length[255]',
+            'echeance_tache'    => 'required|valid_date',
+            'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',
+            'categorie'         => 'required|min_length[3]|max_length[255]',
         ]);
     
-        if (!$this->validate($validation->getRules())) {
+        if (!$this->validate($validation->getRules()))
+        {
             return redirect()->back()->with('errors', $this->validator->getErrors());
         }
     
         // Vérification ou création de la catégorie
         $category = $categoryModel->where('titre_categorie', $titreCategorie)->first();
     
-        if (!$category) {
+        if (!$category)
+        {
             $categoryModel->save(['titre_categorie' => $titreCategorie]);
             $categoryId = $categoryModel->insertID();
-        } else {
+        }
+        else
+        {
             $categoryId = $category['id_categorie'];
         }
     
         // Préparation des données pour la mise à jour
         $data = [
-            'titre' => $titre,
+            'titre'             => $titre,
             'description_tache' => $description,
-            'echeance_tache' => $echeance,
-            'etat_tache' => $etat,
-            'id_categorie' => $categoryId,
+            'echeance_tache'    => $echeance,
+            'etat_tache'        => $etat,
+            'id_categorie'      => $categoryId,
         ];
     
         // Mise à jour de la tâche
-        if ($taskModel->update($taskId, $data)) {
+        if ($taskModel->update($taskId, $data))
+        {
             return redirect()->to('/tasks')->with('success', 'Tâche mise à jour avec succès');
-        } else {
+        }
+        else
+        {
             return redirect()->back()->with('error', 'Échec de la mise à jour de la tâche.');
         }
     }

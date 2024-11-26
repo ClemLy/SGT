@@ -92,7 +92,6 @@ abstract class BaseController extends Controller
 		else
 		{
 			session()->set('auto_redirect', false);
-			session()->remove(['id_user', 'nom_user', 'prenom_user', 'email_user', 'isLoggedIn']);
 			delete_cookie('remember_cookie');
 		}
 	}
