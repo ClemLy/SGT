@@ -24,7 +24,7 @@
 			$rules = [
 				'nom_user'        => 'required|min_length[2]|max_length[50]',
 				'prenom_user'     => 'required|min_length[2]|max_length[50]',
-				'email_user'      => 'required|min_length[4]|max_length[100]|valid_email|is_unique[users.email]',
+				'email_user'      => 'required|min_length[4]|max_length[100]|valid_email|is_unique[utilisateur.email_user]',
 				'password'        => 'required|min_length[4]|max_length[50]',
 				'confirmpassword' => 'matches[password]'
 			];
