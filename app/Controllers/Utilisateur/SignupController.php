@@ -8,7 +8,14 @@
 		public function index()
 		{
 			helper(['form']);
+
+			$data = [
+				'pageTitle' => 'Inscription'
+			];
+		
+			echo view('commun/header', $data);
 			echo view('Utilisateur/signup');
+			echo view('commun/footer');
 		}
 
 		public function store()

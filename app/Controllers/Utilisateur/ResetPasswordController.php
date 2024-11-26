@@ -10,6 +10,13 @@
 		public function index($token)
 		{
 			helper(['form']);
+
+			$data = [
+				'pageTitle' => 'Réinitialisation du Mot de Passe'
+			];
+		
+			echo view('commun/header', $data);
+			
 			$userModel = new UserModelB();
 			$user      = $userModel->where('reset_token', $token)
 
@@ -18,7 +25,8 @@
 
 			if ($user)
 			{
-				return view('Utilisateur/reset_password', ['token' => $token]);
+				echo view('Utilisateur/reset_password', ['token' => $token]);
+				echo view('commun/footer');
 			}
 			else
 			{

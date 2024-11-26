@@ -1,37 +1,26 @@
-<!DOCTYPE html>
-<html lang="fr">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Connexion</title>
-		<link href="/assets/css/style.css" rel="stylesheet" type="text/css">
-	</head>
-	<body>
-		<div class="container">
-			<h2>Connexion</h2>
+<div class="container">
+	<h2>Connexion</h2>
 
-			<?php if(session()->getFlashdata('msg')): ?>
-				<div class="alert alert-danger">
-					<?= session()->getFlashdata('msg') ?>
-				</div>
-			<?php endif; ?>
-
-			<form action="<?= site_url('signin/auth') ?>" method="post">
-				<div class="form-group">
-					<label for="email_user">Adresse email</label>
-					<input type="email_user" name="email_user" id="email_user" required>
-				</div>
-
-				<div class="form-group">
-					<label for="password">Mot de passe</label>
-					<input type="password" name="password" id="password" required>
-				</div>
-
-				<button type="submit">Se connecter</button>
-			</form>
-			
-			<p>Pas encore de compte ? <a href="<?= site_url('signup') ?>">Inscrivez-vous ici</a></p>
-			<p><a href="<?= site_url('forgot-password') ?>">Mot de passe oublié ?</a></p>
+	<?php if(session()->getFlashdata('msg')): ?>
+		<div class="alert alert-danger">
+			<?= session()->getFlashdata('msg') ?>
 		</div>
-	</body>
-</html>
+	<?php endif; ?>
+
+	<form action="<?= site_url('signin/auth') ?>" method="post">
+		<div class="form-group">
+			<label for="email_user">Adresse email</label>
+			<input type="email_user" name="email_user" id="email_user" required>
+		</div>
+
+		<div class="form-group">
+			<label for="password">Mot de passe</label>
+			<input type="password" name="password" id="password" required>
+		</div>
+
+		<button type="submit">Se connecter</button>
+	</form>
+	
+	<p>Pas encore de compte ? <a href="<?= site_url('signup') ?>">Inscrivez-vous ici</a></p>
+	<p><a href="<?= site_url('forgot-password') ?>">Mot de passe oublié ?</a></p>
+</div>

@@ -9,7 +9,14 @@
 		public function index()
 		{
 			helper(['form']);
-			return view('Utilisateur/forgot_password');
+
+			$data = [
+				'pageTitle' => 'Mot de Passe Oublié'
+			];
+		
+			echo view('commun/header', $data);
+			echo view('Utilisateur/forgot_password');
+			echo view('commun/footer');
 		}
 
 		public function sendResetLink()

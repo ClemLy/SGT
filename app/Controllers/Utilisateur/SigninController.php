@@ -9,7 +9,14 @@
 		public function index()
 		{
 			helper(['form']);
+
+			$data = [
+				'pageTitle' => 'Connexion'
+			];
+		
+			echo view('commun/header', $data);
 			echo view('Utilisateur/signin');
+			echo view('commun/footer');
 		}
 
 
