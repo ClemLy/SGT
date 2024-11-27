@@ -180,7 +180,7 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 			<?php
 			renderTaskColumn("À faire", $tasksToDo, "À faire", "#taskModal");
 			renderTaskColumn("En cours", $tasksInProgress, "En cours", "#taskModal");
-			renderTaskColumn("Terminé", $tasksCompleted, "Terminée", "#taskModal");
+			renderTaskColumn("Terminée", $tasksCompleted, "Terminée", "#taskModal");
 			?>
 		</div>
 	</div>
@@ -231,6 +231,15 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 			</div>
 		</div>
 	</div>
+
+	<script>
+		// Fonction pour définir le statut par défaut en fonction de la colonne
+		function setTaskStatus(status) {
+			document.getElementById('etat_tache').value = status;
+			document.getElementById('statut_par_defaut').value = status;
+		}
+	</script>
+
 
 	<!-- Modal de modification -->
 	<div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
