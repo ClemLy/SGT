@@ -10,66 +10,72 @@ function loadTaskData(taskId, titre, description, echeance, etat, categorie)
 }
 
 // Charge et affiche les détails et les commentaires d'une tâche dans la popup
-function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache)
-{
-	document.getElementById('detail_titre').innerText = titre;
-	document.getElementById('detail_description').innerText = description;
-	document.getElementById('detail_echeance').innerText = echeance;
-	document.getElementById('detail_etat').innerText = etat;
-	document.getElementById('detail_categorie').innerText = categorie;
-	document.getElementById('comment_task_id').value = id_tache;
+function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache) {
+    // Mise à jour des détails de la tâche
+    document.getElementById('detail_titre').innerText = titre;
+    document.getElementById('detail_description').innerText = description;
+    document.getElementById('detail_echeance').innerText = echeance;
+    document.getElementById('detail_etat').innerText = etat;
+    document.getElementById('detail_categorie').innerText = categorie;
+    document.getElementById('comment_task_id').value = id_tache;
 
-	// Récupérer les commentaires pour cette tâche
-	fetch(`/comment/get/${id_tache}`)
+    // Charger les commentaires
+    const commentsSection = document.getElementById('commentaires_section');
+    commentsSection.innerHTML = ''; // Vider les anciens commentaires
+
+    fetch(`/comment/get/${id_tache}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length === 0) {
+                commentsSection.innerHTML = '<p>Aucun commentaire pour cette tâche.</p>';
+            } else {
+                data.forEach(comment => {
+                    const commentHTML = `
+                        <div class="mb-3 border p-2">
+                            <p><strong>${comment.date_commentaire}</strong></p>
+                            <p>${comment.text_commentaire}</p>
+                        </div>`;
+                    commentsSection.innerHTML += commentHTML; // Ajouter en bas
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des commentaires:', error);
+            commentsSection.innerHTML = '<p>Erreur lors du chargement des commentaires.</p>';
+        });
+
+    // Gestion de l'envoi du formulaire AJAX
+    const form = document.getElementById('addCommentForm');
+    form.onsubmit = function (event) {
+        event.preventDefault(); // Empêcher le rechargement de la page
+        const formData = new FormData(form);
+
+	fetch(`/comment/add`, {
+		method: 'POST',
+		body: formData
+	})
 		.then(response => response.json())
 		.then(data => {
-			const commentsSection = document.getElementById('commentaires_section');
-			if (data.length === 0)
-				{
-				commentsSection.innerHTML = '<p>Aucun commentaire.</p>';
-			}
-			else
-			{
-				data.forEach(comment => {
-					commentsSection.innerHTML += `
-						<div class="mb-3 border p-2">
-							<p><strong>${comment.date_commentaire}</strong></p>
-							<p>${comment.text_commentaire}</p>
-						</div>
-					`;
-				});
+			if (data.success) {
+				// Ajouter le commentaire directement en haut de la liste
+				const newCommentHTML = `
+					<div class="mb-3 border p-2">
+						<p><strong>${data.comment.date_commentaire}</strong></p>
+						<p>${data.comment.text_commentaire}</p>
+					</div>`;
+				commentsSection.insertAdjacentHTML('afterbegin', newCommentHTML); // Insérer en haut
+				form.reset(); // Réinitialiser le formulaire
+			} else {
+				console.error('Erreur:', data.message);
 			}
 		})
 		.catch(error => {
-			console.error("Erreur lors de la récupération des commentaires:", error);
+			console.error('Erreur lors de l\'ajout du commentaire:', error);
 		});
-
-	const form = document.getElementById('addCommentForm');
-	form.addEventListener('submit', function(event) {
-		event.preventDefault();
-		const formData = new FormData(form);
-
-		// Envoi de la requête pour ajouter un commentaire
-		fetch(`/comment/add`, {
-			method: 'POST',
-			body: formData
-		})
-			.then(response => response.json())
-			.then(data => {
-				if (data.success) {
-					const successMessage = document.createElement('div');
-					successMessage.classList.add('alert', 'alert-success');
-					successMessage.innerText = 'Commentaire ajouté avec succès !';
-					commentsSection.prepend(successMessage);
-					form.reset();
-					setTimeout(() => successMessage.remove(), 3000);
-				} else {
-					console.error('Erreur :', data.message);
-				}
-			})
-			.catch(error => console.error("Erreur lors de l'ajout du commentaire :", error));
-	});
+    };
 }
+
+
 
 // Basculer entre tableau et tableur
 function switchView(view)

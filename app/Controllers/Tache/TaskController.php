@@ -194,5 +194,26 @@
 			// Rediriger avec un message de succès
 			return redirect()->to('/tasks')->with('success', 'Tâche supprimée avec succès');
 		}
+
+		public function page()
+		{
+			$taskModel = new TaskModel();
+
+			// Récupérer le nombre de tâches par page depuis la requête GET (par défaut 5)
+			$perPage = $this->request->getGet('perPage') ?? 5;
+
+			// Récupérer la page actuelle depuis la requête GET (par défaut 1)
+			$page = $this->request->getGet('page') ?? 1;
+
+			// Récupérer les tâches paginées
+			$tasks = $taskModel->getPaginatedTasks($perPage, $page);
+			
+			// Charger la vue avec les tâches et les liens de pagination
+			return view('Tache/tableur', [
+				'tasks'   => $tasks,
+				'pager'   => $taskModel->pager,
+				'perPage' => $perPage
+			]);
+		}
 	}
 ?>

@@ -1,7 +1,6 @@
 <!-- Vue Tableur -->
- <script>
-	console.log(' ta mere')
-	</script>
+
+
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -13,7 +12,14 @@
 	</thead>
 	<tbody>
 		<?php foreach (array_merge($tasksToDo, $tasksInProgress, $tasksCompleted) as $task): ?>
-			<tr>
+			<tr style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal"
+				onclick="loadTaskDetails(
+					'<?= esc($task['titre']); ?>', 
+					'<?= esc($task['description_tache']); ?>', 
+					'<?= esc($task['echeance_tache']); ?>', 
+					'<?= esc($task['etat_tache']); ?>', 
+					'<?= esc($task['titre_categorie']); ?>', 
+					'<?= esc($task['id_tache']); ?>')">
 				<td><?= esc($task['titre']); ?></td>
 				<td><?= esc($task['titre_categorie'] ?? ''); ?></td>
 				<td><?= esc($task['etat_tache']); ?></td>
@@ -22,4 +28,5 @@
 		<?php endforeach; ?>
 	</tbody>
 </table>
+
 </div>

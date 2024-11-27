@@ -2,7 +2,6 @@
 	namespace App\Controllers\Tache;
 
 	use App\Models\CommentModel;
-	use CodeIgniter\Controller;
 	use App\Controllers\BaseController;
 
 	class CommentController extends BaseController
@@ -32,10 +31,15 @@
 				'date_commentaire' => date('Y-m-d H:i:s'),
 				'id_tache'         => $this->request->getVar('id_tache')
 			];
-
+		
 			$model->insert($data);
-
-			return $this->response->setJSON(['success' => true, 'message' => 'Commentaire ajouté avec succès.']);
+		
+			// Retourner une réponse JSON avec succès explicite
+			return $this->response->setJSON([
+				'success' => true,
+				'message' => 'Commentaire ajouté avec succès.',
+				'comment' => $data
+			]);
 		}
 	}
 ?>

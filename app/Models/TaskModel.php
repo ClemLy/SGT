@@ -29,4 +29,9 @@
     {
         return $this->update($id, ['etat_tache' => 'Terminée']);
     }
+
+	public function getPaginatedTasks($perPage, $page)
+	{
+		return $this->paginate($perPage, 'default', $page);
+	}
 }
