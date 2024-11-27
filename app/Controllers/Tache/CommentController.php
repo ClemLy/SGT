@@ -12,7 +12,7 @@
 		{
 			$model    = new CommentModel();
 			$comments = $model->getCommentsByTask($id_tache);
-			
+
 			if (is_array($comments))
 			{
 				return $this->response->setJSON($comments);
@@ -35,7 +35,7 @@
 
 			$model->insert($data);
 
-			return $this->response->setJSON(['success' => true, 'message' => 'Commentaire ajouté avec succès !']);
+			return $this->response->setJSON(['success' => true]);
 		}
 	}
 ?>

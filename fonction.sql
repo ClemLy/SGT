@@ -130,14 +130,14 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION get_task_comments(p_id_tache INT)
 RETURNS TABLE (
     id_commentaire INT,
-    contenu_commentaire TEXT,
+    text_commentaire TEXT,
     date_commentaire TIMESTAMP
 ) AS $$
 BEGIN
     RETURN QUERY
     SELECT 
         c.id_commentaire,
-        c.contenu_commentaire,
+        c.text_commentaire,
         c.date_commentaire
     FROM 
         COMMENTAIRE c
