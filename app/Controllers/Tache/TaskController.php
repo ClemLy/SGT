@@ -148,9 +148,16 @@
 				return redirect()->back()->with('error', 'Échec de la mise à jour de la tâche.');
 			}
 		}
-		
+        public function markAsCompleted($id)
+        {
+            $taskModel = new \App\Models\TaskModel();
 
+            if ($taskModel->markAsCompleted($id)) {
+                return redirect()->to('/tasks')->with('success', 'Tâche mise à jour avec succès');
+            }
 
+            return redirect()->back()->with('error', 'Erreur lors de la mise à jour.');
+        }
 		// Méthode pour supprimer une tâche
 		public function delete($id)
 		{
