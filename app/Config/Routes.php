@@ -39,6 +39,7 @@ $routes->get('tasks/edit/(:num)', 'Tache\TaskController::edit/$1');
 $routes->get('tasks/update', 'Tache\TaskController::update');
 $routes->post('tasks/edit/(:num)', 'Tache\TaskController::edit/$1');
 
-
+$routes->post('tasks/delete/(:num)', 'Tache\TaskController::delete/$1');
+$routes->get('tasks/delete/(:num)', 'Tache\TaskController::delete/$1');
 // Déconnexion
 $routes->get('/logout', 'Utilisateur\LogoutController::logout');
