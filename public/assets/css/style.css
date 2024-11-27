@@ -42,11 +42,11 @@
 }
 
 h1{
-    font-size: 0.8rem !important;
+    font-size: 2vw !important;
 }
 
 h3 {
-    font-size: 0.6rem !important;
+    font-size: 1vw !important;
     margin-bottom:0 !important;
 
 }
@@ -79,7 +79,7 @@ a{
 }
 
 .col-md-3{
-    min-width:32% !important;
+    min-width:30% !important;
 }
 
 button.bi-three-dots{

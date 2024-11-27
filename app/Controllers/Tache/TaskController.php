@@ -43,7 +43,7 @@
 				'description_tache' => 'permit_empty|max_length[500]',
 				'echeance_tache'    => 'required|valid_date',
 				'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',
-				'categorie'         => 'required|min_length[3]|max_length[255]',
+				'categorie'         => 'permit_empty|min_length[3]|max_length[255]',
 			]);
 
 			// Vérifier la validation du formulaire
@@ -108,7 +108,7 @@
 				'description_tache' => 'permit_empty|max_length[500]',
 				'echeance_tache'    => 'required|valid_date',
 				'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',
-				'categorie'         => 'required|min_length[3]|max_length[255]',
+				'categorie'         => 'permit_empty|min_length[3]|max_length[255]',
 			]);
 		
 			if (!$this->validate($validation->getRules()))

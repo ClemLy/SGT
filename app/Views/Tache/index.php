@@ -6,7 +6,7 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 {
 	?>
-	<div class="col-md-3 task-status">
+	<div class="col-md-3 task-status p-3">
 		<div class="d-flex justify-content-between align-items-center">
 			<h3><?= esc($title); ?></h3>
 			<button class="btn" data-bs-toggle="modal" data-bs-target="<?= $modalTarget ?>" onclick="setTaskStatus('<?= esc($title); ?>')">+</button>
@@ -36,8 +36,11 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 									</ul>
 								</div>
 							</div>
-							<h3 class="card-title mb-2"><?= esc($task['titre']); ?></h3>
-							<p class="card-text"><?= esc($task['description_tache']); ?></p>
+                            <div style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal" onclick="loadTaskDetails('<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">
+                                <h3 class="card-title mb-2"><?= esc($task['titre']); ?></h3>
+                                <p class="card-text"><?= esc($task['description_tache']); ?></p>
+                            </div>
+
 						</div>
 					</div>
 				<?php endforeach; ?>
@@ -190,7 +193,7 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 						</div>
 						<div class="mb-3">
 							<label for="categorie" class="form-label">Catégorie</label>
-							<input type="text" class="form-control" name="categorie" id="categorie" list="categories-list" required>
+							<input type="text" class="form-control" name="categorie" id="categorie" list="categories-list">
 							<datalist id="categories-list">
 								<?php foreach ($categories as $categorie): ?>
 									<option value="<?= esc($categorie['titre_categorie']); ?>"></option>
@@ -238,7 +241,7 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 					</div>
 					<div class="mb-3">
 						<label for="edit_categorie" class="form-label">Catégorie</label>
-						<input type="text" class="form-control" name="categorie" id="edit_categorie" list="categories-list" required>
+						<input type="text" class="form-control" name="categorie" id="edit_categorie" list="categories-list">
 						<datalist id="categories-list">
 							<?php foreach ($categories as $categorie): ?>
 								<option value="<?= esc($categorie['titre_categorie']); ?>"></option>
