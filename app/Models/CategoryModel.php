@@ -9,8 +9,4 @@ class CategoryModel extends Model
 	protected $allowedFields = [
 		'titre_categorie'
 	];
-	
-
-
-
 }
