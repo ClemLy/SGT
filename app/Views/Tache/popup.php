@@ -12,6 +12,28 @@
 				<p><strong>Échéance : </strong> <span id="detail_echeance"></span></p>
 				<p><strong>Statut : </strong> <span id="detail_etat"></span></p>
 			</div>
+
+			<hr>
+
+
+			<!-- Section des commentaires -->
+			<div id="commentaires_section">
+				<!-- Formulaire pour ajouter un commentaire -->
+				<form id="addCommentForm" action="<?= site_url('comment/add'); ?>" method="POST">
+					<?= csrf_field(); ?>
+					<input type="hidden" name="id_tache" id="comment_task_id">
+					<div class="mb-3">
+						<label for="comment_text" class="form-label">Ajouter un commentaire</label>
+						<textarea class="form-control" name="text_commentaire" id="comment_text" rows="3" required></textarea>
+					</div>
+					<button type="submit" class="btn btn-primary">Ajouter</button>
+				</form>
+
+				<p id="successMessage" style="display: none; color: green;">Commentaire ajouté avec succès !</p>
+			</div>
+
+			<h3>Commentaires</h3>
+			
 		</div>
 	</div>
 </div>

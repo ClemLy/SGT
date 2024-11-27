@@ -14,7 +14,7 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 		<div id="<?= esc($statusId); ?>">
 			<?php if (!empty($tasks)): ?>
 				<?php foreach ($tasks as $task): ?>
-					<div class="card my-2 border-0" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal" onclick="loadTaskDetails('<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">
+					<div class="card my-2 border-0" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal" onclick="loadTaskDetails('<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>', '<?= esc($task['id_tache']); ?>')">
 						<div class="card-body p-3">
 							<div class="d-flex justify-content-between align-items-center w-100 mb-1">
 								<p><small class="text-uppercase"><?= esc($task['titre_categorie']); ?></small></p>
@@ -65,15 +65,84 @@ function loadTaskData(taskId, titre, description, echeance, etat, categorie)
 	document.getElementById('edit_categorie').value     = categorie;
 }
 
-function loadTaskDetails(titre, description, echeance, etat, categorie)
+function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache)
 {
+	// Remplir les champs de la popup avec les détails de la tâche
 	document.getElementById('detail_titre').innerText       = titre;
 	document.getElementById('detail_description').innerText = description;
 	document.getElementById('detail_echeance').innerText    = echeance;
 	document.getElementById('detail_etat').innerText        = etat;
 	document.getElementById('detail_categorie').innerText   = categorie;
-}
+	document.getElementById('comment_task_id').value        = id_tache;
 
+	// Récupérer les commentaires pour cette tâche
+	fetch('<?= site_url('comment/get/') ?>' + id_tache)
+		.then(response => response.json())
+		.then(data => {
+			const commentsSection = document.getElementById('commentaires_section');
+
+			// Parcourir les commentaires et les afficher
+			data.forEach(comment => {
+				const commentHTML = `
+					<div class="mb-3 border p-2">
+						<p><strong>${comment.date_commentaire}</strong></p>
+						<p>${comment.text_commentaire}</p>
+					</div>
+				`;
+				commentsSection.innerHTML += commentHTML;
+			});
+		})
+		.catch(error => {
+			console.error("Erreur lors de la récupération des commentaires:", error);
+		});
+
+	
+	// Ajouter un événement au formulaire pour envoyer un nouveau commentaire
+	const form = document.getElementById('addCommentForm');
+	form.addEventListener('submit', function(event)
+	{
+		event.preventDefault(); // Empêcher la soumission classique du formulaire
+
+		const formData = new FormData(form);
+		
+		// Envoi de la requête pour ajouter un commentaire
+		fetch('<?= site_url('comment/add'); ?>', {
+			method: 'POST',
+			body: formData
+		})
+		.then(response => response.json())
+		.then(data => {
+			if (data.success)
+			{
+				// Créer un message de succès dans la popup
+				const successMessage = document.createElement('div');
+				successMessage.id = 'success_message';
+				successMessage.classList.add('alert', 'alert-success');
+				successMessage.innerText = 'Commentaire ajouté avec succès !';
+
+				// Ajouter ce message juste en dessous du formulaire des commentaires
+				document.getElementById('commentaires_section').prepend(successMessage);
+
+				// Réinitialiser le formulaire
+				document.getElementById('comment_text').value = '';
+
+				// Mettre à jour la liste des commentaires
+				loadTaskDetails(titre, description, echeance, etat, categorie, id_tache);
+			}
+			else
+			{
+				const errorMessage = document.createElement('div');
+				errorMessage.classList.add('alert', 'alert-danger');
+				errorMessage.innerText = 'Une erreur est survenue lors de l\'ajout du commentaire.';
+
+				document.getElementById('commentaires_section').prepend(errorMessage);
+			}
+		})
+		.catch(error => {
+			console.error("Erreur lors de l'ajout du commentaire :", error);
+		});
+	});
+}
 </script>
 <div class="content m-3 w-100">
 	<div >

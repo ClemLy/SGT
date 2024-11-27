@@ -79,26 +79,5 @@ VALUES
 ('Proposer une solution innovante', 'Présenter une nouvelle solution pour réduire les coûts', 'En cours', '2024-12-10', 9, 7),
 ('Concevoir une stratégie de communication', 'Créer un plan pour améliorer la communication interne', 'À faire', '2024-12-15', 3, 3);
 
--- Insertion dans la table COMMENTAIRE
-INSERT INTO COMMENTAIRE (text_commentaire, id_tache)
-VALUES
-('API presque terminée, quelques tests restants.', 1),
-('Base de données conçue avec succès.', 2),
-('La stratégie marketing doit inclure les réseaux sociaux.', 3),
-('Wireframes validés par léquipe design.', 4),
-('Les données collectées sont prêtes pour lanalyse.', 5),
-('Plusieurs tickets résolus, reste à vérifier.', 6),
-('Ajouté des points pour discussion lors de la réunion.', 7),
-('Première version du logo prête pour les retours.', 8),
-('Tous les tests QA sont passés sans problème.', 9),
-('Article structuré, manque quelques sections.', 10),
-('Une idée de collaboration a été proposée.', 3),
-('Un bug a été identifié dans la tâche.', 1),
-('Relecture nécessaire avant validation.', 10),
-('Logo validé par le client.', 8),
-('La présentation du tableau de bord est en cours d’optimisation.', 11),
-('Le contrat doit inclure des clauses spécifiques.', 12),
-('Les participants ont apprécié la formation.', 13),
-('Quelques erreurs identifiées dans les calculs.', 14),
-('Des suggestions d’amélioration ajoutées pour le plan marketing.', 15),
-('Des KPIs supplémentaires pourraient être nécessaires.', 16);
+INSERT INTO COMMENTAIRE (text_commentaire, date_commentaire, id_tache)
+VALUES (`Ceci est un commentaire ajouté à l'instant.`, NOW(), 1);

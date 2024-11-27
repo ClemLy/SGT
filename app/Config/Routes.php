@@ -42,5 +42,11 @@ $routes->post('tasks/edit/(:num)', 'Tache\TaskController::edit/$1');
 
 $routes->post('tasks/delete/(:num)', 'Tache\TaskController::delete/$1');
 $routes->get('tasks/delete/(:num)', 'Tache\TaskController::delete/$1');
+
+// Commentaires
+$routes->get('comment/get/(:num)', 'Tache\CommentController::get/$1');
+$routes->post('comment/add', 'Tache\CommentController::add');
+
+
 // Déconnexion
 $routes->get('/logout', 'Utilisateur\LogoutController::logout');
