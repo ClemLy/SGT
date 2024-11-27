@@ -2,16 +2,6 @@
 setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr');
 echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 ?>
-<style>
-
-/* Tâches en retard à modifier*/
-.overdue {
-	background-color: #FF8C8C;
-	border-left: 5px solid #FF8C8C;
-	font-weight: bold;
-}
-
-</style>
 
 <?php
 function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
@@ -203,7 +193,7 @@ function switchView(view)
 			<?php
 			renderTaskColumn("À faire", $tasksToDo, "À faire", "#taskModal");
 			renderTaskColumn("En cours", $tasksInProgress, "En cours", "#taskModal");
-			renderTaskColumn("Terminé", $tasksCompleted, "Terminée", "#taskModal");
+			renderTaskColumn("Terminée", $tasksCompleted, "Terminée", "#taskModal");
 			?>
 		</div>
 	</div>
@@ -279,6 +269,15 @@ function switchView(view)
 			</div>
 		</div>
 	</div>
+
+	<script>
+		// Fonction pour définir le statut par défaut en fonction de la colonne
+		function setTaskStatus(status) {
+			document.getElementById('etat_tache').value = status;
+			document.getElementById('statut_par_defaut').value = status;
+		}
+	</script>
+
 
 	<!-- Modal de modification -->
 	<div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
