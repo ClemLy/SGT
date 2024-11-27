@@ -6,7 +6,7 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 {
 	?>
-	<div class="col-md-3 task-status">
+	<div class="col-md-3 task-status p-3">
 		<div class="d-flex justify-content-between align-items-center">
 			<h3><?= esc($title); ?></h3>
 			<button class="btn" data-bs-toggle="modal" data-bs-target="<?= $modalTarget ?>" onclick="setTaskStatus('<?= esc($title); ?>')">+</button>
@@ -14,7 +14,7 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 		<div id="<?= esc($statusId); ?>">
 			<?php if (!empty($tasks)): ?>
 				<?php foreach ($tasks as $task): ?>
-					<div class="card my-2 border-0" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal" onclick="loadTaskDetails('<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">
+					<div class="card my-2 border-0">
 						<div class="card-body p-3">
 							<div class="d-flex justify-content-between align-items-center w-100 mb-1">
 								<p><small class="text-uppercase"><?= esc($task['titre_categorie']); ?></small></p>
@@ -36,8 +36,11 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 									</ul>
 								</div>
 							</div>
-							<h3 class="card-title mb-2"><?= esc($task['titre']); ?></h3>
-							<p class="card-text"><?= esc($task['description_tache']); ?></p>
+                            <div style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal" onclick="loadTaskDetails('<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">
+                                <h3 class="card-title mb-2"><?= esc($task['titre']); ?></h3>
+                                <p class="card-text"><?= esc($task['description_tache']); ?></p>
+                            </div>
+
 						</div>
 					</div>
 				<?php endforeach; ?>
