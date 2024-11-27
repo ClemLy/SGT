@@ -37,7 +37,7 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 							<div class="d-flex justify-content-between align-items-center w-100 mb-1">
 								<p><small class="text-uppercase"><?= esc($task['titre_categorie'] ?? ''); ?></small></p>
 								<div class="d-flex justify-content-between align-items-center">
-									<p class="date border border-dark p-1" style="border-radius:15px">
+									<p class="date border border-dark p-1 <?= $isOverdue ? 'bi bi-alarm-fill' : ''; ?>" style="border-radius:15px">
 										<?= esc(strftime(
 											(date('Y') === (new DateTime($task['echeance_tache']))->format('Y') ? '%A %d %B' : '%A %d %B %Y'),
 											(new DateTime($task['echeance_tache']))->getTimestamp()
@@ -100,23 +100,27 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 
 	// Récupérer les commentaires pour cette tâche
 	fetch('<?= site_url('comment/get/') ?>' + id_tache)
-		.then(response => response.json())
-		.then(data => {
-			const commentsSection = document.getElementById('commentaires_section');
-			// Parcourir les commentaires et les afficher
-			data.forEach(comment => {
-				const commentHTML = `
-					<div class="mb-3 border p-2">
-						<p><strong>${comment.date_commentaire}</strong></p>
-						<p>${comment.text_commentaire}</p>
-					</div>
-				`;
-				commentsSection.innerHTML += commentHTML;
-			});
-		})
-		.catch(error => {
-			console.error("Erreur lors de la récupération des commentaires:", error);
-		});
+    .then(response => response.json())
+    .then(data => {
+		console.log(data);
+        const comments = data.comments || []; // Assurez-vous que `comments` est un tableau
+        const commentsSection = document.getElementById('commentaires_section');
+        commentsSection.innerHTML = ''; // Réinitialiser la section avant d'ajouter les commentaires
+
+        comments.forEach(comment => {
+            const commentHTML = `
+                <div class="mb-3 border p-2">
+                    <p><strong>${comment.date_commentaire}</strong></p>
+                    <p>${comment.text_commentaire}</p>
+                </div>
+            `;
+            commentsSection.innerHTML += commentHTML;
+        });
+    })
+    .catch(error => {
+        console.error("Erreur lors de la récupération des commentaires:", error);
+    });
+
 	
 	// Ajouter un événement au formulaire pour envoyer un nouveau commentaire
 	const form = document.getElementById('addCommentForm');
@@ -144,8 +148,12 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 				document.getElementById('commentaires_section').prepend(successMessage);
 				// Réinitialiser le formulaire
 				document.getElementById('comment_text').value = '';
-				// Mettre à jour la liste des commentaires
-				loadTaskDetails(titre, description, echeance, etat, categorie, id_tache);
+
+				// Masquer le message de succès après 3 secondes
+				setTimeout(function()
+				{
+                    successMessage.remove();
+                }, 3000);
 			}
 			else
 			{
@@ -166,7 +174,7 @@ function switchView(view)
 {
 	const tableauView = document.getElementById('tableauView');
 	const tableurView = document.getElementById('tableurView');
-	const navLinks = document.querySelectorAll('.nav-link');
+	const navLinks    = document.querySelectorAll('.nav-link');
 
 	if (view === 'tableau')
 	{
