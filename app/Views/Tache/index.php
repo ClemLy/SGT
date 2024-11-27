@@ -98,14 +98,18 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 	document.getElementById('detail_categorie').innerText   = categorie;
 	document.getElementById('comment_task_id').value        = id_tache;
 
-	// Récupérer les commentaires pour cette tâche
 	fetch('<?= site_url('comment/get/') ?>' + id_tache)
     .then(response => response.json())
     .then(data => {
-		console.log(data);
-        const comments = data.comments || []; // Assurez-vous que `comments` est un tableau
         const commentsSection = document.getElementById('commentaires_section');
-        commentsSection.innerHTML = ''; // Réinitialiser la section avant d'ajouter les commentaires
+        if (!commentsSection) {
+            console.error("L'élément commentaires_section est introuvable.");
+            return;
+        }
+
+        const comments = data.comments || []; // Assumez un tableau par défaut
+        const commentsContainer = document.createElement('div');
+        commentsContainer.setAttribute('id', 'existing_comments');
 
         comments.forEach(comment => {
             const commentHTML = `
@@ -114,13 +118,14 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
                     <p>${comment.text_commentaire}</p>
                 </div>
             `;
-            commentsSection.innerHTML += commentHTML;
+            commentsContainer.innerHTML += commentHTML;
         });
+
+        commentsSection.appendChild(commentsContainer);
     })
     .catch(error => {
-        console.error("Erreur lors de la récupération des commentaires:", error);
+        console.error("Erreur lors de la récupération des commentaires :", error);
     });
-
 	
 	// Ajouter un événement au formulaire pour envoyer un nouveau commentaire
 	const form = document.getElementById('addCommentForm');
