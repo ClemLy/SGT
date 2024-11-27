@@ -18,13 +18,12 @@ class TaskModel extends Model
     'id_categorie'
   ];
 
-
-
-  public function getTasksWithCategoriesByStatus($etatTache)
-  {
-    return $this->select('tache.*, categorie.titre_categorie')
-      ->join('categorie', 'tache.id_categorie = categorie.id_categorie', 'left')
-      ->where('etat_tache', $etatTache)
-      ->findAll();
-  }
+    public function getTasksWithCategoriesByStatus($etatTache)
+    {
+        return $this->select('tache.*, categorie.titre_categorie')
+            ->join('categorie', 'tache.id_categorie = categorie.id_categorie', 'left')
+            ->where('etat_tache', $etatTache) // Condition sur l'état de la tâche
+            ->where('id_user', session()->get('id_user')) // Condition sur l'utilisateur
+            ->findAll();
+    }
 }
