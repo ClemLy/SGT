@@ -8,7 +8,7 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 			<h3><?= esc($title); ?></h3>
 			<button class="btn" data-bs-toggle="modal" data-bs-target="<?= $modalTarget ?>" onclick="setTaskStatus('<?= esc($title); ?>')">+</button>
 		</div>
-		<div id="<?= esc($statusId); ?>">
+		<div id="<?= esc($statusId); ?>" class="class_taches">
 			<?php if (!empty($tasks)): ?>
 				<?php foreach ($tasks as $task): ?>
 					<?php
