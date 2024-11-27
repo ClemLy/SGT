@@ -256,7 +256,7 @@ function switchView(view)
 						</div>
 						<div class="mb-3">
 							<label for="categorie" class="form-label">Catégorie</label>
-							<input type="text" class="form-control" name="categorie" id="categorie" list="categories-list" required>
+							<input type="text" class="form-control" name="categorie" id="categorie" list="categories-list">
 							<datalist id="categories-list">
 								<?php foreach ($categories as $categorie): ?>
 									<option value="<?= esc($categorie['titre_categorie']); ?>"></option>
