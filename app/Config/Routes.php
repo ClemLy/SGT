@@ -38,6 +38,7 @@ $routes->get('tasks/edit/(:num)', 'Tache\TaskController::edit/$1');
 $routes->get('tasks/complete/(:num)', 'Tache\TaskController::markAsCompleted/$1');
 $routes->post('tasks/updateStatus/(:num)/(:any)', 'Tache\TaskController::updateStatus');
 
+$routes->post('tasks/update', 'Tache\TaskController::update');
 $routes->get('tasks/update', 'Tache\TaskController::update');
 $routes->post('tasks/edit/(:num)', 'Tache\TaskController::edit/$1');
 

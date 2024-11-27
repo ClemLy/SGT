@@ -4,11 +4,11 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 ?>
 <style>
 
-/* Tâches en retard à modifier*/ 
+/* Tâches en retard à modifier*/
 .overdue {
-    background-color: #dc3545; 
-    border-left: 5px solid #dc3545;
-    font-weight: bold;  
+    background-color: #FF8C8C;
+    border-left: 5px solid #FF8C8C;
+    font-weight: bold;
 }
 
 </style>
@@ -17,7 +17,8 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 {
     ?>
-    <div class="col-md-3 task-status p-3">
+    <div class="col-md-3 task-status p-3" ondragover="allowDrop(event)"
+         ondrop="drop(event, '<?= esc($statusId); ?>')">
         <div class="d-flex justify-content-between align-items-center">
             <h3><?= esc($title); ?></h3>
             <button class="btn" data-bs-toggle="modal" data-bs-target="<?= $modalTarget ?>" onclick="setTaskStatus('<?= esc($title); ?>')">+</button>
@@ -26,20 +27,22 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
             <?php if (!empty($tasks)): ?>
                 <?php foreach ($tasks as $task): ?>
                     <?php
-                    
-                    $isOverdue = false; 
+
+                    $isOverdue = false;
                     if (isset($task['echeance_tache']) && !empty($task['echeance_tache'])) {
                         try {
                             $dueDate = new DateTime($task['echeance_tache']);
                             $currentDate = new DateTime();
-                            $isOverdue = $dueDate < $currentDate; 
+                            $isOverdue = $dueDate < $currentDate;
                         } catch (Exception $e) {
-                            
+
                             $isOverdue = false;
                         }
                     }
                     ?>
-                    <div class="card my-2 border-0 <?= $isOverdue ? 'overdue' : ''; ?>">
+                    <div class="card my-2 border-0 <?= $isOverdue ? 'overdue' : ''; ?> " draggable="true"
+                         ondragstart="drag(event)"
+                         data-task-id="<?= esc($task['id_tache']); ?>">
                         <div class="card-body p-3">
                             <div class="d-flex justify-content-between align-items-center w-100 mb-1">
                                 <p><small class="text-uppercase"><?= esc($task['titre_categorie'] ?? ''); ?></small></p>
@@ -277,60 +280,60 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 	</div>
 </div>
 <script>
-	let draggedTask = null;
+    let draggedTask = null;
 
-	function drag(event) {
-		draggedTask = event.target; // Capture la tâche qui est déplacée
-		const taskId = draggedTask.getAttribute('data-task-id');
-		event.dataTransfer.setData("text/plain", taskId); // Enregistre l'ID de la tâche
-	}
+    function drag(event) {
+        draggedTask = event.target;
+        const taskId = draggedTask.getAttribute('data-task-id');
+        event.dataTransfer.setData("text/plain", taskId);
+    }
 
-	function allowDrop(event) {
-		event.preventDefault(); // Autorise le drop
-	}
+    function allowDrop(event) {
+        event.preventDefault();
+    }
 
-	function drop(event, newStatusId) {
-		event.preventDefault();
-		const taskId = event.dataTransfer.getData("text/plain"); // Récupère l'ID de la tâche
+    function drop(event, newStatusId) {
+        event.preventDefault();
+        const taskId = event.dataTransfer.getData("text/plain");
 
-		if (draggedTask) {
-			// Déplacer visuellement la tâche dans la nouvelle colonne
-			const targetColumn = event.target.closest('.task-status').querySelector('#' + newStatusId);
-			if (targetColumn) {
-				targetColumn.appendChild(draggedTask);
-			}
+        if (draggedTask) {
+            // Déplacer visuellement la tâche dans la nouvelle colonne
+            const targetColumn = event.target.closest('.task-status').querySelector('#' + newStatusId);
+            if (targetColumn) {
+                targetColumn.appendChild(draggedTask);
+            }
 
-			// Appeler le backend pour mettre à jour le statut
-			updateTaskStatus(taskId, newStatusId); // C'est ici que la requête est envoyée
-		}
-	}
-	function updateTaskStatus(taskId, newStatusId) {
-		fetch('<?= site_url('tasks/updateStatus'); ?>', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded',
-				'X-Requested-With': 'XMLHttpRequest', // AJAX request
-				'X-CSRF-Token': '<?= csrf_hash(); ?>'
-			},
-			body: new URLSearchParams({
-				id_tache: taskId,
-				etat_tache: newStatusId
-			})
-		})
-			.then(response => response.json())
-			.then(data => {
-				if (data.success) {
-					console.log('Tâche mise à jour avec succès');
-					if (data.refresh) {
-						// Recharger la page
-						location.reload();
-					}
-				} else {
-					console.error('Erreur serveur :', data.message);
-				}
-			})
-			.catch(error => console.error('Erreur AJAX :', error));
-	}
+            // Appeler le backend pour mettre à jour le statut
+            updateTaskStatus(taskId, newStatusId); // C'est ici que la requête est envoyée
+        }
+    }
+    function updateTaskStatus(taskId, newStatusId) {
+        fetch('<?= site_url('tasks/updateStatus'); ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest', // AJAX request
+                'X-CSRF-Token': '<?= csrf_hash(); ?>'
+            },
+            body: new URLSearchParams({
+                id_tache: taskId,
+                etat_tache: newStatusId
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Tâche mise à jour avec succès');
+                    if (data.refresh) {
+                        // Recharger la page
+                        location.reload();
+                    }
+                } else {
+                    console.error('Erreur serveur :', data.message);
+                }
+            })
+            .catch(error => console.error('Erreur AJAX :', error));
+    }
 </script>
 
 </div>
