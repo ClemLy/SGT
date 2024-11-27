@@ -198,7 +198,6 @@
 
 			// Rediriger avec un message de succès
 			return redirect()->to('/tasks')->with('success', 'Tâche supprimée avec succès');
-<<<<<<< HEAD
 		}
 
 		public function page()
@@ -221,8 +220,5 @@
 				'perPage' => $perPage
 			]);
 		}
-=======
-		}	
->>>>>>> ebf16c646abc46955be320e5f3b13c97bf19a641
 	}
 ?>
