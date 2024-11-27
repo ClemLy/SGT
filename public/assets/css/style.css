@@ -3,9 +3,13 @@
 * {
     font-family: "Poppins", sans-serif !important;
 }
-html{
-    overflow-y: hidden;
+
+body{
+    height:100vw !important;
+    overflow: hidden;
+
 }
+
 .wrapper {
     display: flex;
     height: 100vh;
@@ -62,14 +66,23 @@ h5{
 p{
     font-size: 0.7vw !important;
     line-height: 1.7 !important;
+
 }
 
-small ,.date{
-    font-weight: 600 !important;
+p:before{
+    font-size: 0.8vw !important;
+}
+
+small {
+    font-weight:400;
 }
 .date{
-    font-size: 0.5vw !important;
-    padding:45px !important;
+    font-size: 0.6vw !important;
+    font-weight: 600 !important;
+    padding: 8px !important;
+    padding-right:  15px !important;
+    padding-left: 15px !important;
+
 }
 
 a{
@@ -80,18 +93,15 @@ a{
 
 .task-status {
     background-color:#EEF2F5;
-    border-radius:10px
+    border-radius:10px;
+    overflow:scroll;
+    height:90vh
 }
 
 .col-md-3{
     min-width:31% !important;
 }
 
-.class_taches{
-    overflow-y: auto; 
-    max-height: 60%;
-    padding-right: 20px;
-}
 
 button.bi-three-dots{
     color:black; !important;
@@ -109,4 +119,8 @@ button.bi-three-dots{
 .overdue {
     background-color: #FF8C8C !important;
     border-left: 5px solid #FF8C8C !important;
+}
+
+.p4{
+    padding:1.8rem !important;
 }
