@@ -33,9 +33,10 @@ $routes->post('task/store', 'Tache\TaskController::store');
 $routes->get('/tasks/create', 'Tache\TaskController::create'); 
 $routes->post('tasks/store', 'Tache\TaskController::store');
 
-$routes->post('tasks/update', 'Tache\TaskController::update');
+$routes->post('tasks/updateStatus', 'Tache\TaskController::updateStatus');
 $routes->get('tasks/edit/(:num)', 'Tache\TaskController::edit/$1');
 $routes->get('tasks/complete/(:num)', 'Tache\TaskController::markAsCompleted/$1');
+$routes->post('tasks/updateStatus/(:num)/(:any)', 'Tache\TaskController::updateStatus');
 
 $routes->get('tasks/update', 'Tache\TaskController::update');
 $routes->post('tasks/edit/(:num)', 'Tache\TaskController::edit/$1');

@@ -158,6 +158,33 @@
 
             return redirect()->back()->with('error', 'Erreur lors de la mise à jour.');
         }
+        public function updateStatus()
+        {
+            $taskId = $this->request->getPost('id_tache');
+            $newStatus = $this->request->getPost('etat_tache');
+
+            if (!$taskId || !$newStatus) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Données invalides.'
+                ]);
+            }
+
+            $taskModel = new TaskModel();
+            if ($taskModel->update($taskId, ['etat_tache' => $newStatus])) {
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Statut mis à jour avec succès.',
+                    'refresh' => true
+                ]);
+            }
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Erreur lors de la mise à jour.'
+            ]);
+        }
+
 		// Méthode pour supprimer une tâche
 		public function delete($id)
 		{

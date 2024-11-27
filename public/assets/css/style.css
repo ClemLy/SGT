@@ -14,6 +14,7 @@
     display: flex;
     flex-direction: column;
     padding: 10px;
+    max-height:100vw;
 }
 
 .sidebar .brand {
@@ -56,7 +57,7 @@ h5{
 }
 
 p{
-    font-size: 0.5rem !important;
+    font-size: 0.7vw !important;
     line-height: 1.7 !important;
 }
 
@@ -64,12 +65,13 @@ small ,.date{
     font-weight: 600 !important;
 }
 .date{
-    font-size: 0.4rem !important;
+    font-size: 0.5vw !important;
+    padding:45px !important;
 }
 
 a{
     text-decoration: none !important;
-    font-size: 0.5rem !important;
+    font-size: 0.8vw !important;
     color:black !important;
 }
 
@@ -79,7 +81,7 @@ a{
 }
 
 .col-md-3{
-    min-width:30% !important;
+    min-width:31% !important;
 }
 
 button.bi-three-dots{
@@ -89,4 +91,8 @@ button.bi-three-dots{
 .align-items-center *
 {
     margin-bottom:0 !important;
+}
+
+.card{
+    border-radius: 15px !important;
 }

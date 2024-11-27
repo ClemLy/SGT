@@ -5,51 +5,64 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 <?php
 function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 {
-	?>
-	<div class="col-md-3 task-status p-3">
-		<div class="d-flex justify-content-between align-items-center">
-			<h3><?= esc($title); ?></h3>
-			<button class="btn" data-bs-toggle="modal" data-bs-target="<?= $modalTarget ?>" onclick="setTaskStatus('<?= esc($title); ?>')">+</button>
-		</div>
-		<div id="<?= esc($statusId); ?>">
-			<?php if (!empty($tasks)): ?>
-				<?php foreach ($tasks as $task): ?>
-					<div class="card my-2 border-0" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal" onclick="loadTaskDetails('<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>', '<?= esc($task['id_tache']); ?>')">
-						<div class="card-body p-3">
-							<div class="d-flex justify-content-between align-items-center w-100 mb-1">
-								<p><small class="text-uppercase"><?= esc($task['titre_categorie']); ?></small></p>
-								<div class="d-flex justify-content-between align-items-center">
-									<p class="date border border-dark p-1" style="border-radius:15px">
-										<?= esc(strftime((date('Y') === (new DateTime($task['echeance_tache']))->format('Y') ? '%A %d %B' : '%A %d %B %Y'), (new DateTime($task['echeance_tache']))->getTimestamp())); ?>
-									</p>
-									<button class="bi bi-three-dots btn btn-link ps-1 pe-1" data-bs-toggle="dropdown" aria-expanded="false"></button>
-									<ul class="dropdown-menu">
-										<li>
-											<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editTaskModal" onclick="loadTaskData(<?= $task['id_tache']; ?>, '<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">Modifier</a>
-										</li>
-										<li>
-											<a class="dropdown-item" href="<?= site_url('tasks/complete/' . $task['id_tache']); ?>" >Marquer comme terminée</a>
-										</li>
-										<li>
-											<a class="dropdown-item" href="<?= site_url('tasks/delete/' . $task['id_tache']); ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?');">Supprimer</a>
-										</li>
-									</ul>
-								</div>
-							</div>
-                            <div style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal" onclick="loadTaskDetails('<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">
+    ?>
+    <div class="col-md-3 task-status p-4"
+         ondragover="allowDrop(event)"
+         ondrop="drop(event, '<?= esc($statusId); ?>')">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3><?= esc($title); ?></h3>
+            <button class="btn" data-bs-toggle="modal" data-bs-target="<?= $modalTarget ?>" onclick="setTaskStatus('<?= esc($title); ?>')">+</button>
+        </div>
+        <div id="<?= esc($statusId); ?>">
+            <?php if (!empty($tasks)): ?>
+                <?php foreach ($tasks as $task): ?>
+                    <div class="card my-4 border-0"
+                         draggable="true"
+                         ondragstart="drag(event)"
+                         data-task-id="<?= esc($task['id_tache']); ?>">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center w-100 mb-1">
+                                <p><small class="text-uppercase"><?= esc($task['titre_categorie']); ?></small></p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="date border border-dark p-2" style="border-radius:15px">
+                                        <?= esc(strftime((date('Y') === (new DateTime($task['echeance_tache']))->format('Y') ? '%A %d %B' : '%A %d %B %Y'), (new DateTime($task['echeance_tache']))->getTimestamp())); ?>
+                                    </p>
+                                    <button class="bi bi-three-dots btn btn-link ps-3 pe-1 mb-3" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editTaskModal"
+                                               onclick="loadTaskData(<?= esc($task['id_tache']); ?>, '<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">
+                                                Modifier
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="<?= site_url('tasks/complete/' . $task['id_tache']); ?>">
+                                                Marquer comme terminée
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="<?= site_url('tasks/delete/' . $task['id_tache']); ?>"
+                                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?');">
+                                                Supprimer
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal"
+                                 onclick="loadTaskDetails('<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">
                                 <h3 class="card-title mb-2"><?= esc($task['titre']); ?></h3>
                                 <p class="card-text"><?= esc($task['description_tache']); ?></p>
                             </div>
-
-						</div>
-					</div>
-				<?php endforeach; ?>
-			<?php else: ?>
-				<p>Aucune tâche <?= strtolower($title); ?>.</p>
-			<?php endif; ?>
-		</div>
-	</div>
-	<?php
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Aucune tâche <?= strtolower($title); ?>.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php
 }
 ?>
 
@@ -68,100 +81,25 @@ function loadTaskData(taskId, titre, description, echeance, etat, categorie)
 	document.getElementById('edit_categorie').value     = categorie;
 }
 
-function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache)
+function loadTaskDetails(titre, description, echeance, etat, categorie)
 {
-	// Remplir les champs de la popup avec les détails de la tâche
 	document.getElementById('detail_titre').innerText       = titre;
 	document.getElementById('detail_description').innerText = description;
 	document.getElementById('detail_echeance').innerText    = echeance;
 	document.getElementById('detail_etat').innerText        = etat;
 	document.getElementById('detail_categorie').innerText   = categorie;
-	document.getElementById('comment_task_id').value        = id_tache;
-
-	// Récupérer les commentaires pour cette tâche
-	fetch('<?= site_url('comment/get/') ?>' + id_tache)
-		.then(response => response.json())
-		.then(data => {
-			const commentsSection = document.getElementById('commentaires_section');
-
-			// Parcourir les commentaires et les afficher
-			data.forEach(comment => {
-				const commentHTML = `
-					<div class="mb-3 border p-2">
-						<p><strong>${comment.date_commentaire}</strong></p>
-						<p>${comment.text_commentaire}</p>
-					</div>
-				`;
-				commentsSection.innerHTML += commentHTML;
-			});
-		})
-		.catch(error => {
-			console.error("Erreur lors de la récupération des commentaires:", error);
-		});
-
-	
-	// Ajouter un événement au formulaire pour envoyer un nouveau commentaire
-	const form = document.getElementById('addCommentForm');
-	form.addEventListener('submit', function(event)
-	{
-		event.preventDefault(); // Empêcher la soumission classique du formulaire
-
-		const formData = new FormData(form);
-		
-		// Envoi de la requête pour ajouter un commentaire
-		fetch('<?= site_url('comment/add'); ?>', {
-			method: 'POST',
-			body: formData
-		})
-		.then(response => response.json())
-		.then(data => {
-			if (data.success)
-			{
-				// Créer un message de succès dans la popup
-				const successMessage = document.createElement('div');
-				successMessage.id = 'success_message';
-				successMessage.classList.add('alert', 'alert-success');
-				successMessage.innerText = 'Commentaire ajouté avec succès !';
-
-				// Ajouter ce message juste en dessous du formulaire des commentaires
-				document.getElementById('commentaires_section').prepend(successMessage);
-
-				// Réinitialiser le formulaire
-				document.getElementById('comment_text').value = '';
-
-				// Mettre à jour la liste des commentaires
-				loadTaskDetails(titre, description, echeance, etat, categorie, id_tache);
-
-				// Masquer le message de succès après 3 secondes
-				setTimeout(function()
-				{
-                    successMessage.remove();
-                }, 3000);
-			}
-			else
-			{
-				const errorMessage = document.createElement('div');
-				errorMessage.classList.add('alert', 'alert-danger');
-				errorMessage.innerText = 'Une erreur est survenue lors de l\'ajout du commentaire.';
-
-				document.getElementById('commentaires_section').prepend(errorMessage);
-			}
-		})
-		.catch(error => {
-			console.error("Erreur lors de l'ajout du commentaire :", error);
-		});
-	});
 }
-</script>
-<div class="content m-3 w-100">
-	<div >
-		<h1>Gestion des Tâches</h1>
 
-		<div class="row w-100 d-flex justify-content-between">
+</script>
+<div class="content m-3 w-100" >
+	<div >
+		<h1 class="mb-5">Gestion des Tâches</h1>
+
+		<div class="row w-100 d-flex justify-content-between" style="height:100vh">
 			<?php
-			renderTaskColumn("À faire", $tasksToDo, "tasks-to-do", "#taskModal");
-			renderTaskColumn("En cours", $tasksInProgress, "tasks-in-progress", "#taskModal");
-			renderTaskColumn("Terminé", $tasksCompleted, "tasks-completed", "#taskModal");
+			renderTaskColumn("À faire", $tasksToDo, "À faire", "#taskModal");
+			renderTaskColumn("En cours", $tasksInProgress, "En cours", "#taskModal");
+			renderTaskColumn("Terminé", $tasksCompleted, "Terminée", "#taskModal");
 			?>
 		</div>
 	</div>
@@ -199,7 +137,7 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 						</div>
 						<div class="mb-3">
 							<label for="categorie" class="form-label">Catégorie</label>
-							<input type="text" class="form-control" name="categorie" id="categorie" list="categories-list">
+							<input type="text" class="form-control" name="categorie" id="categorie" list="categories-list" required>
 							<datalist id="categories-list">
 								<?php foreach ($categories as $categorie): ?>
 									<option value="<?= esc($categorie['titre_categorie']); ?>"></option>
@@ -260,6 +198,62 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 		</div>
 	</div>
 </div>
+<script>
+    let draggedTask = null;
+
+    function drag(event) {
+        draggedTask = event.target; // Capture la tâche qui est déplacée
+        const taskId = draggedTask.getAttribute('data-task-id');
+        event.dataTransfer.setData("text/plain", taskId); // Enregistre l'ID de la tâche
+    }
+
+    function allowDrop(event) {
+        event.preventDefault(); // Autorise le drop
+    }
+
+    function drop(event, newStatusId) {
+        event.preventDefault();
+        const taskId = event.dataTransfer.getData("text/plain"); // Récupère l'ID de la tâche
+
+        if (draggedTask) {
+            // Déplacer visuellement la tâche dans la nouvelle colonne
+            const targetColumn = event.target.closest('.task-status').querySelector('#' + newStatusId);
+            if (targetColumn) {
+                targetColumn.appendChild(draggedTask);
+            }
+
+            // Appeler le backend pour mettre à jour le statut
+            updateTaskStatus(taskId, newStatusId); // C'est ici que la requête est envoyée
+        }
+    }
+    function updateTaskStatus(taskId, newStatusId) {
+        fetch('<?= site_url('tasks/updateStatus'); ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest', // AJAX request
+                'X-CSRF-Token': '<?= csrf_hash(); ?>'
+            },
+            body: new URLSearchParams({
+                id_tache: taskId,
+                etat_tache: newStatusId
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Tâche mise à jour avec succès');
+                    if (data.refresh) {
+                        // Recharger la page
+                        location.reload();
+                    }
+                } else {
+                    console.error('Erreur serveur :', data.message);
+                }
+            })
+            .catch(error => console.error('Erreur AJAX :', error));
+    }
+</script>
 
 </div>
 
