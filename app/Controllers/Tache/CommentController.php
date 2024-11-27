@@ -12,7 +12,15 @@
 		{
 			$model    = new CommentModel();
 			$comments = $model->getCommentsByTask($id_tache);
-			return $this->response->setJSON($comments);
+			
+			if (is_array($comments))
+			{
+				return $this->response->setJSON($comments);
+			}
+			else
+			{
+				return $this->response->setJSON(['error' => 'Aucun commentaire trouvé.']);
+			}
 		}
 
 		// Ajoute un commentaire

@@ -3,8 +3,8 @@
 
         <div class="brand mb-4">Bonjour, <span class="text-primary"><?= session()->get('prenom_user') ?></span></div>
         <nav class="nav flex-column">
-            <a href="#" class="bi bi-grid-1x2-fill nav-link active">  Tableau</a>
-            <a href="#" class="bi bi-grid-3x2-gap-fill nav-link">  Tableur</a>
+            <a href="#" class="bi bi-grid-1x2-fill nav-link active" id="viewTableau" onclick="switchView('tableau')">  Tableau</a>
+            <a href="#" class="bi bi-grid-3x2-gap-fill nav-link" id="viewTableur" onclick="switchView('tableur')">  Tableur</a>
         </nav>
 
         <div class="sidebar-footer">

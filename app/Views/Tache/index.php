@@ -6,9 +6,9 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 
 /* Tâches en retard à modifier*/
 .overdue {
-    background-color: #FF8C8C;
-    border-left: 5px solid #FF8C8C;
-    font-weight: bold;
+	background-color: #FF8C8C;
+	border-left: 5px solid #FF8C8C;
+	font-weight: bold;
 }
 
 </style>
@@ -16,57 +16,57 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 <?php
 function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 {
-    ?>
-    <div class="col-md-3 task-status p-3" ondragover="allowDrop(event)"
-         ondrop="drop(event, '<?= esc($statusId); ?>')">
-        <div class="d-flex justify-content-between align-items-center">
-            <h3><?= esc($title); ?></h3>
-            <button class="btn" data-bs-toggle="modal" data-bs-target="<?= $modalTarget ?>" onclick="setTaskStatus('<?= esc($title); ?>')">+</button>
-        </div>
-        <div id="<?= esc($statusId); ?>">
-            <?php if (!empty($tasks)): ?>
-                <?php foreach ($tasks as $task): ?>
-                    <?php
+	?>
+	<div class="col-md-3 task-status p-3" ondragover="allowDrop(event)"
+		ondrop="drop(event, '<?= esc($statusId); ?>')">
+		<div class="d-flex justify-content-between align-items-center">
+			<h3><?= esc($title); ?></h3>
+			<button class="btn" data-bs-toggle="modal" data-bs-target="<?= $modalTarget ?>" onclick="setTaskStatus('<?= esc($title); ?>')">+</button>
+		</div>
+		<div id="<?= esc($statusId); ?>">
+			<?php if (!empty($tasks)): ?>
+				<?php foreach ($tasks as $task): ?>
+					<?php
 
-                    $isOverdue = false;
-                    if (isset($task['echeance_tache']) && !empty($task['echeance_tache'])) {
-                        try {
-                            $dueDate = new DateTime($task['echeance_tache']);
-                            $currentDate = new DateTime();
-                            $isOverdue = $dueDate < $currentDate;
-                        } catch (Exception $e) {
+					$isOverdue = false;
+					if (isset($task['echeance_tache']) && !empty($task['echeance_tache'])) {
+						try {
+							$dueDate = new DateTime($task['echeance_tache']);
+							$currentDate = new DateTime();
+							$isOverdue = $dueDate < $currentDate;
+						} catch (Exception $e) {
 
-                            $isOverdue = false;
-                        }
-                    }
-                    ?>
-                    <div class="card my-2 border-0 <?= $isOverdue ? 'overdue' : ''; ?> " draggable="true"
-                         ondragstart="drag(event)"
-                         data-task-id="<?= esc($task['id_tache']); ?>">
-                        <div class="card-body p-3">
-                            <div class="d-flex justify-content-between align-items-center w-100 mb-1">
-                                <p><small class="text-uppercase"><?= esc($task['titre_categorie'] ?? ''); ?></small></p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <p class="date border border-dark p-1" style="border-radius:15px">
-                                        <?= esc(strftime(
-                                            (date('Y') === (new DateTime($task['echeance_tache']))->format('Y') ? '%A %d %B' : '%A %d %B %Y'),
-                                            (new DateTime($task['echeance_tache']))->getTimestamp()
-                                        )); ?>
-                                    </p>
-                                    <button class="bi bi-three-dots btn btn-link ps-1 pe-1" data-bs-toggle="dropdown" aria-expanded="false"></button>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editTaskModal" onclick="loadTaskData(<?= $task['id_tache']; ?>, '<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">Modifier</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="<?= site_url('tasks/complete/' . $task['id_tache']); ?>" >Marquer comme terminée</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="<?= site_url('tasks/delete/' . $task['id_tache']); ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?');">Supprimer</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+							$isOverdue = false;
+						}
+					}
+					?>
+					<div class="card my-2 border-0 <?= $isOverdue ? 'overdue' : ''; ?> " draggable="true"
+						ondragstart="drag(event)"
+						data-task-id="<?= esc($task['id_tache']); ?>">
+						<div class="card-body p-3">
+							<div class="d-flex justify-content-between align-items-center w-100 mb-1">
+								<p><small class="text-uppercase"><?= esc($task['titre_categorie'] ?? ''); ?></small></p>
+								<div class="d-flex justify-content-between align-items-center">
+									<p class="date border border-dark p-1" style="border-radius:15px">
+										<?= esc(strftime(
+											(date('Y') === (new DateTime($task['echeance_tache']))->format('Y') ? '%A %d %B' : '%A %d %B %Y'),
+											(new DateTime($task['echeance_tache']))->getTimestamp()
+										)); ?>
+									</p>
+									<button class="bi bi-three-dots btn btn-link ps-1 pe-1" data-bs-toggle="dropdown" aria-expanded="false"></button>
+									<ul class="dropdown-menu">
+										<li>
+											<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editTaskModal" onclick="loadTaskData(<?= $task['id_tache']; ?>, '<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">Modifier</a>
+										</li>
+										<li>
+											<a class="dropdown-item" href="<?= site_url('tasks/complete/' . $task['id_tache']); ?>" >Marquer comme terminée</a>
+										</li>
+										<li>
+											<a class="dropdown-item" href="<?= site_url('tasks/delete/' . $task['id_tache']); ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?');">Supprimer</a>
+										</li>
+									</ul>
+								</div>
+							</div>
 							<div style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal"
 								onclick="loadTaskDetails('<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>', '<?= esc($task['id_tache']); ?>')">
 								<h3 class="card-title mb-2"><?= esc($task['titre']); ?></h3>
@@ -171,10 +171,33 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 	});
 }
 
+
+function switchView(view)
+{
+	const tableauView = document.getElementById('tableauView');
+	const tableurView = document.getElementById('tableurView');
+	const navLinks = document.querySelectorAll('.nav-link');
+
+	if (view === 'tableau')
+	{
+		tableauView.style.display = 'block';
+		tableurView.style.display = 'none';
+	}
+	else
+	{
+		tableauView.style.display = 'none';
+		tableurView.style.display = 'block';
+	}
+
+	navLinks.forEach(link => link.classList.remove('active'));
+	document.getElementById('view' + (view === 'tableau' ? 'Tableau' : 'Tableur')).classList.add('active');
+}
+
 </script>
 <div class="content m-3 w-100" >
-	<div >
-		<h1 class="mb-5">Gestion des Tâches</h1>
+	<h1>Gestion des Tâches</h1>
+
+	<div id="tableauView" class="mb-5">
 
 		<div class="row w-100 d-flex justify-content-between" style="height:100vh">
 			<?php
@@ -182,6 +205,31 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 			renderTaskColumn("En cours", $tasksInProgress, "En cours", "#taskModal");
 			renderTaskColumn("Terminé", $tasksCompleted, "Terminée", "#taskModal");
 			?>
+		</div>
+	</div>
+
+	<!-- Vue Tableur -->
+	<div id="tableurView" style="display: none;">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Nom de la Tâche</th>
+						<th>Catégorie</th>
+						<th>Statut</th>
+						<th>Date d'Échéance</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach (array_merge($tasksToDo, $tasksInProgress, $tasksCompleted) as $task): ?>
+						<tr>
+							<td><?= esc($task['titre']); ?></td>
+							<td><?= esc($task['titre_categorie'] ?? ''); ?></td>
+							<td><?= esc($task['etat_tache']); ?></td>
+							<td><?= esc(strftime('%A %d %B %Y', (new DateTime($task['echeance_tache']))->getTimestamp())); ?></td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
 		</div>
 	</div>
 
@@ -280,60 +328,60 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 	</div>
 </div>
 <script>
-    let draggedTask = null;
+	let draggedTask = null;
 
-    function drag(event) {
-        draggedTask = event.target;
-        const taskId = draggedTask.getAttribute('data-task-id');
-        event.dataTransfer.setData("text/plain", taskId);
-    }
+	function drag(event) {
+		draggedTask = event.target;
+		const taskId = draggedTask.getAttribute('data-task-id');
+		event.dataTransfer.setData("text/plain", taskId);
+	}
 
-    function allowDrop(event) {
-        event.preventDefault();
-    }
+	function allowDrop(event) {
+		event.preventDefault();
+	}
 
-    function drop(event, newStatusId) {
-        event.preventDefault();
-        const taskId = event.dataTransfer.getData("text/plain");
+	function drop(event, newStatusId) {
+		event.preventDefault();
+		const taskId = event.dataTransfer.getData("text/plain");
 
-        if (draggedTask) {
-            // Déplacer visuellement la tâche dans la nouvelle colonne
-            const targetColumn = event.target.closest('.task-status').querySelector('#' + newStatusId);
-            if (targetColumn) {
-                targetColumn.appendChild(draggedTask);
-            }
+		if (draggedTask) {
+			// Déplacer visuellement la tâche dans la nouvelle colonne
+			const targetColumn = event.target.closest('.task-status').querySelector('#' + newStatusId);
+			if (targetColumn) {
+				targetColumn.appendChild(draggedTask);
+			}
 
-            // Appeler le backend pour mettre à jour le statut
-            updateTaskStatus(taskId, newStatusId); // C'est ici que la requête est envoyée
-        }
-    }
-    function updateTaskStatus(taskId, newStatusId) {
-        fetch('<?= site_url('tasks/updateStatus'); ?>', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-Requested-With': 'XMLHttpRequest', // AJAX request
-                'X-CSRF-Token': '<?= csrf_hash(); ?>'
-            },
-            body: new URLSearchParams({
-                id_tache: taskId,
-                etat_tache: newStatusId
-            })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log('Tâche mise à jour avec succès');
-                    if (data.refresh) {
-                        // Recharger la page
-                        location.reload();
-                    }
-                } else {
-                    console.error('Erreur serveur :', data.message);
-                }
-            })
-            .catch(error => console.error('Erreur AJAX :', error));
-    }
+			// Appeler le backend pour mettre à jour le statut
+			updateTaskStatus(taskId, newStatusId); // C'est ici que la requête est envoyée
+		}
+	}
+	function updateTaskStatus(taskId, newStatusId) {
+		fetch('<?= site_url('tasks/updateStatus'); ?>', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+				'X-Requested-With': 'XMLHttpRequest', // AJAX request
+				'X-CSRF-Token': '<?= csrf_hash(); ?>'
+			},
+			body: new URLSearchParams({
+				id_tache: taskId,
+				etat_tache: newStatusId
+			})
+		})
+			.then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					console.log('Tâche mise à jour avec succès');
+					if (data.refresh) {
+						// Recharger la page
+						location.reload();
+					}
+				} else {
+					console.error('Erreur serveur :', data.message);
+				}
+			})
+			.catch(error => console.error('Erreur AJAX :', error));
+	}
 </script>
 
 </div>
