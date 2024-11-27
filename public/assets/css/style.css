@@ -3,6 +3,9 @@
 * {
     font-family: "Poppins", sans-serif !important;
 }
+html{
+    overflow-y: hidden;
+}
 .wrapper {
     display: flex;
     height: 100vh;
@@ -100,5 +103,4 @@ button.bi-three-dots{
 .overdue {
     background-color: #FF8C8C !important;
     border-left: 5px solid #FF8C8C !important;
-    font-weight: bold;
 }
