@@ -26,6 +26,7 @@
 			];
 
 			$model->insert($data);
+
 			return $this->response->setJSON(['success' => true, 'message' => 'Commentaire ajouté avec succès !']);
 		}
 	}

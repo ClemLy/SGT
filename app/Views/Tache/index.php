@@ -131,6 +131,12 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 
 				// Mettre à jour la liste des commentaires
 				loadTaskDetails(titre, description, echeance, etat, categorie, id_tache);
+
+				// Masquer le message de succès après 3 secondes
+				setTimeout(function()
+				{
+                    successMessage.remove();
+                }, 3000);
 			}
 			else
 			{
