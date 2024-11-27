@@ -2,16 +2,6 @@
 setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr');
 echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 ?>
-<style>
-
-/* Tâches en retard à modifier*/
-.overdue {
-    background-color: #FF8C8C;
-    border-left: 5px solid #FF8C8C;
-    font-weight: bold;
-}
-
-</style>
 
 <?php
 function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
