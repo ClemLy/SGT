@@ -87,6 +87,12 @@ a{
     min-width:31% !important;
 }
 
+.class_taches{
+    overflow-y: auto; 
+    max-height: 60%;
+    padding-right: 20px;
+}
+
 button.bi-three-dots{
     color:black; !important;
 }
