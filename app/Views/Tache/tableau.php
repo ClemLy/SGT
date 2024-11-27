@@ -2,13 +2,13 @@
 function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 {
 	?>
-	<div class="col-md-3 task-status p-3" ondragover="allowDrop(event)"
+	<div class="col-md-3 task-status p-4 " style="overflow-y:scroll" ondragover="allowDrop(event)"
 		ondrop="drop(event, '<?= esc($statusId); ?>')">
-		<div class="d-flex justify-content-between align-items-center">
+		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h3><?= esc($title); ?></h3>
 			<button class="btn" data-bs-toggle="modal" data-bs-target="<?= $modalTarget ?>" onclick="setTaskStatus('<?= esc($title); ?>')">+</button>
 		</div>
-		<div id="<?= esc($statusId); ?>" class="class_taches">
+		<div id="<?= esc($statusId); ?>" class="class_taches pe-0">
 			<?php if (!empty($tasks)): ?>
 				<?php foreach ($tasks as $task): ?>
 					<?php
@@ -29,20 +29,20 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 						}
 					}
 					?>
-					<div class="card my-2 border-0 <?= $isOverdue ? 'overdue' : ''; ?> " draggable="true"
+					<div class="card my-2 border-0 mb-4 <?= $isOverdue ? 'overdue' : ''; ?> " draggable="true"
 						ondragstart="drag(event)"
 						data-task-id="<?= esc($task['id_tache']); ?>">
-						<div class="card-body p-3">
-							<div class="d-flex justify-content-between align-items-center w-100 mb-1">
+						<div class="card-body p-4">
+							<div class="d-flex justify-content-between align-items-center w-100 mb-3">
 								<p><small class="text-uppercase"><?= esc($task['titre_categorie'] ?? ''); ?></small></p>
 								<div class="d-flex justify-content-between align-items-center">
-									<p class="date border border-dark p-1 <?= $isOverdue ? 'bi bi-alarm-fill' : ''; ?>" style="border-radius:15px">
+									<p class="date border border-dark <?= $isOverdue ? 'bi bi-alarm-fill' : ''; ?>" style="border-radius:15px">
 										<?= esc(strftime(
 											(date('Y') === (new DateTime($task['echeance_tache']))->format('Y') ? '%A %d %B' : '%A %d %B %Y'),
 											(new DateTime($task['echeance_tache']))->getTimestamp()
 										)); ?>
 									</p>
-									<button class="bi bi-three-dots btn btn-link ps-1 pe-1" data-bs-toggle="dropdown" aria-expanded="false"></button>
+									<button class="bi bi-three-dots btn btn-link ps-3 pe-1" data-bs-toggle="dropdown" aria-expanded="false"></button>
 									<ul class="dropdown-menu">
 										<li>
 											<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editTaskModal" onclick="loadTaskData(<?= $task['id_tache']; ?>, '<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">Modifier</a>

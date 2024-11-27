@@ -55,6 +55,11 @@
 			// Récupérer le titre de la catégorie depuis le formulaire
 			$titreCategorie = $this->request->getPost('categorie');
 
+			// Si l'utilisateur a choisi "Ajouter une catégorie...", on ajoute la nouvelle catégorie à la base de données
+			if ($titreCategorie === "Ajouter une catégorie...") {
+				$titreCategorie = $this->request->getPost('nouvelle_categorie'); // Vous pouvez récupérer la nouvelle catégorie ici.
+			}
+
 			// Chercher la catégorie par titre
 			$categoryModel = new CategoryModel();
 			$category      = $categoryModel->where('titre_categorie', $titreCategorie)->first();
@@ -193,6 +198,7 @@
 
 			// Rediriger avec un message de succès
 			return redirect()->to('/tasks')->with('success', 'Tâche supprimée avec succès');
+<<<<<<< HEAD
 		}
 
 		public function page()
@@ -215,5 +221,8 @@
 				'perPage' => $perPage
 			]);
 		}
+=======
+		}	
+>>>>>>> ebf16c646abc46955be320e5f3b13c97bf19a641
 	}
 ?>
