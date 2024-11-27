@@ -15,7 +15,6 @@
 
 			<hr>
 
-
 			<!-- Section des commentaires -->
 			<div id="commentaires_section">
 				<!-- Formulaire pour ajouter un commentaire -->
