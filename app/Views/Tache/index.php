@@ -124,7 +124,7 @@ function loadTaskDetails(titre, description, echeance, etat, categorie)
 						</div>
 						<div class="mb-3">
 							<label for="categorie" class="form-label">Catégorie</label>
-							<input type="text" class="form-control" name="categorie" id="categorie" list="categories-list" required>
+							<input type="text" class="form-control" name="categorie" id="categorie" list="categories-list">
 							<datalist id="categories-list">
 								<?php foreach ($categories as $categorie): ?>
 									<option value="<?= esc($categorie['titre_categorie']); ?>"></option>
@@ -172,7 +172,7 @@ function loadTaskDetails(titre, description, echeance, etat, categorie)
 					</div>
 					<div class="mb-3">
 						<label for="edit_categorie" class="form-label">Catégorie</label>
-						<input type="text" class="form-control" name="categorie" id="edit_categorie" list="categories-list" required>
+						<input type="text" class="form-control" name="categorie" id="edit_categorie" list="categories-list">
 						<datalist id="categories-list">
 							<?php foreach ($categories as $categorie): ?>
 								<option value="<?= esc($categorie['titre_categorie']); ?>"></option>
