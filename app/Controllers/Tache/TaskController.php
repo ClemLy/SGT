@@ -2,6 +2,7 @@
 	namespace App\Controllers\Tache;
 
 	use App\Models\TaskModel;
+	use App\Models\UserModel;
 	use App\Models\CategoryModel;
 	use App\Controllers\BaseController;
 	use Config\Pager;
@@ -10,7 +11,7 @@
 	{
 		public function __construct()
 		{
-			// $this->sendReminders();
+			$this->sendRemindersForTasksDueIn48Hours();
 			// $this->page();
 		}
 
@@ -229,50 +230,6 @@
 			return redirect()->to('/tasks')->with('success', 'Tâche supprimée avec succès');
 		}
 
-
-		public function sendReminders()
-		{
-			$taskModel = new TaskModel();
-			$userModel = new \App\Models\UserModel();
-			
-			// Récupérer les tâches de l'utilisateur (ici, vous filtrez déjà par 'etats_tache')
-			$tasks = $taskModel->where('etat_tache !=', 'Terminée')->findAll();
-
-			// Filtrer les tâches dont l'échéance est dans moins de 48 heures
-			$tasksDueSoon = [];
-			$currentDate  = new DateTime();
-			
-			foreach ($tasks as $task)
-			{
-				$dueDate = new DateTime($task['echeance_tache']);
-				
-				// Calcul de la différence en secondes
-				$secondsLeft   = $dueDate->getTimestamp() - $currentDate->getTimestamp();
-				$isOverdue     = $dueDate < $currentDate;
-				$isOverdueSoon = !$isOverdue && $secondsLeft <= 86400*2;
-
-				// Affichage de la valeur de isOverdueSoon
-        		log_message('error', "Task ID: " . $task['id_tache'] . " - isOverdueSoon: " . ($isOverdueSoon ? 'true' : 'false'));
-				
-				// Vérifier si la tâche arrive à échéance dans les 48 heures
-				if ($isOverdueSoon)
-				{
-					$tasksDueSoon[] = $task;
-				}
-			}
-
-			// Si des tâches arrivent à échéance dans moins de 48 heures, envoyer un email à l'utilisateur
-			if (!empty($tasksDueSoon))
-			{
-				foreach ($tasksDueSoon as $task)
-				{
-					$this->sendReminderEmail($task);
-				}
-			}
-
-			echo 'Rappels envoyés pour les tâches avec échéance dans moins de 48 heures.';
-		}
-
 		public function sendRemindersForTasksDueIn48Hours()
 		{
 			$taskModel = new TaskModel();
@@ -283,14 +240,12 @@
 			{
 				$this->sendReminderEmail($task);
 			}
-
-			echo 'Rappels envoyés pour les tâches se terminant dans moins de 24 heures.';
 		}
 
 		private function sendReminderEmail($task)
 		{
-			$userModel = new \App\Models\UserModel();
-			$user = $userModel->find($task['id_user']); // Récupérer l'utilisateur lié à la tâche
+			$userModel = new UserModel();
+			$user = $userModel->where('id_user', session()->get('id_user'))->first();
 
 			if ($user) 
 			{

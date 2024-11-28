@@ -158,16 +158,7 @@ RETURNS TABLE (
 	id_categorie INT
 ) AS $$
 BEGIN
-    -- Met à jour send_retard pour les tâches concernées
-    UPDATE TACHE AS tr
-    SET send_retard = TRUE
-    WHERE tr.id_user = p_id_user
-      AND tr.etat_tache != 'Terminée'
-      AND tr.send_retard = FALSE
-      AND EXTRACT(EPOCH FROM (tr.echeance_tache::TIMESTAMP - CURRENT_TIMESTAMP)) <= 86400 * 2
-      AND EXTRACT(EPOCH FROM (tr.echeance_tache::TIMESTAMP - CURRENT_TIMESTAMP)) > 0;
-
-    -- Retourne les tâches concernées
+	-- Retourne les tâches concernées
 	RETURN QUERY
 	SELECT 
 		t.id_tache,
@@ -181,8 +172,18 @@ BEGIN
 	WHERE 
 		t.id_user = p_id_user
 		AND t.etat_tache != 'Terminée'
+		AND t.send_retard = FALSE
 		AND EXTRACT(EPOCH FROM (t.echeance_tache::TIMESTAMP - CURRENT_TIMESTAMP)) <= 86400 * 2  -- 48 heures
 		AND EXTRACT(EPOCH FROM (t.echeance_tache::TIMESTAMP - CURRENT_TIMESTAMP)) > 0;  -- Pas encore échue
+
+    -- Met à jour send_retard pour les tâches concernées
+    UPDATE TACHE AS tr
+    SET send_retard = TRUE
+    WHERE tr.id_user = p_id_user
+      AND tr.etat_tache != 'Terminée'
+      AND tr.send_retard = FALSE
+      AND EXTRACT(EPOCH FROM (tr.echeance_tache::TIMESTAMP - CURRENT_TIMESTAMP)) <= 86400 * 2
+      AND EXTRACT(EPOCH FROM (tr.echeance_tache::TIMESTAMP - CURRENT_TIMESTAMP)) > 0;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -203,4 +204,7 @@ AFTER DELETE ON TACHE
 FOR EACH ROW
 EXECUTE FUNCTION delete_category_if_no_task();
 
--- 
+CREATE TRIGGER trigger_update_category
+AFTER UPDATE ON TACHE
+FOR EACH ROW
+EXECUTE FUNCTION delete_category_if_no_task();
