@@ -1,6 +1,4 @@
 <!-- Vue Tableur -->
-
-
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -28,5 +26,4 @@
 		<?php endforeach; ?>
 	</tbody>
 </table>
-
 </div>

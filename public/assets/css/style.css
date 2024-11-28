@@ -121,6 +121,11 @@ button.bi-three-dots{
     border-left: 5px solid #FF8C8C !important;
 }
 
+.overdueSoon {
+    background-color: #ffdc8c !important;
+    border-left: 5px solid #ffdc8c !important;
+}
+
 .p4{
     padding:1.8rem !important;
 }

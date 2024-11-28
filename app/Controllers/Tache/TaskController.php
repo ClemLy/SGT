@@ -153,16 +153,19 @@
 				return redirect()->back()->with('error', 'Échec de la mise à jour de la tâche.');
 			}
 		}
+
         public function markAsCompleted($id)
         {
             $taskModel = new \App\Models\TaskModel();
 
-            if ($taskModel->markAsCompleted($id)) {
+            if ($taskModel->markAsCompleted($id))
+			{
                 return redirect()->to('/tasks')->with('success', 'Tâche mise à jour avec succès');
             }
 
             return redirect()->back()->with('error', 'Erreur lors de la mise à jour.');
         }
+
         public function updateStatus()
         {
             $taskId = $this->request->getPost('id_tache');
@@ -199,6 +202,73 @@
 			// Rediriger avec un message de succès
 			return redirect()->to('/tasks')->with('success', 'Tâche supprimée avec succès');
 		}
+
+
+		public function sendReminders()
+		{
+			$taskModel = new TaskModel();
+
+			// Récupérer les tâches dont l'échéance est dans 24 heures
+			$tasksDueSoon = $taskModel->where('etat_tache !=', 'Terminée')
+				->where('TIMESTAMPDIFF(SECOND, NOW(), echeance_tache) <=', 86400*2) // Moins de 48 heures
+				->where('TIMESTAMPDIFF(SECOND, NOW(), echeance_tache) >', 0)
+				->findAll();
+
+			if (!empty($tasksDueSoon))
+			{
+				foreach ($tasksDueSoon as $task)
+				{
+					$this->sendReminderEmail($task);
+				}
+			}
+
+			echo 'Rappels envoyés pour les tâches avec échéance dans moins de 48 heures.';
+		}
+
+		public function sendRemindersForTasksDueIn48Hours()
+		{
+			$taskModel = new \App\Models\TaskModel();
+			$userId = session()->get('id_user');
+			$tasksDueIn24Hours = $taskModel->getTasksDueIn48Hours($userId);
+
+			foreach ($tasksDueIn24Hours as $task)
+			{
+				$this->sendReminderEmail($task);
+			}
+
+			echo 'Rappels envoyés pour les tâches se terminant dans moins de 24 heures.';
+		}
+
+		private function sendReminderEmail($task)
+		{
+			$userModel = new \App\Models\UserModel();
+			$user = $userModel->find($task['id_user']); // Récupérer l'utilisateur lié à la tâche
+
+			if ($user) 
+			{
+				$email = \Config\Services::email();
+				$email->setFrom('XtrayShow@yahoo.fr', 'SGT');
+				$email->setTo($user['email_user']); // Adresse e-mail de l'utilisateur
+				$email->setSubject('Rappel : Tâche à échéance dans 2 jours');
+				$email->setMessage("
+					Bonjour {$user['prenom_user']},
+
+					La tâche \"{$task['titre']}\" est prévue pour bientôt ({$task['echeance_tache']}).
+					Merci de prendre les mesures nécessaires.
+
+					Bonne journée !
+				");
+
+				if (!$email->send())
+				{
+					log_message('error', 'Erreur lors de l\'envoi de l\'email : ' . $email->printDebugger(['headers']));
+				}
+			}
+		}
+
+
+
+
 
 		public function page()
 		{

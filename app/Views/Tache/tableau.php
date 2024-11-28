@@ -21,15 +21,21 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 							$dueDate = new DateTime($task['echeance_tache']);
 							$currentDate = new DateTime();
 							$isOverdue = $dueDate < $currentDate;
+
+							$secondsLeft = $dueDate->getTimestamp() - $currentDate->getTimestamp();
+							var_dump($secondsLeft);
+                            $isOverdueSoon = !$isOverdue && $secondsLeft <= 86400*2;
+							var_dump($isOverdueSoon);
 						}
 						catch (Exception $e)
 						{
 
 							$isOverdue = false;
+							$isOverdueSoon= false;
 						}
 					}
 					?>
-					<div class="card my-2 border-0 mb-4 <?= $isOverdue ? 'overdue' : ''; ?> " draggable="true"
+					<div class="card my-2 border-0 mb-4 <?= $isOverdue ? 'overdue' : ($isOverdueSoon ? 'overdue-soon' : ''); ?>" draggable="true"
 						ondragstart="drag(event)"
 						data-task-id="<?= esc($task['id_tache']); ?>">
 						<div class="card-body p-4">

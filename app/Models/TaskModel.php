@@ -30,6 +30,13 @@
         return $this->update($id, ['etat_tache' => 'Terminée']);
     }
 
+	public function getTasksDueIn24Hours($userId)
+    {
+		$db = \Config\Database::connect();
+        $query = $db->query("SELECT * FROM get_tasks_due_in_48_hours(?)", [$userId]);
+        return $query->getResultArray();
+    }
+
 	public function getPaginatedTasks($perPage, $page)
 	{
 		return $this->paginate($perPage, 'default', $page);
