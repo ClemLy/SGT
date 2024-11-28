@@ -7,6 +7,7 @@ class CategoryModel extends Model
 	protected $primaryKey = 'id_categorie';
 	
 	protected $allowedFields = [
-		'titre_categorie'
+		'titre_categorie',
+		'id_user_categorie'
 	];
 }

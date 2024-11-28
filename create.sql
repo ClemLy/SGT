@@ -21,7 +21,9 @@ CREATE TABLE UTILISATEUR (
 -- Création de la table CATEGORIE
 CREATE TABLE CATEGORIE (
 	id_categorie    SERIAL PRIMARY KEY,
-	titre_categorie VARCHAR(100) NOT NULL
+	titre_categorie VARCHAR(100) NOT NULL,
+	id_user_categorie INT NOT NULL,
+	FOREIGN KEY (id_user_categorie)      REFERENCES UTILISATEUR(id_user) ON DELETE CASCADE   -- Si un utilisateur est supprimé, ses tâches le sont aussi
 );
 
 -- Création de la table TACHE
@@ -33,6 +35,7 @@ CREATE TABLE TACHE (
 	echeance_tache    	DATE,
 	id_user           	INT NOT NULL,
 	id_categorie      	INT,
+	send_retard			BOOLEAN DEFAULT FALSE,
 	FOREIGN KEY (id_user)      REFERENCES UTILISATEUR(id_user) ON DELETE CASCADE,   -- Si un utilisateur est supprimé, ses tâches le sont aussi
 	FOREIGN KEY (id_categorie) REFERENCES CATEGORIE(id_categorie) ON DELETE SET NULL -- Si une catégorie est supprimée, sa valeur est NULL dans TÂCHE
 );
