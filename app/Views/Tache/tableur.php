@@ -1,7 +1,7 @@
 <!-- Vue Tableur -->
 
 <?php if (isset($tasksToDo, $tasksInProgress, $tasksCompleted)): ?>
-
+<?php setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr'); ?>
 <div id="tableTasksBody">
     <button class="btn"  data-bs-toggle="modal" data-bs-target="#taskModal">+ (Ajouter tache)</button>
     <table class="table table-striped">
@@ -26,7 +26,8 @@
                 <td><?= esc($task['titre']); ?></td>
                 <td><?= esc($task['titre_categorie'] ?? ''); ?></td>
                 <td><?= esc($task['etat_tache']); ?></td>
-                <td><?= esc(strftime('%A %d %B %Y', (new DateTime($task['echeance_tache']))->getTimestamp())); ?></td>
+                <td><?= esc(strftime((date('Y') === (new DateTime($task['echeance_tache']))->format('Y') ? '%A %d %B' : '%A %d %B %Y'), (new DateTime($task['echeance_tache']))->getTimestamp())); ?></td>
+
             </tr>
         <?php endforeach; ?>
         </tbody>

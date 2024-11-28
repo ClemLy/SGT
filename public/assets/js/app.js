@@ -219,6 +219,7 @@ function toggleSort(criteria) {
 		currentSort.order = 'asc';
 	}
 	sortTasks(currentSort.criteria, currentSort.order);
+	sortTableRows(currentSort.criteria, currentSort.order);
 	updateButtonStates();
 }
 
@@ -251,24 +252,6 @@ function sortTasks(criteria, order) {
 	});
 }
 
-function getTextWithoutBefore(element) {
-	return element.childNodes[0]?.nodeValue.trim() || '';
-}
-
-
-function parseDate(dateStr) {
-	const months = {
-		janvier: 0, février: 1, mars: 2, avril: 3, mai: 4, juin: 5,
-		juillet: 6, août: 7, septembre: 8, octobre: 9, novembre: 10, décembre: 11
-	};
-
-	const parts = dateStr.split(' ');
-	const day = parseInt(parts[1], 10);
-	const month = months[parts[2].toLowerCase()];
-	const year = parts.length === 4 ? parseInt(parts[3], 10) : new Date().getFullYear(); // Utilise l'année courante si absente.
-
-	return new Date(year, month, day);
-}
 
 function updateButtonStates() {
 	document.querySelectorAll('button').forEach(button => button.classList.remove('active'));
@@ -279,21 +262,10 @@ function updateButtonStates() {
 	}
 }
 
-let currentTableSort = { criteria: null, order: 'asc' };
 function capitalizeFirstLetter(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function toggleSortTable(criteria) {
-	if (currentTableSort.criteria === criteria) {
-		currentTableSort.order = currentTableSort.order === 'asc' ? 'desc' : 'asc';
-	} else {
-		currentTableSort.criteria = criteria;
-		currentTableSort.order = 'asc';
-	}
-
-	sortTableRows(currentTableSort.criteria, currentTableSort.order);
-}
 
 function sortTableRows(criteria, order) {
 	const tableBody = document.querySelector('tbody');
@@ -324,3 +296,20 @@ function sortTableRows(criteria, order) {
 }
 
 
+function getTextWithoutBefore(element) {
+	return element.childNodes[0]?.nodeValue.trim() || '';
+}
+
+function parseDate(dateStr) {
+	const months = {
+		janvier: 0, février: 1, mars: 2, avril: 3, mai: 4, juin: 5,
+		juillet: 6, août: 7, septembre: 8, octobre: 9, novembre: 10, décembre: 11
+	};
+
+	const parts = dateStr.split(' ');
+	const day = parseInt(parts[1], 10);
+	const month = months[parts[2].toLowerCase()];
+	const year = parts.length === 4 ? parseInt(parts[3], 10) : new Date().getFullYear(); // Utilise l'année courante si absente.
+
+	return new Date(year, month, day);
+}

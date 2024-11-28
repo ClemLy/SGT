@@ -13,47 +13,31 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 
 	<!-- Contenu Principal -->
 	<div class="content m-3 w-100">
-
         <div class="d-flex justify-content-between mb-3">
             <input type="text" id="taskSearchInput" class="form-control w-25" placeholder="Rechercher une tâche..." oninput="searchTasks()">
+        </div>
+        <div class="d-flex justify-content-between ">
+            <h1 class="mb-5">Gestion des Tâches</h1>
+
+            <div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Trier par
+                </button>
+                <ul class="dropdown-menu">
+                    <li><button id="sortName" class="dropdown-item" onclick="toggleSort('name')">Name</button></li>
+                    <li><button id="sortCategory" class="dropdown-item" onclick="toggleSort('category')">Category</button></li>
+                    <li> <button id="sortDate" class="dropdown-item" onclick="toggleSort('date')">Date</button></li>
+                </ul>
+            </div>
         </div>
 
 		<!-- Vue Tableau -->
 		<div id="tableauView" >
-            <div class="d-flex justify-content-between ">
-                <h1 class="mb-5">Gestion des Tâches</h1>
-
-                <div class="dropdown">
-                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Trier par
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><button id="sortName" class="dropdown-item" onclick="toggleSort('name')">Name</button></li>
-                        <li><button id="sortCategory" class="dropdown-item" onclick="toggleSort('category')">Category</button></li>
-                        <li> <button id="sortDate" class="dropdown-item" onclick="toggleSort('date')">Date</button></li>
-                    </ul>
-                </div>
-            </div>
-
 				<?php require 'tableau.php'; ?>
-
 		</div>
 
 		<!-- Vue Tableur -->
 		<div id="tableurView" style="display: none;">
-            <div class="d-flex justify-content-between ">
-                <h1 class="mb-5">Gestion des Tâches</h1>
-                <div class="dropdown">
-                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Trier par
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><button id="sortName" class="dropdown-item" onclick="toggleSortTable('Nom')">Nom</button></li>
-                        <li><button id="sortCategory" class="dropdown-item" onclick="toggleSortTable('Categorie')">Catégorie</button></li>
-                        <li> <button id="sortDate" class="dropdown-item" onclick="toggleSortTable('Date')">Date</button></li>
-                    </ul>
-                </div>
-            </div>
 			<?php require 'tableur.php'; ?>
 		</div>
 	</div>

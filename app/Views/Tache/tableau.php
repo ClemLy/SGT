@@ -1,4 +1,6 @@
 <?php
+setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr');
+
 function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 {
 	?>
