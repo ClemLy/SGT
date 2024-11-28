@@ -12,7 +12,6 @@ require_once ROOTPATH . 'vendor/autoload.php';
  */
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
-
 use Dotenv\Dotenv;
 
 $dotenv = Dotenv::createImmutable(ROOTPATH);
