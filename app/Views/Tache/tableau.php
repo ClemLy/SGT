@@ -23,9 +23,7 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 							$isOverdue = $dueDate < $currentDate;
 
 							$secondsLeft = $dueDate->getTimestamp() - $currentDate->getTimestamp();
-							var_dump($secondsLeft);
                             $isOverdueSoon = !$isOverdue && $secondsLeft <= 86400*2;
-							var_dump($isOverdueSoon);
 						}
 						catch (Exception $e)
 						{

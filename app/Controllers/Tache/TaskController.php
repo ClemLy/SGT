@@ -7,6 +7,12 @@
 
 	class TaskController extends BaseController
 	{
+		public function __construct()
+		{
+			// $this->sendReminders();
+			// $this->page();
+		}
+
 		// Méthode pour afficher les tâches
 		public function index()
 		{
@@ -207,13 +213,35 @@
 		public function sendReminders()
 		{
 			$taskModel = new TaskModel();
+			$userModel = new \App\Models\UserModel();
+			
+			// Récupérer les tâches de l'utilisateur (ici, vous filtrez déjà par 'etats_tache')
+			$tasks = $taskModel->where('etat_tache !=', 'Terminée')->findAll();
 
-			// Récupérer les tâches dont l'échéance est dans 24 heures
-			$tasksDueSoon = $taskModel->where('etat_tache !=', 'Terminée')
-				->where('TIMESTAMPDIFF(SECOND, NOW(), echeance_tache) <=', 86400*2) // Moins de 48 heures
-				->where('TIMESTAMPDIFF(SECOND, NOW(), echeance_tache) >', 0)
-				->findAll();
+			// Filtrer les tâches dont l'échéance est dans moins de 48 heures
+			$tasksDueSoon = [];
+			$currentDate  = new DateTime();
+			
+			foreach ($tasks as $task)
+			{
+				$dueDate = new DateTime($task['echeance_tache']);
+				
+				// Calcul de la différence en secondes
+				$secondsLeft   = $dueDate->getTimestamp() - $currentDate->getTimestamp();
+				$isOverdue     = $dueDate < $currentDate;
+				$isOverdueSoon = !$isOverdue && $secondsLeft <= 86400*2;
 
+				// Affichage de la valeur de isOverdueSoon
+        		log_message('error', "Task ID: " . $task['id_tache'] . " - isOverdueSoon: " . ($isOverdueSoon ? 'true' : 'false'));
+				
+				// Vérifier si la tâche arrive à échéance dans les 48 heures
+				if ($isOverdueSoon)
+				{
+					$tasksDueSoon[] = $task;
+				}
+			}
+
+			// Si des tâches arrivent à échéance dans moins de 48 heures, envoyer un email à l'utilisateur
 			if (!empty($tasksDueSoon))
 			{
 				foreach ($tasksDueSoon as $task)
@@ -227,11 +255,11 @@
 
 		public function sendRemindersForTasksDueIn48Hours()
 		{
-			$taskModel = new \App\Models\TaskModel();
+			$taskModel = new TaskModel();
 			$userId = session()->get('id_user');
-			$tasksDueIn24Hours = $taskModel->getTasksDueIn48Hours($userId);
+			$tasksDueIn48Hours = $taskModel->getTasksDueIn48Hours($userId);
 
-			foreach ($tasksDueIn24Hours as $task)
+			foreach ($tasksDueIn48Hours as $task)
 			{
 				$this->sendReminderEmail($task);
 			}

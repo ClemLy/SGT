@@ -151,28 +151,28 @@ $$ LANGUAGE plpgsql;
 -- Fonction pour récupérer les tâches à échéance dans moins de 48 heures
 CREATE OR REPLACE FUNCTION get_tasks_due_in_48_hours(p_id_user INT)
 RETURNS TABLE (
-    id_tache INT,
-    titre VARCHAR(255),
-    description_tache TEXT,
-    etat_tache VARCHAR(50),
-    echeance_tache DATE,
-    id_categorie INT
+	id_tache INT,
+	titre VARCHAR(255),
+	description_tache TEXT,
+	etat_tache VARCHAR(50),
+	echeance_tache DATE,
+	id_categorie INT
 ) AS $$
 BEGIN
-    RETURN QUERY
-    SELECT 
-        t.id_tache,
-        t.titre,
-        t.description_tache,
-        t.etat_tache,
-        t.echeance_tache,
-        t.id_categorie
-    FROM 
-        TACHE t
-    WHERE 
-        t.id_user = p_id_user
-        AND t.etat_tache != 'Terminée'
-        AND EXTRACT(EPOCH FROM (t.echeance_tache::TIMESTAMP - CURRENT_DATE::TIMESTAMP)) <= 86400*2  -- 48 heures
-        AND EXTRACT(EPOCH FROM (t.echeance_tache::TIMESTAMP - CURRENT_DATE::TIMESTAMP)) > 0;  -- Pas encore échue
+	RETURN QUERY
+	SELECT 
+		t.id_tache,
+		t.titre,
+		t.description_tache,
+		t.etat_tache,
+		t.echeance_tache,
+		t.id_categorie
+	FROM 
+		TACHE t
+	WHERE 
+		t.id_user = p_id_user
+		AND t.etat_tache != 'Terminée'
+		AND EXTRACT(EPOCH FROM (t.echeance_tache::TIMESTAMP - CURRENT_TIMESTAMP)) <= 86400*2  -- 48 heures
+		AND EXTRACT(EPOCH FROM (t.echeance_tache::TIMESTAMP - CURRENT_TIMESTAMP)) > 0;  -- Pas encore échue
 END;
 $$ LANGUAGE plpgsql;

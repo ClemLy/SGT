@@ -45,6 +45,10 @@ $routes->post('tasks/edit/(:num)', 'Tache\TaskController::edit/$1');
 $routes->post('tasks/delete/(:num)', 'Tache\TaskController::delete/$1');
 $routes->get('tasks/delete/(:num)', 'Tache\TaskController::delete/$1');
 
+$routes->get('/send-reminders', 'Tache\TaskController::sendReminders');
+
+
+
 $routes->get('/tasks/page', 'Tache\TaskController::page');
 
 // Commentaires
