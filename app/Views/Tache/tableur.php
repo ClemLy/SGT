@@ -1,4 +1,5 @@
 <!-- Vue Tableur -->
+<button class="btn"  data-bs-toggle="modal" data-bs-target="#taskModal">+ (Ajouter tache)</button>
 
 <table class="table table-striped">
 	<thead>
