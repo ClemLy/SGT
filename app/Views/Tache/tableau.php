@@ -18,11 +18,11 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 					{
 						try
 						{
-							$dueDate = new DateTime($task['echeance_tache']);
+							$dueDate     = new DateTime($task['echeance_tache']);
 							$currentDate = new DateTime();
-							$isOverdue = $dueDate < $currentDate;
+							$isOverdue   = $dueDate < $currentDate;
 
-							$secondsLeft = $dueDate->getTimestamp() - $currentDate->getTimestamp();
+							$secondsLeft   = $dueDate->getTimestamp() - $currentDate->getTimestamp();
                             $isOverdueSoon = !$isOverdue && $secondsLeft <= 86400*2;
 						}
 						catch (Exception $e)
@@ -82,9 +82,9 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 
 <?php
 
-	renderTaskColumn("À faire", $tasksToDo, "À faire", "#taskModal");
+	renderTaskColumn("À faire",  $tasksToDo,       "À faire",  "#taskModal");
 	renderTaskColumn("En cours", $tasksInProgress, "En cours", "#taskModal");
-	renderTaskColumn("Terminée", $tasksCompleted, "Terminée", "#taskModal");
+	renderTaskColumn("Terminée", $tasksCompleted,  "Terminée", "#taskModal");
 ?>
 
 

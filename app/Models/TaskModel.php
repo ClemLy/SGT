@@ -1,6 +1,5 @@
 <?php
 	namespace App\Models;
-
 	use CodeIgniter\Model;
 
 	class TaskModel extends Model
@@ -25,17 +24,17 @@
 			->where('id_user', session()->get('id_user')) // Condition sur l'utilisateur
 			->findAll();
 	}
-    public function markAsCompleted($id)
-    {
-        return $this->update($id, ['etat_tache' => 'Terminée']);
-    }
+	public function markAsCompleted($id)
+	{
+		return $this->update($id, ['etat_tache' => 'Terminée']);
+	}
 
-	public function getTasksDueIn24Hours($userId)
-    {
+	public function getTasksDueIn48Hours($userId)
+	{
 		$db = \Config\Database::connect();
-        $query = $db->query("SELECT * FROM get_tasks_due_in_48_hours(?)", [$userId]);
-        return $query->getResultArray();
-    }
+		$query = $db->query("SELECT * FROM get_tasks_due_in_48_hours(?)", [$userId]);
+		return $query->getResultArray();
+	}
 
 	public function getPaginatedTasks($perPage, $page)
 	{

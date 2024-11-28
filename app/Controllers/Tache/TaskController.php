@@ -4,6 +4,7 @@
 	use App\Models\TaskModel;
 	use App\Models\CategoryModel;
 	use App\Controllers\BaseController;
+	use Config\Pager;
 
 	class TaskController extends BaseController
 	{
@@ -59,27 +60,27 @@
 			}
 
 			// Récupérer le titre de la catégorie depuis le formulaire
-			$titreCategorie = $this->request->getPost('categorie');
-
-			// Si l'utilisateur a choisi "Ajouter une catégorie...", on ajoute la nouvelle catégorie à la base de données
-			if ($titreCategorie === "Ajouter une catégorie...") {
-				$titreCategorie = $this->request->getPost('nouvelle_categorie'); // Vous pouvez récupérer la nouvelle catégorie ici.
-			}
+			$titreCategorie    = $this->request->getPost('categorie');
+			$id_user_categorie = session()->get('id_user');
 
 			// Chercher la catégorie par titre
 			$categoryModel = new CategoryModel();
 			$category      = $categoryModel->where('titre_categorie', $titreCategorie)->first();
 
 			// Si la catégorie n'existe pas, on la crée
-			if (!$category)
+			if (!$category && !empty($titreCategorie))
 			{
-				$categoryModel->save(['titre_categorie' => $titreCategorie]);
+				$categoryModel->save([
+					'titre_categorie'   => $titreCategorie,
+					'id_user_categorie' => $id_user_categorie
+				]);
 				$idCategorie = $categoryModel->insertID();
 			}
 			else
 			{
-				$idCategorie = $category['id_categorie'];
+				$idCategorie = NULL;
 			}
+			
 
 			// Préparer les données de la tâche à enregistrer
 			$taskData = [
@@ -127,17 +128,24 @@
 				return redirect()->back()->with('errors', $this->validator->getErrors());
 			}
 		
+			// Récupérer le titre de la catégorie depuis le formulaire
+			$titreCategorie    = $this->request->getPost('categorie');
+			$id_user_categorie = session()->get('id_user');
+
 			// Vérification ou création de la catégorie
 			$category = $categoryModel->where('titre_categorie', $titreCategorie)->first();
 		
-			if (!$category)
+			if (!$category && !empty($titreCategorie))
 			{
-				$categoryModel->save(['titre_categorie' => $titreCategorie]);
+				$categoryModel->save([
+					'titre_categorie'   => $titreCategorie,
+					'id_user_categorie' => $id_user_categorie
+				]);
 				$categoryId = $categoryModel->insertID();
 			}
 			else
 			{
-				$categoryId = $category['id_categorie'];
+				$categoryId = NULL;
 			}
 		
 			// Préparation des données pour la mise à jour

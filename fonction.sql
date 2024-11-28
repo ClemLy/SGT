@@ -148,7 +148,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Fonction pour récupérer les tâches à échéance dans moins de 48 heures
 CREATE OR REPLACE FUNCTION get_tasks_due_in_48_hours(p_id_user INT)
 RETURNS TABLE (
 	id_tache INT,
@@ -159,6 +158,16 @@ RETURNS TABLE (
 	id_categorie INT
 ) AS $$
 BEGIN
+    -- Met à jour send_retard pour les tâches concernées
+    UPDATE TACHE AS tr
+    SET send_retard = TRUE
+    WHERE tr.id_user = p_id_user
+      AND tr.etat_tache != 'Terminée'
+      AND tr.send_retard = FALSE
+      AND EXTRACT(EPOCH FROM (tr.echeance_tache::TIMESTAMP - CURRENT_TIMESTAMP)) <= 86400 * 2
+      AND EXTRACT(EPOCH FROM (tr.echeance_tache::TIMESTAMP - CURRENT_TIMESTAMP)) > 0;
+
+    -- Retourne les tâches concernées
 	RETURN QUERY
 	SELECT 
 		t.id_tache,
@@ -168,11 +177,30 @@ BEGIN
 		t.echeance_tache,
 		t.id_categorie
 	FROM 
-		TACHE t
+		TACHE AS t
 	WHERE 
 		t.id_user = p_id_user
 		AND t.etat_tache != 'Terminée'
-		AND EXTRACT(EPOCH FROM (t.echeance_tache::TIMESTAMP - CURRENT_TIMESTAMP)) <= 86400*2  -- 48 heures
+		AND EXTRACT(EPOCH FROM (t.echeance_tache::TIMESTAMP - CURRENT_TIMESTAMP)) <= 86400 * 2  -- 48 heures
 		AND EXTRACT(EPOCH FROM (t.echeance_tache::TIMESTAMP - CURRENT_TIMESTAMP)) > 0;  -- Pas encore échue
 END;
 $$ LANGUAGE plpgsql;
+
+
+-- Faire un trigger qui, si une tache est supprimer vérifie si sa catégorie est encore lié à une autre tache, dans le cas contraire la supprime
+CREATE OR REPLACE FUNCTION delete_category_if_no_task()
+RETURNS TRIGGER AS $$
+BEGIN
+	IF NOT EXISTS (SELECT 1 FROM TACHE WHERE id_categorie = OLD.id_categorie) THEN
+		DELETE FROM CATEGORIE WHERE id_categorie = OLD.id_categorie;
+	END IF;
+	RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_delete_category
+AFTER DELETE ON TACHE
+FOR EACH ROW
+EXECUTE FUNCTION delete_category_if_no_task();
+
+-- 
