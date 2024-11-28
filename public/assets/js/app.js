@@ -78,14 +78,28 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 
 
 // Basculer entre tableau et tableur
-function switchView(view)
-{
+function switchView(view) {
+	// Affiche la vue appropriée
 	document.getElementById('tableauView').style.display = view === 'tableau' ? 'block' : 'none';
 	document.getElementById('tableurView').style.display = view === 'tableur' ? 'block' : 'none';
 
+	// Met à jour l'état actif des liens de navigation
 	document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
 	document.getElementById('view' + (view === 'tableau' ? 'Tableau' : 'Tableur')).classList.add('active');
+
+	// Met à jour l'URL avec le fragment correspondant
+	window.location.hash = view;
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+	const view = window.location.hash.replace('#', '') || 'tableau';
+	switchView(view);
+});
+
+window.addEventListener('hashchange', () => {
+	const view = window.location.hash.replace('#', '') || 'tableau';
+	switchView(view);
+});
 
 
 
