@@ -12,10 +12,22 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 
 	<!-- Contenu Principal -->
 	<div class="content m-3 w-100">
-		<h1 class="mb-5">Gestion des Tâches</h1>
 
 		<!-- Vue Tableau -->
 		<div id="tableauView" >
+            <div class="d-flex justify-content-between ">
+                <h1 class="mb-5">Gestion des Tâches</h1>
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Trier par
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><button id="sortName" class="dropdown-item" onclick="toggleSort('name')">Nom</button></li>
+                        <li><button id="sortCategory" class="dropdown-item" onclick="toggleSort('category')">Catégorie</button></li>
+                        <li> <button id="sortDate" class="dropdown-item" onclick="toggleSort('date')">Date</button></li>
+                    </ul>
+                </div>
+            </div>
 			<div class="row w-100 d-flex justify-content-between" style="height:100vh">
 				<?php require 'tableau.php'; ?>
 			</div>
@@ -23,6 +35,19 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 
 		<!-- Vue Tableur -->
 		<div id="tableurView" style="display: none;">
+            <div class="d-flex justify-content-between ">
+                <h1 class="mb-5">Gestion des Tâches</h1>
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Trier par
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><button id="sortName" class="dropdown-item" onclick="toggleSortTable('name')">Nom</button></li>
+                        <li><button id="sortCategory" class="dropdown-item" onclick="toggleSortTable('category')">Catégorie</button></li>
+                        <li> <button id="sortDate" class="dropdown-item" onclick="toggleSortTable('date')">Date</button></li>
+                    </ul>
+                </div>
+            </div>
 			<?php require 'tableur.php'; ?>
 		</div>
 	</div>
@@ -88,7 +113,7 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 						<input type="hidden" name="task_id" id="task_id">
 						<div class="mb-3">
 							<label for="edit_titre" class="form-label">Titre</label>
-							<input type="text" class="form-control" name="titre" id="edit_titre" required>
+							<input autocomplete="off" type="text" class="form-control" name="titre" id="edit_titre" required>
 						</div>
 						<div class="mb-3">
 							<label for="edit_description" class="form-label">Description</label>
@@ -109,14 +134,13 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 						<div class="mb-3">
 							<label for="edit_categorie" class="form-label">Catégorie</label>
 							<input 
+								autocomplete="off"
 								type="text" 
 								class="form-control" 
 								name="categorie" 
 								id="edit_categorie" 
 								list="categories-list" 
-								placeholder="Choisissez ou ajoutez une catégorie" 
-								oninput="checkAddCategory(this.value)" 
-								onchange="addNewCategory(this.value)">
+								placeholder="Choisissez ou ajoutez une catégorie">
 							<datalist id="categories-list">
 								<?php foreach ($categories as $categorie): ?>
 									<option value="<?= esc($categorie['titre_categorie']); ?>"></option>

@@ -59,6 +59,9 @@ h3 {
 
 }
 
+.head-column *{
+    font-size:1.5vw!important;
+}
 h5{
     font-size: 0.5rem !important;
 }
