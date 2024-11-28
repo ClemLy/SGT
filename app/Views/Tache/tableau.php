@@ -2,7 +2,7 @@
 function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 {
 	?>
-	<div class="col-md-3 task-status p-4 " style="overflow-y:scroll" ondragover="allowDrop(event)"
+	<div class="col-md-3 task-status p-4 " ondragover="allowDrop(event)"
 		ondrop="drop(event, '<?= esc($statusId); ?>')">
 		<div class="head-column d-flex justify-content-between align-items-center mb-3">
 			<h3><?= esc($title); ?></h3>

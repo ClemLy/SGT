@@ -15,26 +15,27 @@ VALUES
 ('leo.smith@example.com', 'Leo', 'Smith', 'leo456');
 
 -- Insertion dans la table CATEGORIE
-INSERT INTO CATEGORIE (titre_categorie)
+INSERT INTO CATEGORIE (titre_categorie, id_user)
 VALUES
-('Développement'),
-('Marketing'),
-('Administration'),
-('Recherche'),
-('Design'),
-('Support Client'),
-('Ressources Humaines'),
-('Qualité'),
-('Formation'),
-('Vente'),
-('Finances'),
-('Gestion de Projet');
+('Développement', 1),
+('Marketing', 1),
+('Administration', 1),
+('Recherche', 1),
+('Design', 1),
+('Support Client', 2),
+('Ressources Humaines', 2),
+('Qualité', 3),
+('Formation', 3),
+('Vente', 4),
+('Finances', 4),
+('Gestion de Projet', 5),
+('Gestion de Test', 5);
 
 -- Insertion de 100 données dans la table TACHE
 INSERT INTO TACHE (titre, description_tache, etat_tache, echeance_tache, id_user, id_categorie)
 VALUES
-('Créer une API REST', 'Développer une API REST pour le projet principal', 'En cours', '2024-12-15', 1, 1),
-('Créer une base de données', 'Concevoir une base de données relationnelle', 'Terminée', '2024-11-10', 1, 1),
+('Créer une API REST', 'Développer une API REST pour le projet principal', 'En cours', '2024-11-29', 1, 13),
+('Créer une base de données', 'Concevoir une base de données relationnelle', 'Terminée', '2024-11-30', 1, 1),
 ('Planifier une campagne', 'Élaborer une stratégie marketing efficace', 'À faire', '2024-11-30', 2, 2),
 ('Réaliser des wireframes', 'Créer des maquettes pour l’application mobile', 'En cours', '2024-12-01', 5, 5),
 ('Rédiger un rapport', 'Synthèse des résultats de la dernière enquête', 'À faire', '2024-11-20', 3, 4),
@@ -80,4 +81,4 @@ VALUES
 ('Concevoir une stratégie de communication', 'Créer un plan pour améliorer la communication interne', 'À faire', '2024-12-15', 3, 3);
 
 INSERT INTO COMMENTAIRE (text_commentaire, date_commentaire, id_tache)
-VALUES (`Ceci est un commentaire ajouté à l'instant.`, NOW(), 1);
+VALUES ('Ceci est un commentaire ajouté à linstant.', NOW(), 1);

@@ -101,8 +101,12 @@ a{
 .task-status {
     background-color:#EEF2F5;
     border-radius:10px;
-    overflow:scroll;
     height:90vh
+}
+
+.class_taches {
+    overflow-y: scroll; 
+    height:75vh  
 }
 
 .col-md-3{
