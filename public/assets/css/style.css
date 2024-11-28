@@ -15,24 +15,24 @@ body{
     height: 100vh;
 }
 .sidebar {
-    width: 14%;
+    width: 16%;
     background-color: #f8f9fa;
     border-right: 1px solid #dee2e6;
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 1.5vw;
     max-height:100vw;
 }
 
 .sidebar .brand {
-    font-size: 0.8rem;
+    font-size: 1.5vw;
     font-weight: 600;
 }
 
 .sidebar .nav-link {
-    color: black;
-    font-size: 0.5rem;
-    font-weight:400;
+    color: #000000;
+    font-size: 1vw !important;
+    font-weight:300;
     margin: 0.5rem 0;
 }
 
@@ -131,4 +131,9 @@ button.bi-three-dots{
 
 .p4{
     padding:1.8rem !important;
+}
+
+.link-footer{
+    font-size: 0.9vw !important;
+    font-weight:400!important;
 }

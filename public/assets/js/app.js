@@ -191,8 +191,11 @@ function sortTasks(criteria, order) {
 				valueA = a.querySelector('.t-category').innerText.toLowerCase();
 				valueB = b.querySelector('.t-category').innerText.toLowerCase();
 			} else if (criteria === 'date') {
-				valueA = parseDate(a.querySelector('.t-date').innerText);
-				valueB = parseDate(b.querySelector('.t-date').innerText);
+				const dateElementA = a.querySelector('.t-date');
+				const dateElementB = b.querySelector('.t-date');
+
+				valueA = parseDate(getTextWithoutBefore(dateElementA));
+				valueB = parseDate(getTextWithoutBefore(dateElementB));
 			}
 
 			if (valueA < valueB) return order === 'asc' ? -1 : 1;
@@ -202,6 +205,11 @@ function sortTasks(criteria, order) {
 		tasks.forEach(task => column.appendChild(task));
 	});
 }
+
+function getTextWithoutBefore(element) {
+	return element.childNodes[0]?.nodeValue.trim() || '';
+}
+
 
 function parseDate(dateStr) {
 	const months = {
@@ -245,7 +253,6 @@ function toggleSortTable(criteria) {
 function sortTableRows(criteria, order) {
 	const tableBody = document.querySelector('tbody');
 	const rows = Array.from(tableBody.querySelectorAll('tr'));
-
 	rows.sort((a, b) => {
 		let valueA, valueB;
 
