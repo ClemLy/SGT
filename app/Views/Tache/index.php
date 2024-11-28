@@ -3,6 +3,7 @@ setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr');
 echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 ?>
 
+
 <body>
 	<!-- Navbar -->
 	<?php require 'navbar.php'; ?>
@@ -17,20 +18,26 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 		<div id="tableauView" >
             <div class="d-flex justify-content-between ">
                 <h1 class="mb-5">Gestion des Tâches</h1>
+
                 <div class="dropdown">
                     <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Trier par
                     </button>
                     <ul class="dropdown-menu">
-                        <li><button id="sortName" class="dropdown-item" onclick="toggleSort('name')">Nom</button></li>
-                        <li><button id="sortCategory" class="dropdown-item" onclick="toggleSort('category')">Catégorie</button></li>
+                        <li><button id="sortName" class="dropdown-item" onclick="toggleSort('name')">Name</button></li>
+                        <li><button id="sortCategory" class="dropdown-item" onclick="toggleSort('category')">Category</button></li>
                         <li> <button id="sortDate" class="dropdown-item" onclick="toggleSort('date')">Date</button></li>
                     </ul>
                 </div>
             </div>
-			<div class="row w-100 d-flex justify-content-between" style="height:100vh">
+            <div class="d-flex justify-content-between mb-3">
+                <h1>Gestion des Tâches</h1>
+                <input type="text" id="taskSearchInput" class="form-control w-25" placeholder="Rechercher une tâche..." oninput="searchTasks()">
+            </div>
+
+
 				<?php require 'tableau.php'; ?>
-			</div>
+
 		</div>
 
 		<!-- Vue Tableur -->
@@ -42,9 +49,9 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
                         Trier par
                     </button>
                     <ul class="dropdown-menu">
-                        <li><button id="sortName" class="dropdown-item" onclick="toggleSortTable('name')">Nom</button></li>
-                        <li><button id="sortCategory" class="dropdown-item" onclick="toggleSortTable('category')">Catégorie</button></li>
-                        <li> <button id="sortDate" class="dropdown-item" onclick="toggleSortTable('date')">Date</button></li>
+                        <li><button id="sortName" class="dropdown-item" onclick="toggleSortTable('Nom')">Nom</button></li>
+                        <li><button id="sortCategory" class="dropdown-item" onclick="toggleSortTable('Categorie')">Catégorie</button></li>
+                        <li> <button id="sortDate" class="dropdown-item" onclick="toggleSortTable('Date')">Date</button></li>
                     </ul>
                 </div>
             </div>
@@ -154,7 +161,36 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 		</div>
 	</div>
 
+    <script>
+        function searchTasks() {
+            const searchValue = document.getElementById('taskSearchInput').value;
 
+            fetch(`<?= site_url('tasks/searchTasks'); ?>?search=${encodeURIComponent(searchValue)}`, {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de la récupération des tâches.');
+                    }
+                    return response.text(); // Retourne le HTML
+                })
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const updatedColumns = doc.querySelector('#taskColumns'); // Récupère le conteneur mis à jour
+
+                    if (updatedColumns) {
+                        document.getElementById('taskColumns').innerHTML = updatedColumns.innerHTML;
+                    } else {
+                        console.error('Le conteneur #taskColumns est introuvable dans la réponse.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                });
+        }
+    </script>
 </body>
 
 </html>

@@ -2,8 +2,14 @@
 	<h2>Connexion</h2>
 
 	<?php if(session()->getFlashdata('msg')): ?>
-		<div class="alert alert-danger">
+		<div class="alert alert-warning">
 			<?= session()->getFlashdata('msg') ?>
+		</div>
+	<?php endif; ?>
+
+	<?php if(session()->getFlashdata('error')): ?>
+		<div class="alert alert-danger">
+			<?= session()->getFlashdata('error') ?>
 		</div>
 	<?php endif; ?>
 

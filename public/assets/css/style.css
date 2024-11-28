@@ -10,6 +10,12 @@ body{
 
 }
 
+span{
+    font-size: 1.8rem!important;
+    font-weight:300 !important;
+
+}
+
 .wrapper {
     display: flex;
     height: 100vh;
@@ -55,7 +61,7 @@ h1{
 
 
 h3 {
-    font-size: 1rem !important;
+    font-size: 1.2rem !important;
     margin-bottom:0 !important;
 }
 
@@ -63,9 +69,7 @@ h4 {
     font-size:1.4rem !important;
 }
 
-.head-column *{
-    font-size:1.5vw!important;
-}
+
 h5{
     font-size: 0.5rem !important;
 }

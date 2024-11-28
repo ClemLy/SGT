@@ -72,14 +72,14 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 }
 ?>
 
+<div id="taskColumns" class="row w-100 d-flex justify-content-between" style="height:100vh">
+    <?php
+    renderTaskColumn("À faire", $tasksToDo, "À faire", "#taskModal");
+    renderTaskColumn("En cours", $tasksInProgress, "En cours", "#taskModal");
+    renderTaskColumn("Terminée", $tasksCompleted, "Terminée", "#taskModal");
+    ?>
+</div>
 
 
-
-<?php
-
-	renderTaskColumn("À faire",  $tasksToDo,       "À faire",  "#taskModal");
-	renderTaskColumn("En cours", $tasksInProgress, "En cours", "#taskModal");
-	renderTaskColumn("Terminée", $tasksCompleted,  "Terminée", "#taskModal");
-?>
 
 

@@ -84,13 +84,13 @@
 				}
 				else
 				{
-					$session->setFlashdata('msg', 'Mot de passe incorrect.');
+					$session->setFlashdata('error', 'Mot de passe incorrect.');
 					return redirect()->to('/signin');
 				}
 			}
 			else
 			{
-				$session->setFlashdata('msg', `Cet email n'existe pas.`);
+				$session->setFlashdata('error', `Cet email n'existe pas.`);
 				return redirect()->to('/signin');
 			}
 		}

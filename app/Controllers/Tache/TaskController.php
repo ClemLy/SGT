@@ -192,6 +192,28 @@
 
             return redirect()->back()->with('error', 'Erreur lors de la mise à jour.');
         }
+        public function searchTasks()
+        {
+            if (!$this->request->isAJAX()) {
+                return redirect()->to('/tasks'); // Redirige si ce n'est pas une requête AJAX
+            }
+
+            $searchQuery = $this->request->getGet('search') ?? '';
+
+            $taskModel = new \App\Models\TaskModel();
+
+            // Récupérer les tâches filtrées par statut
+            $tasksToDo = $taskModel->getTasksWithCategoriesByStatus('À faire', $searchQuery);
+            $tasksInProgress = $taskModel->getTasksWithCategoriesByStatus('En cours', $searchQuery);
+            $tasksCompleted = $taskModel->getTasksWithCategoriesByStatus('Terminée', $searchQuery);
+
+            // Retourner la vue partielle
+            return view('Tache/tableau', [
+                'tasksToDo' => $tasksToDo,
+                'tasksInProgress' => $tasksInProgress,
+                'tasksCompleted' => $tasksCompleted
+            ]);
+        }
 
         public function updateStatus()
         {
@@ -240,7 +262,7 @@
 			{
 				$this->sendReminderEmail($task);
 			}
-		}
+        }
 
 		private function sendReminderEmail($task)
 		{

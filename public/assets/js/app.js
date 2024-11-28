@@ -291,3 +291,5 @@ function sortTableRows(criteria, order) {
 
 	rows.forEach(row => tableBody.appendChild(row));
 }
+
+
