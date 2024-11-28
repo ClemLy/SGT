@@ -113,7 +113,7 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 						<input type="hidden" name="task_id" id="task_id">
 						<div class="mb-3">
 							<label for="edit_titre" class="form-label">Titre</label>
-							<input type="text" class="form-control" name="titre" id="edit_titre" required>
+							<input autocomplete="off" type="text" class="form-control" name="titre" id="edit_titre" required>
 						</div>
 						<div class="mb-3">
 							<label for="edit_description" class="form-label">Description</label>
@@ -134,14 +134,13 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 						<div class="mb-3">
 							<label for="edit_categorie" class="form-label">Catégorie</label>
 							<input 
+								autocomplete="off"
 								type="text" 
 								class="form-control" 
 								name="categorie" 
 								id="edit_categorie" 
 								list="categories-list" 
-								placeholder="Choisissez ou ajoutez une catégorie" 
-								oninput="checkAddCategory(this.value)" 
-								onchange="addNewCategory(this.value)">
+								placeholder="Choisissez ou ajoutez une catégorie">
 							<datalist id="categories-list">
 								<?php foreach ($categories as $categorie): ?>
 									<option value="<?= esc($categorie['titre_categorie']); ?>"></option>
