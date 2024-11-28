@@ -6,8 +6,9 @@
 	use App\Models\CategoryModel;
 	use App\Controllers\BaseController;
 	use Config\Pager;
+    use DateTime;
 
-	class TaskController extends BaseController
+    class TaskController extends BaseController
 	{
 		public function __construct()
 		{
@@ -195,26 +196,36 @@
         public function searchTasks()
         {
             if (!$this->request->isAJAX()) {
-                return redirect()->to('/tasks'); // Redirige si ce n'est pas une requête AJAX
+                return redirect()->to('/tasks');
             }
 
             $searchQuery = $this->request->getGet('search') ?? '';
 
             $taskModel = new \App\Models\TaskModel();
 
-            // Récupérer les tâches filtrées par statut
+            // Filtrer les tâches par statut et recherche
             $tasksToDo = $taskModel->getTasksWithCategoriesByStatus('À faire', $searchQuery);
             $tasksInProgress = $taskModel->getTasksWithCategoriesByStatus('En cours', $searchQuery);
             $tasksCompleted = $taskModel->getTasksWithCategoriesByStatus('Terminée', $searchQuery);
 
-            // Retourner la vue partielle
-            return view('Tache/tableau', [
-                'tasksToDo' => $tasksToDo,
-                'tasksInProgress' => $tasksInProgress,
-                'tasksCompleted' => $tasksCompleted
+            // Charger les catégories (utilisées dans les vues)
+            $categories = (new \App\Models\CategoryModel())->findAll();
+
+            // Capturer la vue tableau.php (vue Kanban)
+            ob_start();
+            require(APPPATH . 'Views/Tache/tableau.php');
+            $kanbanHtml = ob_get_clean();
+
+            // Capturer la vue tableur.php
+            ob_start();
+            require(APPPATH . 'Views/Tache/tableur.php');
+            $tableHtml = ob_get_clean();
+
+            return $this->response->setJSON([
+                'kanban' => $kanbanHtml, // Contenu HTML du tableau Kanban
+                'table' => $tableHtml   // Contenu HTML du tableau
             ]);
         }
-
         public function updateStatus()
         {
             $taskId = $this->request->getPost('id_tache');

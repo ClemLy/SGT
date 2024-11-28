@@ -14,6 +14,10 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 	<!-- Contenu Principal -->
 	<div class="content m-3 w-100">
 
+        <div class="d-flex justify-content-between mb-3">
+            <input type="text" id="taskSearchInput" class="form-control w-25" placeholder="Rechercher une tâche..." oninput="searchTasks()">
+        </div>
+
 		<!-- Vue Tableau -->
 		<div id="tableauView" >
             <div class="d-flex justify-content-between ">
@@ -30,11 +34,6 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
                     </ul>
                 </div>
             </div>
-            <div class="d-flex justify-content-between mb-3">
-                <h1>Gestion des Tâches</h1>
-                <input type="text" id="taskSearchInput" class="form-control w-25" placeholder="Rechercher une tâche..." oninput="searchTasks()">
-            </div>
-
 
 				<?php require 'tableau.php'; ?>
 
@@ -169,21 +168,18 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
                 method: 'GET',
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de la récupération des tâches.');
+                .then(response => response.json())
+                .then(data => {
+                    // Mise à jour de la vue Kanban (tableau.php)
+                    const taskColumns = document.getElementById('taskColumns');
+                    if (data.kanban && taskColumns) {
+                        taskColumns.innerHTML = data.kanban; // Remplacement complet
                     }
-                    return response.text(); // Retourne le HTML
-                })
-                .then(html => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const updatedColumns = doc.querySelector('#taskColumns'); // Récupère le conteneur mis à jour
 
-                    if (updatedColumns) {
-                        document.getElementById('taskColumns').innerHTML = updatedColumns.innerHTML;
-                    } else {
-                        console.error('Le conteneur #taskColumns est introuvable dans la réponse.');
+                    // Mise à jour de la vue Tableur (tableur.php)
+                    const tableBody = document.getElementById('tableTasksBody');
+                    if (data.table && tableBody) {
+                        tableBody.innerHTML = data.table; // Remplacement complet
                     }
                 })
                 .catch(error => {
