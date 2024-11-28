@@ -103,9 +103,9 @@
 			$taskModel = new TaskModel();
 			$taskModel->save($taskData);
 
-			// Rediriger avec un message de succès
-			return redirect()->to('/tasks')->with('success', 'Tâche créée avec succès');
-		}
+            $currentView = $this->request->getPost('current_view') ?? 'tableau';
+            return redirect()->to('/tasks#' . $currentView)->with('success', 'Tâche créée avec succès');
+         	}
 
 		public function update()
 		{

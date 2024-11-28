@@ -82,7 +82,8 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 								<?php endforeach; ?>
 							</datalist>
 						</div>
-						<button type="submit" class="btn btn-primary">Créer</button>
+                        <input type="hidden" id="currentView" name="current_view" value="tableau">
+                        <button type="submit" class="btn btn-primary">Créer</button>
 					</form>
 				</div>
 			</div>
@@ -137,7 +138,8 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 								<?php endforeach; ?>
 							</datalist>
 						</div>
-						<button type="submit" class="btn btn-primary">Mettre à jour</button>
+                        <input type="hidden" name="redirect_url" value="<?= current_url() . '#' . ($viewMode ?? 'tableau'); ?>">
+                        <button type="submit" class="btn btn-primary">Mettre à jour</button>
 					</form>
 				</div>
 			</div>

@@ -11,13 +11,16 @@ function loadTaskData(taskId, titre, description, echeance, etat, categorie)
 
 // Charge et affiche les détails et les commentaires d'une tâche dans la popup
 function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache) {
-    // Mise à jour des détails de la tâche
     document.getElementById('detail_titre').innerText = titre;
     document.getElementById('detail_description').innerText = description;
     document.getElementById('detail_echeance').innerText = echeance;
     document.getElementById('detail_etat').innerText = etat;
     document.getElementById('detail_categorie').innerText = categorie;
     document.getElementById('comment_task_id').value = id_tache;
+
+	// Ouvrir le modal manuellement
+	const taskDetailModal = new bootstrap.Modal(document.getElementById('taskDetailModal'));
+	taskDetailModal.show();
 
     // Charger les commentaires
     const commentsSection = document.getElementById('commentaires_section');
@@ -120,7 +123,14 @@ function switchView(view) {
 
 	// Met à jour l'URL avec le fragment correspondant
 	window.location.hash = view;
+
+	// Sauvegarde la vue active dans localStorage
+	localStorage.setItem('activeView', view);
 }
+document.addEventListener('DOMContentLoaded', () => {
+	const savedView = localStorage.getItem('activeView') || 'tableau'; // Par défaut : tableau
+	switchView(savedView); // Affiche la vue sauvegardée
+});
 
 document.addEventListener('DOMContentLoaded', () => {
 	const view = window.location.hash.replace('#', '') || 'tableau';
