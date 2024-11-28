@@ -12,10 +12,22 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 
 	<!-- Contenu Principal -->
 	<div class="content m-3 w-100">
-		<h1 class="mb-5">Gestion des Tâches</h1>
 
 		<!-- Vue Tableau -->
 		<div id="tableauView" >
+            <div class="d-flex justify-content-between ">
+                <h1 class="mb-5">Gestion des Tâches</h1>
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Trier par
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><button id="sortName" class="dropdown-item" onclick="toggleSort('name')">Nom</button></li>
+                        <li><button id="sortCategory" class="dropdown-item" onclick="toggleSort('category')">Catégorie</button></li>
+                        <li> <button id="sortDate" class="dropdown-item" onclick="toggleSort('date')">Date</button></li>
+                    </ul>
+                </div>
+            </div>
 			<div class="row w-100 d-flex justify-content-between" style="height:100vh">
 				<?php require 'tableau.php'; ?>
 			</div>
@@ -23,6 +35,19 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 
 		<!-- Vue Tableur -->
 		<div id="tableurView" style="display: none;">
+            <div class="d-flex justify-content-between ">
+                <h1 class="mb-5">Gestion des Tâches</h1>
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Trier par
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><button id="sortName" class="dropdown-item" onclick="toggleSortTable('name')">Nom</button></li>
+                        <li><button id="sortCategory" class="dropdown-item" onclick="toggleSortTable('category')">Catégorie</button></li>
+                        <li> <button id="sortDate" class="dropdown-item" onclick="toggleSortTable('date')">Date</button></li>
+                    </ul>
+                </div>
+            </div>
 			<?php require 'tableur.php'; ?>
 		</div>
 	</div>

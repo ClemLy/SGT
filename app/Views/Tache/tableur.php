@@ -12,7 +12,7 @@
 	</thead>
 	<tbody>
 		<?php foreach (array_merge($tasksToDo, $tasksInProgress, $tasksCompleted) as $task): ?>
-			<tr style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal"
+			<tr class="" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal"
 				onclick="loadTaskDetails(
 					'<?= esc($task['titre']); ?>', 
 					'<?= esc($task['description_tache']); ?>', 

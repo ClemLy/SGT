@@ -160,3 +160,113 @@ function updateTaskStatus(taskId, newStatusId)
 		})
 		.catch(error => console.error('Erreur AJAX :', error));
 }
+
+let currentSort = {
+	criteria: null,  // Critère de tri actif
+	order: 'asc'     // Ordre actuel : 'asc' ou 'desc'
+};
+
+function toggleSort(criteria) {
+	if (currentSort.criteria === criteria) {
+		currentSort.order = currentSort.order === 'asc' ? 'desc' : 'asc';
+	} else {
+		currentSort.criteria = criteria;
+		currentSort.order = 'asc';
+	}
+	sortTasks(currentSort.criteria, currentSort.order);
+	updateButtonStates();
+}
+
+function sortTasks(criteria, order) {
+	const columns = document.querySelectorAll('.class_taches');
+	columns.forEach(column => {
+		const tasks = Array.from(column.querySelectorAll('.t-card'));
+		tasks.sort((a, b) => {
+			let valueA, valueB;
+
+			if (criteria === 'name') {
+				valueA = a.querySelector('.t-title').innerText.toLowerCase();
+				valueB = b.querySelector('.t-title').innerText.toLowerCase();
+			} else if (criteria === 'category') {
+				valueA = a.querySelector('.t-category').innerText.toLowerCase();
+				valueB = b.querySelector('.t-category').innerText.toLowerCase();
+			} else if (criteria === 'date') {
+				valueA = parseDate(a.querySelector('.t-date').innerText);
+				valueB = parseDate(b.querySelector('.t-date').innerText);
+			}
+
+			if (valueA < valueB) return order === 'asc' ? -1 : 1;
+			if (valueA > valueB) return order === 'asc' ? 1 : -1;
+			return 0;
+		});
+		tasks.forEach(task => column.appendChild(task));
+	});
+}
+
+function parseDate(dateStr) {
+	const months = {
+		janvier: 0, février: 1, mars: 2, avril: 3, mai: 4, juin: 5,
+		juillet: 6, août: 7, septembre: 8, octobre: 9, novembre: 10, décembre: 11
+	};
+
+	const parts = dateStr.split(' ');
+	const day = parseInt(parts[1], 10);
+	const month = months[parts[2].toLowerCase()];
+	const year = parts.length === 4 ? parseInt(parts[3], 10) : new Date().getFullYear(); // Utilise l'année courante si absente.
+
+	return new Date(year, month, day);
+}
+
+function updateButtonStates() {
+	document.querySelectorAll('button').forEach(button => button.classList.remove('active'));
+	if (currentSort.criteria) {
+		const button = document.getElementById(`sort${capitalizeFirstLetter(currentSort.criteria)}`);
+		button.classList.add('active');
+		button.innerText = `${capitalizeFirstLetter(currentSort.criteria)} (${currentSort.order === 'asc' ? '↑' : '↓'})`;
+	}
+}
+
+let currentTableSort = { criteria: null, order: 'asc' };
+function capitalizeFirstLetter(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function toggleSortTable(criteria) {
+	if (currentTableSort.criteria === criteria) {
+		currentTableSort.order = currentTableSort.order === 'asc' ? 'desc' : 'asc';
+	} else {
+		currentTableSort.criteria = criteria;
+		currentTableSort.order = 'asc';
+	}
+
+	sortTableRows(currentTableSort.criteria, currentTableSort.order);
+}
+
+function sortTableRows(criteria, order) {
+	const tableBody = document.querySelector('tbody');
+	const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+	rows.sort((a, b) => {
+		let valueA, valueB;
+
+		if (criteria === 'name') {
+			valueA = a.querySelector('td:nth-child(1)').innerText.toLowerCase();
+			valueB = b.querySelector('td:nth-child(1)').innerText.toLowerCase();
+		} else if (criteria === 'category') {
+			valueA = a.querySelector('td:nth-child(2)').innerText.toLowerCase();
+			valueB = b.querySelector('td:nth-child(2)').innerText.toLowerCase();
+		} else if (criteria === 'status') {
+			valueA = a.querySelector('td:nth-child(3)').innerText.toLowerCase();
+			valueB = b.querySelector('td:nth-child(3)').innerText.toLowerCase();
+		} else if (criteria === 'date') {
+			valueA = parseDate(a.querySelector('td:nth-child(4)').innerText);
+			valueB = parseDate(b.querySelector('td:nth-child(4)').innerText);
+		}
+
+		if (valueA < valueB) return order === 'asc' ? -1 : 1;
+		if (valueA > valueB) return order === 'asc' ? 1 : -1;
+		return 0;
+	});
+
+	rows.forEach(row => tableBody.appendChild(row));
+}
