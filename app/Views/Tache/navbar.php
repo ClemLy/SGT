@@ -9,7 +9,7 @@
 
         <div class="sidebar-footer">
             <div class="d-flex justify-content-between text-center w-100">
-                <a class="bi bi-box-arrow-right w-100 text-center link-footer" href=<?= site_url('/logout') ?>> Log out</a>
+                <a class="bi bi-box-arrow-right w-100 text-center link-footer" href=<?= site_url('/logout') ?>> Deconnexion</a>
             </div>
         </div>
     </div>
