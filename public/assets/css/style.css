@@ -31,7 +31,7 @@ body{
 
 .sidebar .nav-link {
     color: #000000;
-    font-size: 1vw !important;
+    font-size: 0.9vw !important;
     font-weight:300;
     margin: 0.5rem 0;
 }
@@ -50,13 +50,17 @@ body{
 }
 
 h1{
-    font-size: 2vw !important;
+    font-size: 1.8vw !important;
 }
 
-h3 {
-    font-size: 1vw !important;
-    margin-bottom:0 !important;
 
+h3 {
+    font-size: 1rem !important;
+    margin-bottom:0 !important;
+}
+
+h4 {
+    font-size:1.4rem !important;
 }
 
 .head-column *{
