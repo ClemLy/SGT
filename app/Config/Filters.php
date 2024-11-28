@@ -13,6 +13,8 @@ use CodeIgniter\Filters\PageCache;
 use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
 
+use App\Filters\AuthGuard;
+
 class Filters extends BaseFilters
 {
     /**
@@ -69,15 +71,36 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, array<string, string>>>|array<string, list<string>>
      */
+    // public array $globals = [
+    //     'before' => [
+    //         // 'honeypot',
+    //         // 'csrf',
+    //         // 'invalidchars',
+    //     ],
+    //     'after' => [
+    //         // 'honeypot',
+    //         // 'secureheaders',
+    //     ],
+    // ];
+
+
     public array $globals = [
         'before' => [
-            // 'honeypot',
-            // 'csrf',
-            // 'invalidchars',
+            'authguard' => [
+                'except' => [
+                    '/',
+                    '/signin',
+                    '/signin/auth',
+                    '/forgot-password',
+                    '/signup',
+                    '/activate/*', 
+                    '/forgot-password/send-reset-link',
+                    '/reset-password/*', 
+                    '/reset-password/update'
+                ],
+            ],
         ],
-        'after' => [
-            // 'honeypot',
-            // 'secureheaders',
+        'after'  => [
         ],
     ];
 
@@ -105,5 +128,5 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [ 'authguard' => AuthGuard::class];
 }
