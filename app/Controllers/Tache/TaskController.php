@@ -22,7 +22,7 @@
 			$taskModel     = new TaskModel();
 
 			// Récupération de toutes les catégories
-			$categories = $categoryModel->findAll();
+			$categories = $categoryModel->getCategoriesByUser(session()->get('id_user'));
 
 			// Récupération des tâches par statut
 			$tasksToDo       = $taskModel->getTasksWithCategoriesByStatus('À faire');
@@ -65,16 +65,21 @@
 
 			// Chercher la catégorie par titre
 			$categoryModel = new CategoryModel();
-			$category      = $categoryModel->where('titre_categorie', $titreCategorie)->first();
+			$category      = $categoryModel->where('titre_categorie', $titreCategorie)
+										   ->where('id_user_categorie', $id_user_categorie)->first();
 
 			// Si la catégorie n'existe pas, on la crée
-			if (!$category && !empty($titreCategorie))
+			if ($category == NULL && !empty($titreCategorie))
 			{
 				$categoryModel->save([
 					'titre_categorie'   => $titreCategorie,
 					'id_user_categorie' => $id_user_categorie
 				]);
 				$idCategorie = $categoryModel->insertID();
+			}
+			else if ($category)
+			{
+				$idCategorie = $category['id_categorie'];
 			}
 			else
 			{
@@ -132,20 +137,27 @@
 			$titreCategorie    = $this->request->getPost('categorie');
 			$id_user_categorie = session()->get('id_user');
 
-			// Vérification ou création de la catégorie
-			$category = $categoryModel->where('titre_categorie', $titreCategorie)->first();
-		
-			if (!$category && !empty($titreCategorie))
+			// Chercher la catégorie par titre
+			$categoryModel = new CategoryModel();
+			$category      = $categoryModel->where('titre_categorie', $titreCategorie)
+										   ->where('id_user_categorie', $id_user_categorie)->first();
+
+			// Si la catégorie n'existe pas, on la crée
+			if ($category == NULL && !empty($titreCategorie))
 			{
 				$categoryModel->save([
 					'titre_categorie'   => $titreCategorie,
 					'id_user_categorie' => $id_user_categorie
 				]);
-				$categoryId = $categoryModel->insertID();
+				$idCategorie = $categoryModel->insertID();
+			}
+			else if ($category)
+			{
+				$idCategorie = $category['id_categorie'];
 			}
 			else
 			{
-				$categoryId = NULL;
+				$idCategorie = NULL;
 			}
 		
 			// Préparation des données pour la mise à jour
@@ -154,7 +166,7 @@
 				'description_tache' => $description,
 				'echeance_tache'    => $echeance,
 				'etat_tache'        => $etat,
-				'id_categorie'      => $categoryId,
+				'id_categorie'      => $idCategorie,
 			];
 		
 			// Mise à jour de la tâche

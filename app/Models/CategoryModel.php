@@ -10,4 +10,12 @@ class CategoryModel extends Model
 		'titre_categorie',
 		'id_user_categorie'
 	];
+
+
+	public function getCategoriesByUser($userId)
+	{
+		return $this->select('*')
+			->where('id_user_categorie', $userId)
+			->findAll();
+	}
 }

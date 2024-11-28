@@ -24,6 +24,7 @@
 			->where('id_user', session()->get('id_user')) // Condition sur l'utilisateur
 			->findAll();
 	}
+
 	public function markAsCompleted($id)
 	{
 		return $this->update($id, ['etat_tache' => 'Terminée']);
