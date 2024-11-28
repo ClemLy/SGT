@@ -35,7 +35,7 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 						}
 					}
 					?>
-					<div class="card my-2 border-0 mb-4 <?= $isOverdue ? 'overdue' : ($isOverdueSoon ? 'overdue-soon' : ''); ?>" draggable="true"
+					<div class="t-card card my-2 border-0 mb-4 <?= $isOverdue ? 'overdue' : ($isOverdueSoon ? 'overdue-soon' : ''); ?>" draggable="true"
 						ondragstart="drag(event)"
 						data-task-id="<?= esc($task['id_tache']); ?>">
 						<div class="card-body p-4">
