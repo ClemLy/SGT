@@ -41,5 +41,31 @@
 				'comment' => $data
 			]);
 		}
+
+		// Supprime un commentaire
+		public function delete($id_commentaire)
+		{
+			$model = new CommentModel();
+			$comment = $model->find($id_commentaire);
+		
+			if ($comment)
+			{
+				$model->delete($id_commentaire);
+		
+				// Retourner une réponse JSON avec succès explicite
+				return $this->response->setJSON([
+					'success' => true,
+					'message' => 'Commentaire supprimé avec succès.'
+				]);
+			}
+			else
+			{
+				// Retourner une réponse JSON avec erreur explicite
+				return $this->response->setJSON([
+					'success' => false,
+					'error'   => 'Commentaire non trouvé.'
+				]);
+			}
+		}
 	}
 ?>

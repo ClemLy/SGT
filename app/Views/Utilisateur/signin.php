@@ -1,9 +1,17 @@
 <div class="container">
 	<h2>Connexion</h2>
 
+
+	<!-- Affichage des messages de succès ou d'erreur -->
 	<?php if(session()->getFlashdata('msg')): ?>
 		<div class="alert alert-warning">
 			<?= session()->getFlashdata('msg') ?>
+		</div>
+	<?php endif; ?>
+
+	<?php if(session()->getFlashdata('success')): ?>
+		<div class="alert alert-success">
+			<?= session()->getFlashdata('success') ?>
 		</div>
 	<?php endif; ?>
 
@@ -13,6 +21,8 @@
 		</div>
 	<?php endif; ?>
 
+
+	<!-- Formulaire de connexion -->
 	<form action="<?= site_url('signin/auth') ?>" method="post">
 		<div class="form-group">
 			<label for="email_user">Adresse email</label>

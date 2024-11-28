@@ -1,12 +1,12 @@
 // Charge les détails d'une tâche dans le formulaire de modification
 function loadTaskData(taskId, titre, description, echeance, etat, categorie)
 {
-	document.getElementById('task_id').value = taskId;
-	document.getElementById('edit_titre').value = titre;
-	document.getElementById('edit_description').value = description;
-	document.getElementById('edit_echeance').value = echeance;
-	document.getElementById('edit_etat_tache').value = etat;
-	document.getElementById('edit_categorie').value = categorie;
+    document.getElementById('task_id').value = taskId;
+    document.getElementById('edit_titre').value = titre;
+    document.getElementById('edit_description').value = description;
+    document.getElementById('edit_echeance').value = echeance;
+    document.getElementById('edit_etat_tache').value = etat;
+    document.getElementById('edit_categorie').value = categorie;
 }
 
 // Charge et affiche les détails et les commentaires d'une tâche dans la popup
@@ -26,15 +26,22 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
     fetch(`/comment/get/${id_tache}`)
         .then(response => response.json())
         .then(data => {
-            if (data.length === 0) {
+            if (data.length === 0)
+			{
                 commentsSection.innerHTML = '<p>Aucun commentaire pour cette tâche.</p>';
-            } else {
+            }
+			else {
                 data.forEach(comment => {
                     const commentHTML = `
-                        <div class="mb-3 border p-2">
+                    <div class="mb-3 border p-2 d-flex justify-content-between align-items-center" id="comment-${comment.id_commentaire}">
+                        <div>
                             <p><strong>${comment.date_commentaire}</strong></p>
                             <p>${comment.text_commentaire}</p>
-                        </div>`;
+                        </div>
+                        <button class="btn btn-sm btn-danger" onclick="deleteComment(${comment.id_commentaire})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>`;
                     commentsSection.innerHTML += commentHTML; // Ajouter en bas
                 });
             }
@@ -49,33 +56,57 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
     form.onsubmit = function (event) {
         event.preventDefault(); // Empêcher le rechargement de la page
         const formData = new FormData(form);
-
-	fetch(`/comment/add`, {
-		method: 'POST',
-		body: formData
-	})
-		.then(response => response.json())
-		.then(data => {
-			if (data.success) {
-				// Ajouter le commentaire directement en haut de la liste
-				const newCommentHTML = `
-					<div class="mb-3 border p-2">
-						<p><strong>${data.comment.date_commentaire}</strong></p>
-						<p>${data.comment.text_commentaire}</p>
-					</div>`;
-				commentsSection.insertAdjacentHTML('afterbegin', newCommentHTML); // Insérer en haut
-				form.reset(); // Réinitialiser le formulaire
-			} else {
-				console.error('Erreur:', data.message);
-			}
-		})
-		.catch(error => {
-			console.error('Erreur lors de l\'ajout du commentaire:', error);
-		});
+        fetch(`/comment/add`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Ajouter le commentaire directement en haut de la liste
+                const newCommentHTML = `
+                    <div class="mb-3 border p-2 d-flex justify-content-between align-items-center" id="comment-${data.comment.id_commentaire}">
+                        <div>
+                            <p><strong>${data.comment.date_commentaire}</strong></p>
+                            <p>${data.comment.text_commentaire}</p>
+                        </div>
+						<button class="btn btn-sm btn-danger" onclick="deleteComment(${data.comment.id_commentaire})">
+							<i class="bi bi-trash"></i>
+                        </button>
+                    </div>`;
+                commentsSection.insertAdjacentHTML('afterbegin', newCommentHTML); // Insérer en haut
+                form.reset(); // Réinitialiser le formulaire
+            } else {
+                console.error('Erreur:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de l\'ajout du commentaire:', error);
+        });
     };
 }
 
-
+function deleteComment(commentId) 
+{
+	fetch(`/comment/delete/${commentId}`, {
+		method: 'DELETE'
+	})
+	.then(response => response.json())
+	.then(data => {
+		if (data.success)
+		{
+			const commentElement = document.getElementById(`comment-${commentId}`);
+			commentElement.remove();
+		}
+		else
+		{
+			console.error('Erreur:', data.message);
+		}
+	})
+	.catch(error => {
+		console.error('Erreur lors de la suppression du commentaire:', error);
+	});
+}
 
 // Basculer entre tableau et tableur
 function switchView(view) {

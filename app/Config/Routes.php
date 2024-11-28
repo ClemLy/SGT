@@ -55,6 +55,8 @@ $routes->get('/tasks/page', 'Tache\TaskController::page');
 // Commentaires
 $routes->get('comment/get/(:num)', 'Tache\CommentController::get/$1');
 $routes->post('comment/add', 'Tache\CommentController::add');
+$routes->delete('comment/delete/(:num)', 'Tache\CommentController::delete/$1');
+
 
 // Déconnexion
 $routes->get('/logout', 'Utilisateur\LogoutController::logout');

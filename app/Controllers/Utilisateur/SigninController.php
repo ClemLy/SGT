@@ -63,7 +63,7 @@
 
 					if ($data['is_verified'] == 'f')
 					{
-						$session->setFlashdata('msg', 'Votre compte n\'est pas encore activé. Veuillez vérifier votre boîte mail.');
+						$session->setFlashdata('error', 'Votre compte n\'est pas encore activé. Veuillez vérifier votre boîte mail.');
 						return redirect()->to('/signin');
 					}
 

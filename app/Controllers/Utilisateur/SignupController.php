@@ -76,7 +76,7 @@
 						->where('id_user', $user['id_user'])
 						->update();
 
-				return redirect()->to('/signin')->with('msg', 'Votre compte a été activé avec succès.');
+				return redirect()->to('/signin')->with('success', 'Votre compte a été activé avec succès.');
 			}
 			else
 			{
