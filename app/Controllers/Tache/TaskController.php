@@ -17,29 +17,60 @@
 		}
 
 		// Méthode pour afficher les tâches
-		public function index()
-		{
-			// Chargement des modèles
-			$categoryModel = new CategoryModel();
-			$taskModel     = new TaskModel();
+        public function index()
+        {
+            $pager = \Config\Services::pager(); // Service de pagination
 
-			// Récupération de toutes les catégories
-			$categories = $categoryModel->getCategoriesByUser(session()->get('id_user'));
+            // Chargement des modèles
+            $taskModel = new \App\Models\TaskModel();
+            $categoryModel = new \App\Models\CategoryModel();
 
-			// Récupération des tâches par statut
-			$tasksToDo       = $taskModel->getTasksWithCategoriesByStatus('À faire');
-			$tasksInProgress = $taskModel->getTasksWithCategoriesByStatus('En cours');
-			$tasksCompleted  = $taskModel->getTasksWithCategoriesByStatus('Terminée');
+            // Récupération des catégories
+            $categories = $categoryModel->findAll();
 
-			// Retourner la vue avec les données nécessaires
-			return view('Tache/index', [
-				'categories'      => $categories,
-				'tasksToDo'       => $tasksToDo,
-				'tasksInProgress' => $tasksInProgress,
-				'tasksCompleted'  => $tasksCompleted
-			]);
-		}
+            // Récupération des tâches paginées pour chaque statut
+            $tasksToDo       = $taskModel->getTasksWithCategoriesByStatus('À faire');
+            $tasksInProgress = $taskModel->getTasksWithCategoriesByStatus('En cours');
+            $tasksCompleted  = $taskModel->getTasksWithCategoriesByStatus('Terminée');
 
+
+            $totalTasksToDo = $taskModel->getTaskCount('À faire');
+            $totalTasksInProgress = $taskModel->getTaskCount('En cours');
+            $totalTasksCompleted = $taskModel->getTaskCount('Terminée');
+
+            // Paramètres de pagination
+            $perPage = $this->request->getGet('perPage') ?? $totalTasksToDo + $totalTasksCompleted + $totalTasksInProgress; // Nombre de tâches par page
+            if ($this->request->getGet('perPage')==0) $perPage = $totalTasksToDo + $totalTasksCompleted + $totalTasksInProgress;
+            $currentPageToDo = $this->request->getGet('pageToDo') ?? 1; // Page actuelle pour "À faire"
+            $currentPageInProgress = $this->request->getGet('pageInProgress') ?? 1; // Page actuelle pour "En cours"
+            $currentPageCompleted = $this->request->getGet('pageCompleted') ?? 1; // Page actuelle pour "Terminée"
+
+            // Calcul des offsets pour chaque statut
+            $offsetToDo = ($currentPageToDo - 1) * $perPage;
+            $offsetInProgress = ($currentPageInProgress - 1) * $perPage;
+            $offsetCompleted = ($currentPageCompleted - 1) * $perPage;
+
+            // Récupération des tâches paginées pour tout
+            $tasks = $taskModel->getPaginatedTasks($perPage, $offsetToDo);
+
+
+            // Retourner la vue avec les données nécessaires
+            return view('Tache/index', [
+                'categories' => $categories,
+                'tasksToDo' => $tasksToDo,
+                'tasksInProgress' => $tasksInProgress,
+                'tasksCompleted' => $tasksCompleted,
+                'perPage' => $perPage,
+                'currentPageToDo' => $currentPageToDo,
+                'currentPageInProgress' => $currentPageInProgress,
+                'currentPageCompleted' => $currentPageCompleted,
+                'totalTasksToDo' => $totalTasksToDo,
+                'totalTasksInProgress' => $totalTasksInProgress,
+                'totalTasksCompleted' => $totalTasksCompleted,
+                'pager' => $pager,
+                'tasks' => $tasks,
+            ]);
+        }
 		// Méthode pour enregistrer une nouvelle tâche
 		public function store()
 		{
@@ -87,7 +118,7 @@
 			{
 				$idCategorie = NULL;
 			}
-			
+
 
 			// Préparer les données de la tâche à enregistrer
 			$taskData = [
@@ -111,7 +142,7 @@
 		{
 			$taskModel     = new TaskModel();
 			$categoryModel = new CategoryModel();
-		
+
 			// Récupération des données du formulaire
 			$taskId         = $this->request->getPost('task_id');
 			$titre          = $this->request->getPost('titre');
@@ -119,7 +150,7 @@
 			$echeance       = $this->request->getPost('echeance_tache');
 			$etat           = $this->request->getPost('etat_tache');
 			$titreCategorie = $this->request->getPost('categorie');
-		
+
 			// Validation des données
 			$validation = \Config\Services::validation();
 			$validation->setRules([
@@ -129,12 +160,12 @@
 				'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',
 				'categorie'         => 'permit_empty|min_length[3]|max_length[255]',
 			]);
-		
+
 			if (!$this->validate($validation->getRules()))
 			{
 				return redirect()->back()->with('errors', $this->validator->getErrors());
 			}
-		
+
 			// Récupérer le titre de la catégorie depuis le formulaire
 			$titreCategorie    = $this->request->getPost('categorie');
 			$id_user_categorie = session()->get('id_user');
@@ -161,7 +192,7 @@
 			{
 				$idCategorie = NULL;
 			}
-		
+
 			// Préparation des données pour la mise à jour
 			$data = [
 				'titre'             => $titre,
@@ -170,7 +201,7 @@
 				'etat_tache'        => $etat,
 				'id_categorie'      => $idCategorie,
 			];
-		
+
 			// Mise à jour de la tâche
 			if ($taskModel->update($taskId, $data))
 			{
@@ -280,7 +311,7 @@
 			$userModel = new UserModel();
 			$user = $userModel->where('id_user', session()->get('id_user'))->first();
 
-			if ($user) 
+			if ($user)
 			{
 				$email = \Config\Services::email();
 				$email->setFrom('XtrayShow@yahoo.fr', 'SGT');
@@ -302,29 +333,41 @@
 			}
 		}
 
+        public function getPaginatedTasks($limit, $offset, $searchQuery = '')
+        {
+            $builder = $this->db->table($this->table)
+                ->select('tache.*, categorie.titre_categorie')
+                ->join('categorie', 'tache.id_categorie = categorie.id_categorie', 'left')
+                ->where('tache.id_user', session()->get('id_user'));
+
+            if (!empty($searchQuery)) {
+                $builder->groupStart()
+                    ->like('tache.titre', $searchQuery)
+                    ->orLike('tache.description_tache', $searchQuery)
+                    ->orLike('categorie.titre_categorie', $searchQuery)
+                    ->groupEnd();
+            }
+
+            return $builder->limit($limit, $offset)->get()->getResultArray();
+        }
+
+        public function getTaskCount($searchQuery = '')
+        {
+            $builder = $this->db->table($this->table)
+                ->join('categorie', 'tache.id_categorie = categorie.id_categorie', 'left')
+                ->where('tache.id_user', session()->get('id_user'));
+
+            if (!empty($searchQuery)) {
+                $builder->groupStart()
+                    ->like('tache.titre', $searchQuery)
+                    ->orLike('tache.description_tache', $searchQuery)
+                    ->orLike('categorie.titre_categorie', $searchQuery)
+                    ->groupEnd();
+            }
+
+            return $builder->countAllResults();
+        }
 
 
-
-
-		public function page()
-		{
-			$taskModel = new TaskModel();
-
-			// Récupérer le nombre de tâches par page depuis la requête GET (par défaut 5)
-			$perPage = $this->request->getGet('perPage') ?? 5;
-
-			// Récupérer la page actuelle depuis la requête GET (par défaut 1)
-			$page = $this->request->getGet('page') ?? 1;
-
-			// Récupérer les tâches paginées
-			$tasks = $taskModel->getPaginatedTasks($perPage, $page);
-			
-			// Charger la vue avec les tâches et les liens de pagination
-			return view('Tache/tableur', [
-				'tasks'   => $tasks,
-				'pager'   => $taskModel->pager,
-				'perPage' => $perPage
-			]);
-		}
 	}
 ?>
