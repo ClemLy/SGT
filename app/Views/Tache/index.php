@@ -115,9 +115,7 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 								name="categorie" 
 								id="edit_categorie" 
 								list="categories-list" 
-								placeholder="Choisissez ou ajoutez une catégorie" 
-								oninput="checkAddCategory(this.value)" 
-								onchange="addNewCategory(this.value)">
+								placeholder="Choisissez ou ajoutez une catégorie">
 							<datalist id="categories-list">
 								<?php foreach ($categories as $categorie): ?>
 									<option value="<?= esc($categorie['titre_categorie']); ?>"></option>
