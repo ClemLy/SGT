@@ -16,7 +16,7 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 					<?php
 
 					$isOverdue = false;
-					if (isset($task['echeance_tache']) && !empty($task['echeance_tache']))
+					if (isset($task['echeance_tache']) && !empty($task['echeance_tache']) && $statusId != 'Terminée')
 					{
 						try
 						{
