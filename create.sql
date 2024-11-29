@@ -32,6 +32,7 @@ CREATE TABLE TACHE (
 	titre             	VARCHAR(255) NOT NULL,
 	description_tache 	TEXT,
     etat_tache 			VARCHAR(50) NOT NULL CHECK (etat_tache IN ('À faire', 'En cours', 'Terminée')),
+	importance_tache 			VARCHAR(50) NOT NULL CHECK (importance_tache IN ('Faible', 'Modéré', 'Fort')),
 	echeance_tache    	DATE,
 	id_user           	INT NOT NULL,
 	id_categorie      	INT,

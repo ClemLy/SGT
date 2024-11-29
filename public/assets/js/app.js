@@ -6,11 +6,12 @@ function htmlEntityDecode(str)
 }
 
 // Charge les détails d'une tâche dans le formulaire de modification
-function loadTaskData(taskId, titre, description, echeance, etat, categorie)
+function loadTaskData(taskId, titre, description, importance, echeance, etat, categorie)
 {
 	document.getElementById('task_id').value          = taskId;
 	document.getElementById('edit_titre').value       = htmlEntityDecode(titre);
 	document.getElementById('edit_description').value = htmlEntityDecode(description);
+	document.getElementById('edit_importance_tache').value       = importance;
 	document.getElementById('edit_echeance').value    = echeance;
 	document.getElementById('edit_etat_tache').value  = etat;
 	document.getElementById('edit_categorie').value   = categorie;
@@ -63,14 +64,14 @@ function formatDate(dateString, includeTime = true) {
 
 
 // Charge et affiche les détails et les commentaires d'une tâche dans la popup
-function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache)
+function loadTaskDetails(titre, description, importance, echeance, etat, categorie, id_tache)
 {
-	console.log(titre, description, echeance, etat, categorie);
 
     document.getElementById('detail_titre').innerText       = htmlEntityDecode(titre);
     document.getElementById('detail_description').innerText = htmlEntityDecode(description);
     document.getElementById('detail_echeance').innerText    = formatDate(echeance, false);
     document.getElementById('detail_etat').innerText        = etat;
+	document.getElementById('detail_importance').innerText        = importance;
     document.getElementById('detail_categorie').innerText   = categorie;
     document.getElementById('comment_task_id').value        = id_tache;
 

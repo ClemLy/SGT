@@ -10,6 +10,7 @@
         protected $allowedFields = [
             'titre',
             'description_tache',
+            'importance_tache',
             'etat_tache',
             'echeance_tache',
             'id_user',
@@ -34,13 +35,17 @@
             return $builder->findAll();
         }
 
-
         public function getPaginatedTasks($perPage, $page, $searchQuery = '')
         {
+            $idUser = session()->get('id_user');
+            if (!$idUser) {
+                throw new \RuntimeException('Utilisateur non authentifié.');
+            }
+
             $builder = $this->select('tache.*, categorie.titre_categorie')
                 ->join('categorie', 'tache.id_categorie = categorie.id_categorie', 'left')
-                ->where('tache.id_user', session()->get('id_user'));
-    
+                ->where('tache.id_user', $idUser);
+
             if (!empty($searchQuery)) {
                 $builder->groupStart()
                     ->like('tache.titre', $searchQuery)
@@ -48,10 +53,10 @@
                     ->orLike('tache.description_tache', $searchQuery)
                     ->groupEnd();
             }
-    
+
+            // Appel à paginate avec la page courante passée directement
             return $this->paginate($perPage, 'default', $page);
         }
-
         
 
         public function getTotalTasks($searchQuery = '')
@@ -70,27 +75,7 @@
             return $builder->countAllResults();
         }
         
-        public function getAllTasksPaginated($perPage, $offset, $searchQuery = '')
-        {
-            $offset = (int)$offset;
-            $perPage = (int)$perPage;
 
-            $builder = $this->db->table('tache')
-                ->select('tache.*, categorie.titre_categorie')
-                ->join('categorie', 'tache.id_categorie = categorie.id_categorie', 'left')
-                ->where('tache.id_user', session()->get('id_user'))
-                ->limit($perPage, $offset);
-
-            if (!empty($searchQuery)) {
-                $builder->groupStart()
-                    ->like('tache.titre', $searchQuery)
-                    ->orLike('categorie.titre_categorie', $searchQuery)
-                    ->orLike('tache.description_tache', $searchQuery)
-                    ->groupEnd();
-            }
-
-            return $builder->get()->getResultArray();
-        }
 
         public function getAllTaskCount($searchQuery = '')
         {

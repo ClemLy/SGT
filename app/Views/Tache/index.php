@@ -4,6 +4,7 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 ?>
 
 
+
 <body>
 	<!-- Navbar -->
 	<?php require 'navbar.php'; ?>
@@ -63,6 +64,14 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 							<div id="charCount" class="mt-2 text-muted">0/100</div>
 						</div>
 						<div class="mb-3">
+						<label for="importance_tache" class="form-label">Importance</label>
+							<select class="form-control" name="importance_tache" id="importance_tache" required>
+								<option value="Faible">Faible</option>
+								<option value="Modéré">Modéré</option>
+								<option value="Fort">Fort</option>
+							</select>
+						</div>
+						<div class="mb-3">
 							<label for="echeance_tache" class="form-label">Échéance</label>
 							<input type="date" class="form-control" name="echeance_tache" id="echeance_tache" required>
 						</div>
@@ -111,6 +120,14 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 							<label for="edit_description" class="form-label">Description</label>
 							<textarea class="form-control" name="description_tache" id="edit_description"></textarea>
 							<div id="charCount" class="mt-2 text-muted">0/100</div>
+						</div>
+						<div class="mb-3">
+							<label for="edit_importance_tache" class="form-label">Importance</label>
+							<select class="form-control" name="edit_importance_tache" id="edit_importance_tache" required>
+								<option value="Faible">Faible</option>
+								<option value="Modéré">Modéré</option>
+								<option value="Fort">Fort</option>
+							</select>
 						</div>
 						<div class="mb-3">
 							<label for="edit_echeance" class="form-label">Échéance</label>
@@ -204,6 +221,8 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
                     });
             }, 1000);
         }
+
+
     </script>
 </body>
 

@@ -21,56 +21,64 @@
 		// Méthode pour afficher les tâches
         public function index()
         {
+            // Chargement des services et modèles
             $pager = \Config\Services::pager();
-
-            // Chargement des modèles
-            $taskModel     = new TaskModel();
+            $taskModel = new TaskModel();
             $categoryModel = new CategoryModel();
 
-            // Récupération des catégories
-            $categories = $categoryModel->findAll();
+            // Gestion des paramètres de pagination
+            $perPage = (int) ($this->request->getGet('perPage') ?? 10);
+            $currentPage = (int) ($this->request->getGet('page') ?? 1);
+            $perPage = $perPage > 0 ? $perPage : 10;
+            $currentPage = $currentPage > 0 ? $currentPage : 1;
+            $searchQuery = $this->request->getGet('searchQuery') ?? '';
 
-            // Récupération des tâches paginées pour chaque statut
-            $tasksToDo       = $taskModel->getTasksWithCategoriesByStatus('À faire');
-            $tasksInProgress = $taskModel->getTasksWithCategoriesByStatus('En cours');
-            $tasksCompleted  = $taskModel->getTasksWithCategoriesByStatus('Terminée');
 
-
-            $totalTasksToDo       = $taskModel->getTaskCount('À faire');
+            // Calcul des totaux par statut
+            $totalTasksToDo = $taskModel->getTaskCount('À faire');
             $totalTasksInProgress = $taskModel->getTaskCount('En cours');
-            $totalTasksCompleted  = $taskModel->getTaskCount('Terminée');
+            $totalTasksCompleted = $taskModel->getTaskCount('Terminée');
+            $totalTasks = $totalTasksToDo + $totalTasksInProgress + $totalTasksCompleted;
 
-            // Paramètres de pagination
-            $perPage = $this->request->getGet('perPage') ?? $totalTasksToDo + $totalTasksCompleted + $totalTasksInProgress; // Nombre de tâches par page
-            if ($this->request->getGet('perPage')==0) $perPage = $totalTasksToDo + $totalTasksCompleted + $totalTasksInProgress;
-            $currentPage = $this->request->getGet('page') ?? 1; // Page actuelle pour "À faire"
+            // Récupération des tâches paginées
+            $tasks = $taskModel->getPaginatedTasks($perPage, $currentPage, $searchQuery);
 
-            // Calcul des offsets pour chaque statut
-            $offset = ($currentPage - 1) * $perPage;
+            // Vérifier si la requête est AJAX
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON([
+                    'tasks' => $tasks,
+                    'pager' => [
+                        'currentPage' => $currentPage,
+                        'perPage' => $perPage,
+                        'totalTasks' => $totalTasks,
+                        'totalPages' => ceil($totalTasks / $perPage),
+                    ],
+                ]);
+            }
 
-            // Récupération des tâches paginées pour tout
-            $tasks = $taskModel->getPaginatedTasks($perPage, $offset);
-            $pager->makeLinks($currentPage, $perPage, $totalTasksToDo + $totalTasksInProgress + $totalTasksCompleted);
+            // Récupération des catégories et tâches par statut (pour affichage classique)
+            $categories = $categoryModel->findAll();
+            $tasksToDo = $taskModel->getTasksWithCategoriesByStatus('À faire');
+            $tasksInProgress = $taskModel->getTasksWithCategoriesByStatus('En cours');
+            $tasksCompleted = $taskModel->getTasksWithCategoriesByStatus('Terminée');
+            $pagerLinks = $totalTasks > 0 ? $pager->makeLinks($currentPage, $perPage, $totalTasks) : '';
 
-
-            // Retourner la vue avec les données nécessaires
+            // Chargement de la vue
             return view('Tache/index', [
-                'categories'            => $categories,
-                'tasksToDo'             => $tasksToDo,
-                'tasksInProgress'       => $tasksInProgress,
-                'tasksCompleted'        => $tasksCompleted,
-                'perPage'               => $perPage,
-                'currentPageToDo'       => $currentPage,
-                'totalTasksToDo'        => $totalTasksToDo,
-                'totalTasksInProgress'  => $totalTasksInProgress,
-                'totalTasksCompleted'   => $totalTasksCompleted,
-				'offset' => $offset,
-                'pager' => $taskModel->pager,
-                'tasks'  => $tasks,
+                'categories' => $categories,
+                'tasksToDo' => $tasksToDo,
+                'tasksInProgress' => $tasksInProgress,
+                'tasksCompleted' => $tasksCompleted,
+                'tasks' => $tasks,
+                'perPage' => $perPage,
+                'currentPage' => $currentPage,
+                'totalTasksToDo' => $totalTasksToDo,
+                'totalTasksInProgress' => $totalTasksInProgress,
+                'totalTasksCompleted' => $totalTasksCompleted,
+                'pagerLinks' => $pagerLinks,
+                'pager'=> $pager,
             ]);
         }
-
-		
 		// Méthode pour enregistrer une nouvelle tâche
 		public function store()
 		{
@@ -81,6 +89,7 @@
 			$validation->setRules([
 				'titre'             => 'required|min_length[3]|max_length[255]',
 				'description_tache' => 'permit_empty|max_length[500]',
+				'importance_tache'  => 'required|in_list[Faible,Modéré,Faible]',
 				'echeance_tache'    => 'required|valid_date',
 				'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',
 				'categorie'         => 'permit_empty|min_length[3]|max_length[255]',
@@ -122,6 +131,7 @@
 			// Préparer les données de la tâche à enregistrer
 			$taskData = [
 				'titre'             => htmlspecialchars($this->request->getPost('titre')),
+				'importance_tache'  => $this->request->getPost('importance_tache'),
 				'description_tache' => htmlspecialchars($this->request->getPost('description_tache')),
 				'etat_tache'        => $this->request->getPost('etat_tache'),
 				'echeance_tache'    => $this->request->getPost('echeance_tache'),
@@ -144,7 +154,12 @@
 
 			// Récupération des données du formulaire
 			$taskId         = $this->request->getPost('task_id');
+<<<<<<< HEAD
 			$titre          = htmlspecialchars($this->request->getPost('titre'));
+=======
+			$titre          = $this->request->getPost('titre');
+			$importance     = $this->request->getPost('importance_tache');
+>>>>>>> 28bfcfc4c6c544045f5540a97f198f168deb5a82
 			$description    = htmlspecialchars($this->request->getPost('description_tache'));
 			$echeance       = $this->request->getPost('echeance_tache');
 			$etat           = $this->request->getPost('etat_tache');
@@ -154,6 +169,7 @@
 			$validation = \Config\Services::validation();
 			$validation->setRules([
 				'titre'             => 'required|min_length[3]|max_length[255]',
+				'importance_tache'  => 'required|in_list[Faible,Modéré,Faible]',
 				'description_tache' => 'permit_empty|max_length[100]',
 				'echeance_tache'    => 'required|valid_date',
 				'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',
@@ -196,6 +212,7 @@
 			$data = [
 				'titre'             => $titre,
 				'description_tache' => $description,
+				'importance_tache'  => $importance,
 				'echeance_tache'    => $echeance,
 				'etat_tache'        => $etat,
 				'id_categorie'      => $idCategorie,
