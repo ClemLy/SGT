@@ -16,11 +16,12 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 					<?php
 
 					$isOverdue = false;
-					if (isset($task['echeance_tache']) && !empty($task['echeance_tache']))
+					if (isset($task['echeance_tache']) && !empty($task['echeance_tache']) && $statusId != 'Terminée')
 					{
 						try
 						{
 							$dueDate     = new DateTime($task['echeance_tache']);
+							$dueDate->modify('+1 day');
 							$currentDate = new DateTime();
 							$isOverdue   = $dueDate < $currentDate;
 						}
