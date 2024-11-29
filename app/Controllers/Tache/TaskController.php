@@ -21,52 +21,64 @@
             $pager = \Config\Services::pager();
 
             // Chargement des modèles
-            $taskModel     = new TaskModel();
+            $taskModel = new TaskModel();
             $categoryModel = new CategoryModel();
 
             // Récupération des catégories
             $categories = $categoryModel->findAll();
 
-            // Récupération des tâches paginées pour chaque statut
-            $tasksToDo       = $taskModel->getTasksWithCategoriesByStatus('À faire');
+            // Récupération des tâches par statut
+            $tasksToDo = $taskModel->getTasksWithCategoriesByStatus('À faire');
             $tasksInProgress = $taskModel->getTasksWithCategoriesByStatus('En cours');
-            $tasksCompleted  = $taskModel->getTasksWithCategoriesByStatus('Terminée');
+            $tasksCompleted = $taskModel->getTasksWithCategoriesByStatus('Terminée');
 
-
-            $totalTasksToDo       = $taskModel->getTaskCount('À faire');
+            // Calcul des totaux par statut
+            $totalTasksToDo = $taskModel->getTaskCount('À faire');
             $totalTasksInProgress = $taskModel->getTaskCount('En cours');
-            $totalTasksCompleted  = $taskModel->getTaskCount('Terminée');
+            $totalTasksCompleted = $taskModel->getTaskCount('Terminée');
+            $totalTasks = $totalTasksToDo + $totalTasksInProgress + $totalTasksCompleted;
 
-            // Paramètres de pagination
-            $perPage = $this->request->getGet('perPage') ?? $totalTasksToDo + $totalTasksCompleted + $totalTasksInProgress; // Nombre de tâches par page
-            if ($this->request->getGet('perPage')==0) $perPage = $totalTasksToDo + $totalTasksCompleted + $totalTasksInProgress;
-            $currentPage = $this->request->getGet('page') ?? 1; // Page actuelle pour "À faire"
+            // Gestion des paramètres de pagination
+            $perPage = (int) ($this->request->getGet('perPage') ?? 10); // Nombre d'éléments par page
+            if ($perPage <= 0) {
+                $perPage = 10; // Valeur par défaut
+            }
 
-            // Calcul des offsets pour chaque statut
-            $offset = ($currentPage - 1) * $perPage;
+            $currentPage = (int) ($this->request->getGet('page') ?? 1); // Page actuelle
+            if ($currentPage <= 0) {
+                $currentPage = 1; // Valeur par défaut
+            }
 
-            // Récupération des tâches paginées pour tout
-            $tasks = $taskModel->getPaginatedTasks($perPage, $offset);
-            $pager->makeLinks($currentPage, $perPage, $totalTasksToDo + $totalTasksInProgress + $totalTasksCompleted);
+            // Gestion du cas où il n'y a aucune tâche
+            if ($totalTasks === 0) {
+                $tasks = []; // Aucune tâche à afficher
+                $pagerLinks = ''; // Pas de pagination nécessaire
+            } else {
+                // Calcul de l'offset pour la pagination
+                $offset = ($currentPage - 1) * $perPage;
 
+                // Récupération des tâches paginées
+                $tasks = $taskModel->getPaginatedTasks($perPage, $offset);
+
+                // Génération des liens de pagination
+                $pagerLinks = $pager->makeLinks($currentPage, $perPage, $totalTasks);
+            }
 
             // Retourner la vue avec les données nécessaires
             return view('Tache/index', [
-                'categories'            => $categories,
-                'tasksToDo'             => $tasksToDo,
-                'tasksInProgress'       => $tasksInProgress,
-                'tasksCompleted'        => $tasksCompleted,
-                'perPage'               => $perPage,
-                'currentPageToDo'       => $currentPage,
-                'totalTasksToDo'        => $totalTasksToDo,
-                'totalTasksInProgress'  => $totalTasksInProgress,
-                'totalTasksCompleted'   => $totalTasksCompleted,
-				'offset' => $offset,
-                'pager' => $taskModel->pager,
-                'tasks'  => $tasks,
+                'categories' => $categories,
+                'tasksToDo' => $tasksToDo,
+                'tasksInProgress' => $tasksInProgress,
+                'tasksCompleted' => $tasksCompleted,
+                'perPage' => $perPage,
+                'currentPage' => $currentPage,
+                'totalTasksToDo' => $totalTasksToDo,
+                'totalTasksInProgress' => $totalTasksInProgress,
+                'totalTasksCompleted' => $totalTasksCompleted,
+                'pagerLinks' => $pagerLinks, // Renvoie les liens de pagination ou une chaîne vide si aucune tâche
+                'tasks' => $tasks,
             ]);
         }
-
 		
 		// Méthode pour enregistrer une nouvelle tâche
 		public function store()

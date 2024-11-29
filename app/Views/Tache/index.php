@@ -4,6 +4,7 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 ?>
 
 
+
 <body>
 	<!-- Navbar -->
 	<?php require 'navbar.php'; ?>

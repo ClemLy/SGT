@@ -1,5 +1,5 @@
 <?php setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr'); ?>
-<?php $perPage = $perPage ?? 0; ?>
+<?php $perPage = $perPage ?? 10; ?>
 <div id="tableTasksBody">
     <form method="get" action="<?= site_url('tasks/') ?>">
         <label for="perPage">Tâches par page :</label>
@@ -24,7 +24,11 @@
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($tasks ?? array_merge($tasksToDo ?? [], $tasksInProgress ?? [], $tasksCompleted ?? []) as $task): ?>
+        <?php
+        $allTasks = $tasks ?? array_merge($tasksToDo ?? [], $tasksInProgress ?? [], $tasksCompleted ?? []);
+        if (!empty($allTasks)): // Vérifie si le tableau des tâches n'est pas vide
+            ?>
+            <?php foreach ($allTasks as $task): ?>
             <?php
             $isOverdue = false;
             if (isset($task['echeance_tache']) && !empty($task['echeance_tache']) && $task['etat_tache'] != 'Terminée' ) {
@@ -60,12 +64,18 @@
                 </td>
             </tr>
         <?php endforeach; ?>
+        <?php else: ?>
+            <!-- Affiche un message si aucune tâche n'existe -->
+            <tr>
+                <td colspan="5" class="text-center">Aucune tâche trouvée</td>
+            </tr>
+        <?php endif; ?>
         </tbody>
     </table>
 
     <!-- Pagination -->
 
-    <?php if (isset($pager)): ?>
+    <?php if (isset($pager)) : ?>
         <!-- Pagination -->
         <nav aria-label="Pagination">
             <?= $pager->links() ?>
