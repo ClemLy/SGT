@@ -21,6 +21,7 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 						try
 						{
 							$dueDate     = new DateTime($task['echeance_tache']);
+							$dueDate->modify('+1 day');
 							$currentDate = new DateTime();
 							$isOverdue   = $dueDate < $currentDate;
 						}
