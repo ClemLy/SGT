@@ -7,6 +7,7 @@
 body{
     height:100vw !important;
     overflow: scroll;
+    width:100vw !important;
 
 }
 
@@ -119,7 +120,7 @@ a{
 
 
 button.bi-three-dots{
-    color:black; !important;
+    color:black !important;
 }
 
 .align-items-center *
@@ -130,6 +131,7 @@ button.bi-three-dots{
 .card{
     border-radius: 15px !important;
 }
+
 
 .overdue {
     background-color: #FF8C8C !important;

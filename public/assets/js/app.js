@@ -1,19 +1,44 @@
+function htmlEntityDecode(str)
+{
+	const txt     = document.createElement('textarea');
+	txt.innerHTML = str;
+	return txt.value;
+}
+
 // Charge les détails d'une tâche dans le formulaire de modification
 function loadTaskData(taskId, titre, description, echeance, etat, categorie)
 {
-    document.getElementById('task_id').value = taskId;
-    document.getElementById('edit_titre').value = titre;
-    document.getElementById('edit_description').value = description;
-    document.getElementById('edit_echeance').value = echeance;
-    document.getElementById('edit_etat_tache').value = etat;
-    document.getElementById('edit_categorie').value = categorie;
+	document.getElementById('task_id').value          = taskId;
+	document.getElementById('edit_titre').value       = titre;
+	document.getElementById('edit_description').value = htmlEntityDecode(description);
+	document.getElementById('edit_echeance').value    = echeance;
+	document.getElementById('edit_etat_tache').value  = etat;
+	document.getElementById('edit_categorie').value   = categorie;
+
+	setupCharacterCounter();
 }
+
+function setupCharacterCounter()
+{
+	const descriptionField = document.getElementById('edit_description');
+	const charCountDisplay = document.getElementById('charCount');
+	const maxLength = 100;
+
+	descriptionField.addEventListener('input', function ()
+	{
+		const currentLength = descriptionField.value.length;
+		charCountDisplay.textContent = `${currentLength}/${maxLength}`;
+	});
+}
+
 
 // Charge et affiche les détails et les commentaires d'une tâche dans la popup
 function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache)
 {
+	console.log(titre, description, echeance, etat, categorie);
+
     document.getElementById('detail_titre').innerText = titre;
-    document.getElementById('detail_description').innerText = description;
+    document.getElementById('detail_description').innerText = htmlEntityDecode(description);
     document.getElementById('detail_echeance').innerText = echeance;
     document.getElementById('detail_etat').innerText = etat;
     document.getElementById('detail_categorie').innerText = categorie;

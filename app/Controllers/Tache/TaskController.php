@@ -116,11 +116,10 @@
 				$idCategorie = NULL;
 			}
 
-
 			// Préparer les données de la tâche à enregistrer
 			$taskData = [
 				'titre'             => $this->request->getPost('titre'),
-				'description_tache' => $this->request->getPost('description_tache'),
+				'description_tache' => htmlspecialchars($this->request->getPost('description_tache')),
 				'etat_tache'        => $this->request->getPost('etat_tache'),
 				'echeance_tache'    => $this->request->getPost('echeance_tache'),
 				'id_user'           => session()->get('id_user'),  // Utilisation de l'utilisateur connecté
@@ -133,7 +132,7 @@
 
             $currentView = $this->request->getPost('current_view') ?? 'tableau';
             return redirect()->to('/tasks#' . $currentView)->with('success', 'Tâche créée avec succès');
-         	}
+        }
 
 		public function update()
 		{
@@ -143,7 +142,7 @@
 			// Récupération des données du formulaire
 			$taskId         = $this->request->getPost('task_id');
 			$titre          = $this->request->getPost('titre');
-			$description    = $this->request->getPost('description_tache');
+			$description    = htmlspecialchars($this->request->getPost('description_tache'));
 			$echeance       = $this->request->getPost('echeance_tache');
 			$etat           = $this->request->getPost('etat_tache');
 			$titreCategorie = $this->request->getPost('categorie');
@@ -152,7 +151,7 @@
 			$validation = \Config\Services::validation();
 			$validation->setRules([
 				'titre'             => 'required|min_length[3]|max_length[255]',
-				'description_tache' => 'permit_empty|max_length[500]',
+				'description_tache' => 'permit_empty|max_length[100]',
 				'echeance_tache'    => 'required|valid_date',
 				'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',
 				'categorie'         => 'permit_empty|min_length[3]|max_length[255]',

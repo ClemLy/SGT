@@ -61,7 +61,7 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 							<div style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal"
 								onclick="loadTaskDetails('<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>', '<?= esc($task['id_tache']); ?>')">
 								<h4 class="t-title card-title mb-2"><?= esc($task['titre']); ?></h4>
-								<p class="card-text"><?= esc($task['description_tache']); ?></p>
+								<p class="card-text"><?= html_entity_decode($task['description_tache']); ?></p>
 							</div>
 						</div>
 					</div>
