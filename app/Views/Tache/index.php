@@ -4,6 +4,7 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 ?>
 
 
+
 <body>
 	<!-- Navbar -->
 	<?php require 'navbar.php'; ?>
@@ -60,6 +61,7 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 						<div class="mb-3">
 							<label for="description_tache" class="form-label">Description</label>
 							<textarea class="form-control" name="description_tache" id="description_tache"></textarea>
+							<div id="charCount" class="mt-2 text-muted">0/100</div>
 						</div>
 						<div class="mb-3">
 						<label for="importance_tache" class="form-label">Statut</label>
@@ -117,6 +119,7 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 						<div class="mb-3">
 							<label for="edit_description" class="form-label">Description</label>
 							<textarea class="form-control" name="description_tache" id="edit_description"></textarea>
+							<div id="charCount" class="mt-2 text-muted">0/100</div>
 						</div>
 						<div class="mb-3">
 							<label for="edit_echeance" class="form-label">Échéance</label>

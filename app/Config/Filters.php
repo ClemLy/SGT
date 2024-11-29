@@ -84,7 +84,7 @@ class Filters extends BaseFilters
     // ];
 
 
-    public array $globals = [
+    /*public array $globals = [
         'before' => [
             'authguard' => [
                 'except' => [
@@ -102,7 +102,7 @@ class Filters extends BaseFilters
         ],
         'after'  => [
         ],
-    ];
+    ];*/
 
     /**
      * List of filter aliases that works on a
