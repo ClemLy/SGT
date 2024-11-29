@@ -47,6 +47,7 @@
 
             // Récupération des tâches paginées pour tout
             $tasks = $taskModel->getPaginatedTasks($perPage, $offset);
+            $pager->makeLinks($currentPage, $perPage, $totalTasksToDo + $totalTasksInProgress + $totalTasksCompleted);
 
 
             // Retourner la vue avec les données nécessaires
@@ -61,7 +62,7 @@
                 'totalTasksInProgress'  => $totalTasksInProgress,
                 'totalTasksCompleted'   => $totalTasksCompleted,
 				'offset' => $offset,
-                'pager'  => $pager,
+                'pager' => $taskModel->pager,
                 'tasks'  => $tasks,
             ]);
         }

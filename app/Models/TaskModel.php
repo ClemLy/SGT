@@ -35,20 +35,31 @@
         }
 
 
-        public function getPaginatedTasks($perPage, $offset, $searchQuery = '')
+        public function getPaginatedTasks($perPage, $page, $searchQuery = '')
         {
-            // Convertir les paramètres pour s'assurer qu'ils sont valides
-            $offset  = max((int)$offset, 0); // Assure que l'offset est au minimum 0
-            $perPage = max((int)$perPage, 1); // Assure qu'au moins une tâche est récupérée
-
-            $builder = $this->db->table('tache')
-                ->select('tache.*, categorie.titre_categorie')
+            $builder = $this->select('tache.*, categorie.titre_categorie')
                 ->join('categorie', 'tache.id_categorie = categorie.id_categorie', 'left')
                 ->where('tache.id_user', session()->get('id_user'));
+    
+            if (!empty($searchQuery)) {
+                $builder->groupStart()
+                    ->like('tache.titre', $searchQuery)
+                    ->orLike('categorie.titre_categorie', $searchQuery)
+                    ->orLike('tache.description_tache', $searchQuery)
+                    ->groupEnd();
+            }
+    
+            return $this->paginate($perPage, 'default', $page);
+        }
 
-            // Appliquer la recherche si une requête est fournie
-            if (!empty($searchQuery))
-            {
+        
+
+        public function getTotalTasks($searchQuery = '')
+        {
+            $builder = $this->db->table('tache')
+                ->where('tache.id_user', session()->get('id_user'));
+
+            if (!empty($searchQuery)) {
                 $builder->groupStart()
                     ->like('tache.titre', $searchQuery)
                     ->orLike('categorie.titre_categorie', $searchQuery)
@@ -56,13 +67,7 @@
                     ->groupEnd();
             }
 
-            // Appliquer les limites de pagination
-            $builder->limit($perPage, $offset);
-
-            // Récupérer les résultats
-            $results = $builder->get()->getResultArray();
-
-            return $results ?: []; // Retourner un tableau vide si aucun résultat
+            return $builder->countAllResults();
         }
         
         public function getAllTasksPaginated($perPage, $offset, $searchQuery = '')
