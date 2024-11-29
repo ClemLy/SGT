@@ -165,6 +165,29 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 		</div>
 	</div>
 
+
+
+	<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="deleteAccountModalLabel">Confirmer la suppression de votre compte</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Vouslez vous vraiment supprimer votre compte ? Cette action est irréversible.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+				<!-- Formulaire pour supprimer le compte -->
+				<form action="<?= site_url('profile/delete'); ?>" method="POST">
+				<button type="submit" class="btn btn-danger" name="delete_account">Supprimer le compte</button>
+				</form>
+			</div>
+			</div>
+		</div>
+	</div>
+
     <script>
         let searchTimeout; // Variable pour gérer le délai
         let isFetching = false; // État pour savoir si une requête est en cours

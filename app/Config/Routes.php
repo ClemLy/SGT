@@ -19,6 +19,9 @@ $routes->get('/activate/(:any)', 'Utilisateur\SignupController::activate/$1');
 // Profil
 $routes->get('/profile', 'Utilisateur\UserController::profile', ['filter' => 'authguard']);
 $routes->post('/profile/update', 'Utilisateur\UserController::updateProfile');
+$routes->get('/profile/delete', 'Utilisateur\UserController::deleteProfile');
+$routes->post('/profile/delete', 'Utilisateur\UserController::deleteProfile');
+
 
 // Réinitialisation de mot de passe
 $routes->get('/forgot-password', 'Utilisateur\ForgotPasswordController::index');
