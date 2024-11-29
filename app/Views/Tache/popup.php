@@ -9,6 +9,7 @@
                 <p><strong>Titre : </strong> <span id="detail_titre"></span></p>
                 <p><strong>Description : </strong> <span id="detail_description"></span></p>
                 <p><strong>Catégorie : </strong> <span id="detail_categorie"></span></p>
+                <p><strong>Importance : </strong> <span id="detail_importance"></span></p>
                 <p><strong>Échéance : </strong> <span id="detail_echeance"></span></p>
                 <p><strong>Statut : </strong> <span id="detail_etat"></span></p>
 

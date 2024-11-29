@@ -62,6 +62,14 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 							<textarea class="form-control" name="description_tache" id="description_tache"></textarea>
 						</div>
 						<div class="mb-3">
+						<label for="importance_tache" class="form-label">Statut</label>
+							<select class="form-control" name="importance_tache" id="importance_tache" required>
+								<option value="Faible">Faible</option>
+								<option value="Modéré">Modéré</option>
+								<option value="Fort">Fort</option>
+							</select>
+						</div>
+						<div class="mb-3">
 							<label for="echeance_tache" class="form-label">Échéance</label>
 							<input type="date" class="form-control" name="echeance_tache" id="echeance_tache" required>
 						</div>

@@ -78,6 +78,7 @@
 			$validation->setRules([
 				'titre'             => 'required|min_length[3]|max_length[255]',
 				'description_tache' => 'permit_empty|max_length[500]',
+				'importance_tache'  => 'required|in_list[Faible,Modéré,Faible]',
 				'echeance_tache'    => 'required|valid_date',
 				'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',
 				'categorie'         => 'permit_empty|min_length[3]|max_length[255]',
@@ -121,6 +122,7 @@
 			$taskData = [
 				'titre'             => $this->request->getPost('titre'),
 				'description_tache' => $this->request->getPost('description_tache'),
+				'importance_tache'  => $this->request->getPost('importance_tache'),
 				'etat_tache'        => $this->request->getPost('etat_tache'),
 				'echeance_tache'    => $this->request->getPost('echeance_tache'),
 				'id_user'           => session()->get('id_user'),  // Utilisation de l'utilisateur connecté
@@ -143,6 +145,7 @@
 			// Récupération des données du formulaire
 			$taskId         = $this->request->getPost('task_id');
 			$titre          = $this->request->getPost('titre');
+			$importance     = $this->request->getPost('importance_tache');
 			$description    = $this->request->getPost('description_tache');
 			$echeance       = $this->request->getPost('echeance_tache');
 			$etat           = $this->request->getPost('etat_tache');
@@ -153,6 +156,7 @@
 			$validation->setRules([
 				'titre'             => 'required|min_length[3]|max_length[255]',
 				'description_tache' => 'permit_empty|max_length[500]',
+				'importance_tache'  => 'required|in_list[Faible,Modéré,Faible]',
 				'echeance_tache'    => 'required|valid_date',
 				'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',
 				'categorie'         => 'permit_empty|min_length[3]|max_length[255]',
@@ -194,6 +198,7 @@
 			$data = [
 				'titre'             => $titre,
 				'description_tache' => $description,
+				'importance_tache'  => $importance,
 				'echeance_tache'    => $echeance,
 				'etat_tache'        => $etat,
 				'id_categorie'      => $idCategorie,
