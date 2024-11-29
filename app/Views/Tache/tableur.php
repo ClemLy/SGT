@@ -76,6 +76,9 @@
         if (event.target.closest('.no-click')) {
             return; // Ignorer le clic
         }
+        const taskDetailModal = new bootstrap.Modal(document.getElementById('taskDetailModal'));
+        taskDetailModal.show();
         loadTaskDetails(title, description, dueDate, status, category, id);
+        
     }
 </script>
