@@ -18,19 +18,18 @@
 		// Méthode pour afficher les tâches
         public function index()
         {
+            // Chargement des services et modèles
             $pager = \Config\Services::pager();
-
-            // Chargement des modèles
             $taskModel = new TaskModel();
             $categoryModel = new CategoryModel();
 
-            // Récupération des catégories
-            $categories = $categoryModel->findAll();
+            // Gestion des paramètres de pagination
+            $perPage = (int) ($this->request->getGet('perPage') ?? 10);
+            $currentPage = (int) ($this->request->getGet('page') ?? 1);
+            $perPage = $perPage > 0 ? $perPage : 10;
+            $currentPage = $currentPage > 0 ? $currentPage : 1;
+            $searchQuery = $this->request->getGet('searchQuery') ?? '';
 
-            // Récupération des tâches par statut
-            $tasksToDo = $taskModel->getTasksWithCategoriesByStatus('À faire');
-            $tasksInProgress = $taskModel->getTasksWithCategoriesByStatus('En cours');
-            $tasksCompleted = $taskModel->getTasksWithCategoriesByStatus('Terminée');
 
             // Calcul des totaux par statut
             $totalTasksToDo = $taskModel->getTaskCount('À faire');
@@ -38,48 +37,45 @@
             $totalTasksCompleted = $taskModel->getTaskCount('Terminée');
             $totalTasks = $totalTasksToDo + $totalTasksInProgress + $totalTasksCompleted;
 
-            // Gestion des paramètres de pagination
-            $perPage = (int) ($this->request->getGet('perPage') ?? 10); // Nombre d'éléments par page
-            if ($perPage <= 0) {
-                $perPage = 10; // Valeur par défaut
+            // Récupération des tâches paginées
+            $tasks = $taskModel->getPaginatedTasks($perPage, $currentPage, $searchQuery);
+
+            // Vérifier si la requête est AJAX
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON([
+                    'tasks' => $tasks,
+                    'pager' => [
+                        'currentPage' => $currentPage,
+                        'perPage' => $perPage,
+                        'totalTasks' => $totalTasks,
+                        'totalPages' => ceil($totalTasks / $perPage),
+                    ],
+                ]);
             }
 
-            $currentPage = (int) ($this->request->getGet('page') ?? 1); // Page actuelle
-            if ($currentPage <= 0) {
-                $currentPage = 1; // Valeur par défaut
-            }
+            // Récupération des catégories et tâches par statut (pour affichage classique)
+            $categories = $categoryModel->findAll();
+            $tasksToDo = $taskModel->getTasksWithCategoriesByStatus('À faire');
+            $tasksInProgress = $taskModel->getTasksWithCategoriesByStatus('En cours');
+            $tasksCompleted = $taskModel->getTasksWithCategoriesByStatus('Terminée');
+            $pagerLinks = $totalTasks > 0 ? $pager->makeLinks($currentPage, $perPage, $totalTasks) : '';
 
-            // Gestion du cas où il n'y a aucune tâche
-            if ($totalTasks === 0) {
-                $tasks = []; // Aucune tâche à afficher
-                $pagerLinks = ''; // Pas de pagination nécessaire
-            } else {
-                // Calcul de l'offset pour la pagination
-                $offset = ($currentPage - 1) * $perPage;
-
-                // Récupération des tâches paginées
-                $tasks = $taskModel->getPaginatedTasks($perPage, $offset);
-
-                // Génération des liens de pagination
-                $pagerLinks = $pager->makeLinks($currentPage, $perPage, $totalTasks);
-            }
-
-            // Retourner la vue avec les données nécessaires
+            // Chargement de la vue
             return view('Tache/index', [
                 'categories' => $categories,
                 'tasksToDo' => $tasksToDo,
                 'tasksInProgress' => $tasksInProgress,
                 'tasksCompleted' => $tasksCompleted,
+                'tasks' => $tasks,
                 'perPage' => $perPage,
                 'currentPage' => $currentPage,
                 'totalTasksToDo' => $totalTasksToDo,
                 'totalTasksInProgress' => $totalTasksInProgress,
                 'totalTasksCompleted' => $totalTasksCompleted,
-                'pagerLinks' => $pagerLinks, // Renvoie les liens de pagination ou une chaîne vide si aucune tâche
-                'tasks' => $tasks,
+                'pagerLinks' => $pagerLinks,
+                'pager'=> $pager,
             ]);
         }
-		
 		// Méthode pour enregistrer une nouvelle tâche
 		public function store()
 		{
