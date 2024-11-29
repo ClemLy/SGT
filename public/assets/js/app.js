@@ -37,11 +37,11 @@ function setupCharacterCounter()
 // Formater la date 
 function formatDate(dateString, includeTime = true) {
     const days = [
-        'dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'
+        'Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'
     ];
     const months = [
-        'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 
-        'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+        'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 
+        'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
     ];
 
     const date = new Date(dateString);
@@ -67,12 +67,12 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 {
 	console.log(titre, description, echeance, etat, categorie);
 
-    document.getElementById('detail_titre').innerText = titre;
+    document.getElementById('detail_titre').innerText       = titre;
     document.getElementById('detail_description').innerText = htmlEntityDecode(description);
-    document.getElementById('detail_echeance').innerText = echeance;
-    document.getElementById('detail_etat').innerText = etat;
-    document.getElementById('detail_categorie').innerText = categorie;
-    document.getElementById('comment_task_id').value = id_tache;
+    document.getElementById('detail_echeance').innerText    = formatDate(echeance, false);
+    document.getElementById('detail_etat').innerText        = etat;
+    document.getElementById('detail_categorie').innerText   = categorie;
+    document.getElementById('comment_task_id').value        = id_tache;
 
 	loadPaginatedComments(id_tache, 1); // Charger les commentaires de la première page
 
