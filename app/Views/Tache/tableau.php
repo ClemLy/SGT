@@ -2,9 +2,8 @@
 setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr');
 
 function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
-{
+{	
 	$nbTask = 0;
-
 	foreach ($tasks as $task): 
 		$nbTask++;
 	endforeach; ?>
@@ -12,7 +11,7 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 	<div class="col-md-3 task-status p-4 " ondragover="allowDrop(event)"
 		ondrop="drop(event, '<?= esc($statusId); ?>')">
 		<div class="head-column d-flex justify-content-between align-items-center mb-3">
-		<h3><?= esc($title . ' (' . $nbTask . ')'); ?></h3>
+			<h3><?= esc($title. ' (' . $nbTask . ')'); ?></h3>
 			<button class="btn"  data-bs-toggle="modal" data-bs-target="<?= $modalTarget ?>" onclick="setTaskStatus('<?= esc($title); ?>')">+</button>
 		</div>
 		<div id="<?= esc($statusId); ?>" class="class_taches pe-0">
@@ -65,7 +64,7 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 							</div>
 							<div style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal"
 								onclick="loadTaskDetails('<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>', '<?= esc($task['id_tache']); ?>')">
-								<h4 class="t-title card-title mb-2"><?= esc($task['titre']); ?></h4>
+								<h4 class="t-title card-title mb-2"><?= html_entity_decode($task['titre']); ?></h4>
 								<p class="card-text"><?= html_entity_decode($task['description_tache']); ?></p>
 							</div>
 						</div>

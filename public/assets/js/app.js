@@ -9,7 +9,7 @@ function htmlEntityDecode(str)
 function loadTaskData(taskId, titre, description, echeance, etat, categorie)
 {
 	document.getElementById('task_id').value          = taskId;
-	document.getElementById('edit_titre').value       = titre;
+	document.getElementById('edit_titre').value       = htmlEntityDecode(titre);
 	document.getElementById('edit_description').value = htmlEntityDecode(description);
 	document.getElementById('edit_echeance').value    = echeance;
 	document.getElementById('edit_etat_tache').value  = etat;
@@ -67,7 +67,7 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
 {
 	console.log(titre, description, echeance, etat, categorie);
 
-    document.getElementById('detail_titre').innerText       = titre;
+    document.getElementById('detail_titre').innerText       = htmlEntityDecode(titre);
     document.getElementById('detail_description').innerText = htmlEntityDecode(description);
     document.getElementById('detail_echeance').innerText    = formatDate(echeance, false);
     document.getElementById('detail_etat').innerText        = etat;

@@ -6,6 +6,9 @@
 	use App\Models\CategoryModel;
 	use App\Controllers\BaseController;
 	use Config\Pager;
+	use DateTime;
+
+	setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr');
 
     class TaskController extends BaseController
 	{
@@ -118,7 +121,7 @@
 
 			// Préparer les données de la tâche à enregistrer
 			$taskData = [
-				'titre'             => $this->request->getPost('titre'),
+				'titre'             => htmlspecialchars($this->request->getPost('titre')),
 				'description_tache' => htmlspecialchars($this->request->getPost('description_tache')),
 				'etat_tache'        => $this->request->getPost('etat_tache'),
 				'echeance_tache'    => $this->request->getPost('echeance_tache'),
@@ -141,7 +144,7 @@
 
 			// Récupération des données du formulaire
 			$taskId         = $this->request->getPost('task_id');
-			$titre          = $this->request->getPost('titre');
+			$titre          = htmlspecialchars($this->request->getPost('titre'));
 			$description    = htmlspecialchars($this->request->getPost('description_tache'));
 			$echeance       = $this->request->getPost('echeance_tache');
 			$etat           = $this->request->getPost('etat_tache');
@@ -309,6 +312,11 @@
 
 			if ($user)
 			{
+				$dateEcheance = esc(strftime(
+					(date('Y') === (new DateTime($task['echeance_tache']))->format('Y') ? '%A %d %B' : '%A %d %B %Y'),
+					(new DateTime($task['echeance_tache']))->getTimestamp()
+				));
+
 				$email = \Config\Services::email();
 				$email->setFrom('XtrayShow@yahoo.fr', 'SGT');
 				$email->setTo($user['email_user']); // Adresse e-mail de l'utilisateur
@@ -316,7 +324,7 @@
 				$email->setMessage("
 					Bonjour {$user['prenom_user']},
 
-					La tâche \"{$task['titre']}\" est prévue pour bientôt ({$task['echeance_tache']}).
+					la tâche \"{$task['titre']}\" est prévue pour bientôt ({$dateEcheance}).
 					Merci de prendre les mesures nécessaires.
 
 					Bonne journée !
