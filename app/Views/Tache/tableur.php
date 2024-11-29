@@ -27,7 +27,7 @@
         <?php foreach ($tasks ?? array_merge($tasksToDo ?? [], $tasksInProgress ?? [], $tasksCompleted ?? []) as $task): ?>
             <?php
             $isOverdue = false;
-            if (isset($task['echeance_tache']) && !empty($task['echeance_tache'])) {
+            if (isset($task['echeance_tache']) && !empty($task['echeance_tache']) && $task['etat_tache'] != 'Terminée' ) {
                 try {
                     $dueDate = new DateTime($task['echeance_tache']);
                     $currentDate = new DateTime();
