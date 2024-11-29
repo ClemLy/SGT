@@ -123,7 +123,7 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 						</div>
 						<div class="mb-3">
 							<label for="edit_importance_tache" class="form-label">Importance</label>
-							<select class="form-control" name="edit_importance_tache" id="edit_importance_tache" required>
+							<select class="form-control" name="importance_tache" id="edit_importance_tache" required>
 								<option value="Faible">Faible</option>
 								<option value="Modéré">Modéré</option>
 								<option value="Fort">Fort</option>
