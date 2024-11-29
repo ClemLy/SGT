@@ -55,7 +55,7 @@
 
 			}
 			else
-			{
+			{	
 				$data['validation'] = $this->validator;
 				echo view('Utilisateur/signup', $data);
 			}

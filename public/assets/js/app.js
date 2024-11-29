@@ -18,6 +18,7 @@ function loadTaskData(taskId, titre, description, echeance, etat, categorie)
 	setupCharacterCounter();
 }
 
+
 function setupCharacterCounter()
 {
 	const descriptionField = document.getElementById('edit_description');
@@ -30,6 +31,35 @@ function setupCharacterCounter()
 		charCountDisplay.textContent = `${currentLength}/${maxLength}`;
 	});
 }
+
+
+
+// Formater la date 
+function formatDate(dateString, includeTime = true) {
+    const days = [
+        'dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'
+    ];
+    const months = [
+        'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 
+        'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+    ];
+
+    const date = new Date(dateString);
+    const dayName = days[date.getDay()];
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+
+    if (includeTime) {
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        // const seconds = date.getSeconds().toString().padStart(2, '0');
+        return `${dayName} ${day} ${month} ${year} à ${hours}:${minutes}`;
+    } else {
+        return `${dayName} ${day} ${month} ${year}`;
+    }
+}
+
 
 
 // Charge et affiche les détails et les commentaires d'une tâche dans la popup
@@ -66,7 +96,7 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
                 const newCommentHTML = `
                     <div class="mb-3 border p-2 d-flex justify-content-between align-items-center" id="comment-${data.comment.id_commentaire}">
                         <div>
-                            <p><strong>${data.comment.date_commentaire}</strong></p>
+                            <p><strong>${formatDate(data.comment.date_commentaire)}</strong></p>
                             <p>${data.comment.text_commentaire}</p>
                         </div>
 						<button class="btn btn-sm btn-danger" onclick="deleteComment(${data.comment.id_commentaire})">
@@ -130,7 +160,7 @@ function loadPaginatedComments(id_tache, page)
                     const commentHTML = `
                     <div class="mb-3 border p-2 d-flex justify-content-between align-items-center" id="comment-${comment.id_commentaire}">
                         <div>
-                            <p><strong>${comment.date_commentaire}</strong></p>
+                            <p><strong>${formatDate(comment.date_commentaire)}</strong></p>
                             <p>${comment.text_commentaire}</p>
                         </div>
                         <button class="btn btn-sm btn-danger" onclick="deleteComment(${comment.id_commentaire})">

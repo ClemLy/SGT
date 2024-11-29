@@ -3,11 +3,16 @@ setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr');
 
 function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 {
-	?>
+	$nbTask = 0;
+
+	foreach ($tasks as $task): 
+		$nbTask++;
+	endforeach; ?>
+
 	<div class="col-md-3 task-status p-4 " ondragover="allowDrop(event)"
 		ondrop="drop(event, '<?= esc($statusId); ?>')">
 		<div class="head-column d-flex justify-content-between align-items-center mb-3">
-			<h3><?= esc($title); ?></h3>
+		<h3><?= esc($title . ' (' . $nbTask . ')'); ?></h3>
 			<button class="btn"  data-bs-toggle="modal" data-bs-target="<?= $modalTarget ?>" onclick="setTaskStatus('<?= esc($title); ?>')">+</button>
 		</div>
 		<div id="<?= esc($statusId); ?>" class="class_taches pe-0">
