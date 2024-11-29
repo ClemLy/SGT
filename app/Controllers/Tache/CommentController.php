@@ -67,5 +67,23 @@
 				]);
 			}
 		}
+
+
+		public function getPaginated($id_tache)
+		{
+			$model   = new CommentModel();
+			$perPage = $this->request->getGet('perPage') ?? 3; // Nombre de commentaires par page
+			$page    = $this->request->getGet('page') ?? 1;
+
+			$comments = $model->getPaginatedCommentsByTask($id_tache, $perPage, $page);
+
+
+			return $this->response->setJSON([
+				'comments' => $comments,
+				'pager'    => $model->pager->getDetails(),
+			]);
+			
+		}
+
 	}
 ?>

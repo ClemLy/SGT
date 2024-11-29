@@ -15,5 +15,12 @@
 			$query = $db->query("SELECT * FROM get_task_comments(?)", [$id_tache]);
 			return $query->getResultArray();
 		}
+
+		public function getPaginatedCommentsByTask($id_tache, $perPage, $page)
+		{
+			return $this->where('id_tache', $id_tache)
+						->orderBy('date_commentaire', 'DESC')
+						->paginate($perPage, 'default', $page);
+		}
 	}
 ?>

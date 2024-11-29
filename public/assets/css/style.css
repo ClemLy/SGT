@@ -156,3 +156,13 @@ tr {
 td{
     padding-left:2% !important;
 }
+
+.pagination button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.pagination span {
+    margin: 0 10px;
+    font-weight: bold;
+}

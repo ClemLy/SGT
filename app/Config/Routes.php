@@ -56,6 +56,8 @@ $routes->get('/tasks/page', 'Tache\TaskController::page');
 $routes->get('comment/get/(:num)', 'Tache\CommentController::get/$1');
 $routes->post('comment/add', 'Tache\CommentController::add');
 $routes->delete('comment/delete/(:num)', 'Tache\CommentController::delete/$1');
+$routes->get('comment/getPaginated/(:num)', 'Tache\CommentController::getPaginated/$1');
+
 
 
 // Déconnexion

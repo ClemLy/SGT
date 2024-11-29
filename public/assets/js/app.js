@@ -10,7 +10,8 @@ function loadTaskData(taskId, titre, description, echeance, etat, categorie)
 }
 
 // Charge et affiche les détails et les commentaires d'une tâche dans la popup
-function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache) {
+function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache)
+{
     document.getElementById('detail_titre').innerText = titre;
     document.getElementById('detail_description').innerText = description;
     document.getElementById('detail_echeance').innerText = echeance;
@@ -18,37 +19,11 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
     document.getElementById('detail_categorie').innerText = categorie;
     document.getElementById('comment_task_id').value = id_tache;
 
+	loadPaginatedComments(id_tache, 1); // Charger les commentaires de la première page
+
     // Charger les commentaires
     const commentsSection = document.getElementById('commentaires_section');
     commentsSection.innerHTML = ''; // Vider les anciens commentaires
-
-    fetch(`/comment/get/${id_tache}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.length === 0)
-			{
-                commentsSection.innerHTML = '<p>Aucun commentaire pour cette tâche.</p>';
-            }
-			else {
-                data.forEach(comment => {
-                    const commentHTML = `
-                    <div class="mb-3 border p-2 d-flex justify-content-between align-items-center" id="comment-${comment.id_commentaire}">
-                        <div>
-                            <p><strong>${comment.date_commentaire}</strong></p>
-                            <p>${comment.text_commentaire}</p>
-                        </div>
-                        <button class="btn btn-sm btn-danger" onclick="deleteComment(${comment.id_commentaire})">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>`;
-                    commentsSection.innerHTML += commentHTML; // Ajouter en bas
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Erreur lors du chargement des commentaires:', error);
-            commentsSection.innerHTML = '<p>Erreur lors du chargement des commentaires.</p>';
-        });
 
     // Gestion de l'envoi du formulaire AJAX
     const form = document.getElementById('addCommentForm');
@@ -75,7 +50,9 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
                     </div>`;
                 commentsSection.insertAdjacentHTML('afterbegin', newCommentHTML); // Insérer en haut
                 form.reset(); // Réinitialiser le formulaire
-            } else {
+            }
+			else
+			{
                 console.error('Erreur:', data.message);
             }
         })
@@ -106,6 +83,73 @@ function deleteComment(commentId)
 		console.error('Erreur lors de la suppression du commentaire:', error);
 	});
 }
+
+
+function loadPaginatedComments(id_tache, page)
+{
+    const commentsSection = document.getElementById('commentaires_section');
+    commentsSection.innerHTML = ''; // Vider les anciens commentaires
+
+    fetch(`/comment/getPaginated/${id_tache}?page=${page}&perPage=3`)
+        .then(response => response.json())
+        .then(data => {
+			console.log(data);
+            const { comments, pager } = data;
+            if (comments.length === 0)
+			{
+                commentsSection.innerHTML = '<p>Aucun commentaire pour cette tâche.</p>';
+            }
+			else
+			{
+                comments.forEach(comment => {
+                    const commentHTML = `
+                    <div class="mb-3 border p-2 d-flex justify-content-between align-items-center" id="comment-${comment.id_commentaire}">
+                        <div>
+                            <p><strong>${comment.date_commentaire}</strong></p>
+                            <p>${comment.text_commentaire}</p>
+                        </div>
+                        <button class="btn btn-sm btn-danger" onclick="deleteComment(${comment.id_commentaire})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>`;
+                    commentsSection.innerHTML += commentHTML;
+                });
+
+                // Ajouter les liens de pagination
+                const paginationHTML = generatePaginationHTML(pager, id_tache);
+                commentsSection.innerHTML += paginationHTML;
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des commentaires:', error);
+            commentsSection.innerHTML = '<p>Erreur lors du chargement des commentaires.</p>';
+        });
+}
+
+
+function generatePaginationHTML(pager, id_tache)
+{
+	const totalPages = Math.ceil(pager.total / pager.perPage);
+
+    let html = `<div class="pagination">Page ${pager.currentPage} sur ${totalPages}</div>`;
+
+    // Vérifier si une page précédente existe
+    if (pager.previous)
+	{
+        html += `<button onclick="loadPaginatedComments(${id_tache}, ${pager.currentPage - 1})">Précédent</button>`;
+    }
+
+    // Vérifier si une page suivante existe
+    if (pager.next)
+	{
+        html += `<button onclick="loadPaginatedComments(${id_tache}, ${pager.currentPage + 1})">Suivant</button>`;
+    }
+
+    html += '</div>';
+    return html;
+}
+
+
 
 // Basculer entre tableau et tableur
 function switchView(view) {
