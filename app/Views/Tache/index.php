@@ -147,30 +147,60 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 	</div>
 
     <script>
+        let searchTimeout; // Variable pour gérer le délai
+        let isFetching = false; // État pour savoir si une requête est en cours
+        let lastSearchValue = ""; // Dernière valeur de recherche à envoyer
+
         function searchTasks() {
             const searchValue = document.getElementById('taskSearchInput').value;
 
-            fetch(`<?= site_url('tasks/searchTasks'); ?>?search=${encodeURIComponent(searchValue)}`, {
-                method: 'GET',
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    // Mise à jour de la vue Kanban (tableau.php)
-                    const taskColumns = document.getElementById('taskColumns');
-                    if (data.kanban && taskColumns) {
-                        taskColumns.innerHTML = data.kanban; // Remplacement complet
-                    }
+            // Stocke la dernière valeur de recherche
+            lastSearchValue = searchValue;
 
-                    // Mise à jour de la vue Tableur (tableur.php)
-                    const tableBody = document.getElementById('tableTasksBody');
-                    if (data.table && tableBody) {
-                        tableBody.innerHTML = data.table; // Remplacement complet
-                    }
+            // Annule tout timeout précédent
+            clearTimeout(searchTimeout);
+
+            // Démarre un nouveau timeout
+            searchTimeout = setTimeout(() => {
+                // Si une requête est déjà en cours, on attend qu'elle soit terminée
+                if (isFetching) {
+                    return;
+                }
+
+                // Indique qu'une requête est en cours
+                isFetching = true;
+
+                fetch(`<?= site_url('tasks/searchTasks'); ?>?search=${encodeURIComponent(lastSearchValue)}`, {
+                    method: 'GET',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 })
-                .catch(error => {
-                    console.error('Erreur:', error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        // Mise à jour de la vue Kanban (tableau.php)
+                        const taskColumns = document.getElementById('taskColumns');
+                        if (data.kanban && taskColumns) {
+                            taskColumns.innerHTML = data.kanban; // Remplacement complet
+                        }
+
+                        // Mise à jour de la vue Tableur (tableur.php)
+                        const tableBody = document.getElementById('tableTasksBody');
+                        if (data.table && tableBody) {
+                            tableBody.innerHTML = data.table; // Remplacement complet
+                        }
+
+                        // Réinitialise l'état une fois la requête terminée
+                        isFetching = false;
+
+                        // Si la valeur de recherche a changé pendant la requête, relance la recherche
+                        if (lastSearchValue !== searchValue) {
+                            searchTasks();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur:', error);
+                        isFetching = false; // Réinitialise même en cas d'erreur
+                    });
+            }, 1000);
         }
     </script>
 </body>

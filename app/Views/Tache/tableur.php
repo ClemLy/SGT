@@ -1,5 +1,5 @@
 <?php setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr'); ?>
-
+<?php $perPage = $perPage ?? 0; ?>
 <div id="tableTasksBody">
     <form method="get" action="<?= site_url('tasks/') ?>">
         <label for="perPage">Tâches par page :</label>
@@ -64,9 +64,13 @@
     </table>
 
     <!-- Pagination -->
-    <div aria-label="Pagination">
-        <?= $pager->links()?>
-    </div>
+
+    <?php if (isset($pager)): ?>
+        <!-- Pagination -->
+        <nav aria-label="Pagination">
+            <?= $pager->links() ?>
+        </nav>
+    <?php endif; ?>
 
 </div>
 
