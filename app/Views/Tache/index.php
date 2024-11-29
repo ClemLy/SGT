@@ -205,6 +205,8 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
                     });
             }, 1000);
         }
+
+
     </script>
 </body>
 
