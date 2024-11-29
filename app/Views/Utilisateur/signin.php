@@ -1,11 +1,14 @@
 <style>
-
+body,html{
+	overflow-y: hidden;
+}
 .div-login {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh; 
     background-color: #f1f1f1;
+
 }
 
 .container {

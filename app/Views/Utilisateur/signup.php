@@ -1,5 +1,7 @@
 <style>
-
+body,html{
+	overflow-y: hidden;
+}
 .div-login {
     display: flex;
     justify-content: center;
