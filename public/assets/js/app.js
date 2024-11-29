@@ -18,10 +18,6 @@ function loadTaskDetails(titre, description, echeance, etat, categorie, id_tache
     document.getElementById('detail_categorie').innerText = categorie;
     document.getElementById('comment_task_id').value = id_tache;
 
-	// Ouvrir le modal manuellement
-	const taskDetailModal = new bootstrap.Modal(document.getElementById('taskDetailModal'));
-	taskDetailModal.show();
-
     // Charger les commentaires
     const commentsSection = document.getElementById('commentaires_section');
     commentsSection.innerHTML = ''; // Vider les anciens commentaires
