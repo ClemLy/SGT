@@ -38,7 +38,7 @@
         public function getPaginatedTasks($perPage, $offset, $searchQuery = '')
         {
             // Convertir les paramètres pour s'assurer qu'ils sont valides
-            $offset = max((int)$offset, 0); // Assure que l'offset est au minimum 0
+            $offset  = max((int)$offset, 0); // Assure que l'offset est au minimum 0
             $perPage = max((int)$perPage, 1); // Assure qu'au moins une tâche est récupérée
 
             $builder = $this->db->table('tache')
@@ -47,7 +47,8 @@
                 ->where('tache.id_user', session()->get('id_user'));
 
             // Appliquer la recherche si une requête est fournie
-            if (!empty($searchQuery)) {
+            if (!empty($searchQuery))
+            {
                 $builder->groupStart()
                     ->like('tache.titre', $searchQuery)
                     ->orLike('categorie.titre_categorie', $searchQuery)
@@ -63,6 +64,7 @@
 
             return $results ?: []; // Retourner un tableau vide si aucun résultat
         }
+        
         public function getAllTasksPaginated($perPage, $offset, $searchQuery = '')
         {
             $offset = (int)$offset;

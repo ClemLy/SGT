@@ -64,10 +64,9 @@
     </table>
 
     <!-- Pagination -->
-
-        <nav aria-label="Pagination">
-            <?= $pager->links()?>
-        </nav>
+    <div aria-label="Pagination">
+        <?= $pager->links()?>
+    </div>
 
 </div>
 
