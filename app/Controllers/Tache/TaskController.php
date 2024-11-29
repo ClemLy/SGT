@@ -154,12 +154,8 @@
 
 			// Récupération des données du formulaire
 			$taskId         = $this->request->getPost('task_id');
-<<<<<<< HEAD
 			$titre          = htmlspecialchars($this->request->getPost('titre'));
-=======
-			$titre          = $this->request->getPost('titre');
 			$importance     = $this->request->getPost('importance_tache');
->>>>>>> 28bfcfc4c6c544045f5540a97f198f168deb5a82
 			$description    = htmlspecialchars($this->request->getPost('description_tache'));
 			$echeance       = $this->request->getPost('echeance_tache');
 			$etat           = $this->request->getPost('etat_tache');
