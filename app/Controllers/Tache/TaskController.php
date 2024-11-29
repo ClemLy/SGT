@@ -6,7 +6,6 @@
 	use App\Models\CategoryModel;
 	use App\Controllers\BaseController;
 	use Config\Pager;
-    use DateTime;
 
     class TaskController extends BaseController
 	{
@@ -19,11 +18,11 @@
 		// Méthode pour afficher les tâches
         public function index()
         {
-            $pager = \Config\Services::pager(); // Service de pagination
+            $pager = \Config\Services::pager();
 
             // Chargement des modèles
-            $taskModel = new \App\Models\TaskModel();
-            $categoryModel = new \App\Models\CategoryModel();
+            $taskModel     = new TaskModel();
+            $categoryModel = new CategoryModel();
 
             // Récupération des catégories
             $categories = $categoryModel->findAll();
@@ -34,43 +33,40 @@
             $tasksCompleted  = $taskModel->getTasksWithCategoriesByStatus('Terminée');
 
 
-            $totalTasksToDo = $taskModel->getTaskCount('À faire');
+            $totalTasksToDo       = $taskModel->getTaskCount('À faire');
             $totalTasksInProgress = $taskModel->getTaskCount('En cours');
-            $totalTasksCompleted = $taskModel->getTaskCount('Terminée');
+            $totalTasksCompleted  = $taskModel->getTaskCount('Terminée');
 
             // Paramètres de pagination
             $perPage = $this->request->getGet('perPage') ?? $totalTasksToDo + $totalTasksCompleted + $totalTasksInProgress; // Nombre de tâches par page
             if ($this->request->getGet('perPage')==0) $perPage = $totalTasksToDo + $totalTasksCompleted + $totalTasksInProgress;
-            $currentPageToDo = $this->request->getGet('pageToDo') ?? 1; // Page actuelle pour "À faire"
-            $currentPageInProgress = $this->request->getGet('pageInProgress') ?? 1; // Page actuelle pour "En cours"
-            $currentPageCompleted = $this->request->getGet('pageCompleted') ?? 1; // Page actuelle pour "Terminée"
+            $currentPage = $this->request->getGet('page') ?? 1; // Page actuelle pour "À faire"
 
             // Calcul des offsets pour chaque statut
-            $offsetToDo = ($currentPageToDo - 1) * $perPage;
-            $offsetInProgress = ($currentPageInProgress - 1) * $perPage;
-            $offsetCompleted = ($currentPageCompleted - 1) * $perPage;
+            $offset = ($currentPage - 1) * $perPage;
 
             // Récupération des tâches paginées pour tout
-            $tasks = $taskModel->getPaginatedTasks($perPage, $offsetToDo);
+            $tasks = $taskModel->getPaginatedTasks($perPage, $offset);
 
 
             // Retourner la vue avec les données nécessaires
             return view('Tache/index', [
-                'categories' => $categories,
-                'tasksToDo' => $tasksToDo,
-                'tasksInProgress' => $tasksInProgress,
-                'tasksCompleted' => $tasksCompleted,
-                'perPage' => $perPage,
-                'currentPageToDo' => $currentPageToDo,
-                'currentPageInProgress' => $currentPageInProgress,
-                'currentPageCompleted' => $currentPageCompleted,
-                'totalTasksToDo' => $totalTasksToDo,
-                'totalTasksInProgress' => $totalTasksInProgress,
-                'totalTasksCompleted' => $totalTasksCompleted,
-                'pager' => $pager,
-                'tasks' => $tasks,
+                'categories'            => $categories,
+                'tasksToDo'             => $tasksToDo,
+                'tasksInProgress'       => $tasksInProgress,
+                'tasksCompleted'        => $tasksCompleted,
+                'perPage'               => $perPage,
+                'currentPageToDo'       => $currentPage,
+                'totalTasksToDo'        => $totalTasksToDo,
+                'totalTasksInProgress'  => $totalTasksInProgress,
+                'totalTasksCompleted'   => $totalTasksCompleted,
+				'offset' => $offset,
+                'pager'  => $pager,
+                'tasks'  => $tasks,
             ]);
         }
+
+		
 		// Méthode pour enregistrer une nouvelle tâche
 		public function store()
 		{
