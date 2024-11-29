@@ -132,12 +132,8 @@
 			// Préparer les données de la tâche à enregistrer
 			$taskData = [
 				'titre'             => $this->request->getPost('titre'),
-<<<<<<< HEAD
-				'description_tache' => $this->request->getPost('description_tache'),
 				'importance_tache'  => $this->request->getPost('importance_tache'),
-=======
 				'description_tache' => htmlspecialchars($this->request->getPost('description_tache')),
->>>>>>> 42d9d37d922ab3cbe47df25dc5aaceaff2e5b64b
 				'etat_tache'        => $this->request->getPost('etat_tache'),
 				'echeance_tache'    => $this->request->getPost('echeance_tache'),
 				'id_user'           => session()->get('id_user'),  // Utilisation de l'utilisateur connecté
@@ -160,12 +156,8 @@
 			// Récupération des données du formulaire
 			$taskId         = $this->request->getPost('task_id');
 			$titre          = $this->request->getPost('titre');
-<<<<<<< HEAD
 			$importance     = $this->request->getPost('importance_tache');
-			$description    = $this->request->getPost('description_tache');
-=======
 			$description    = htmlspecialchars($this->request->getPost('description_tache'));
->>>>>>> 42d9d37d922ab3cbe47df25dc5aaceaff2e5b64b
 			$echeance       = $this->request->getPost('echeance_tache');
 			$etat           = $this->request->getPost('etat_tache');
 			$titreCategorie = $this->request->getPost('categorie');
@@ -174,12 +166,8 @@
 			$validation = \Config\Services::validation();
 			$validation->setRules([
 				'titre'             => 'required|min_length[3]|max_length[255]',
-<<<<<<< HEAD
-				'description_tache' => 'permit_empty|max_length[500]',
 				'importance_tache'  => 'required|in_list[Faible,Modéré,Faible]',
-=======
 				'description_tache' => 'permit_empty|max_length[100]',
->>>>>>> 42d9d37d922ab3cbe47df25dc5aaceaff2e5b64b
 				'echeance_tache'    => 'required|valid_date',
 				'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',
 				'categorie'         => 'permit_empty|min_length[3]|max_length[255]',

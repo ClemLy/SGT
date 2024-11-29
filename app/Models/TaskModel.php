@@ -10,6 +10,7 @@
         protected $allowedFields = [
             'titre',
             'description_tache',
+            'importance_tache',
             'etat_tache',
             'echeance_tache',
             'id_user',

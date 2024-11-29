@@ -64,7 +64,7 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 							<div id="charCount" class="mt-2 text-muted">0/100</div>
 						</div>
 						<div class="mb-3">
-						<label for="importance_tache" class="form-label">Statut</label>
+						<label for="importance_tache" class="form-label">Importance</label>
 							<select class="form-control" name="importance_tache" id="importance_tache" required>
 								<option value="Faible">Faible</option>
 								<option value="Modéré">Modéré</option>
@@ -120,6 +120,14 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
 							<label for="edit_description" class="form-label">Description</label>
 							<textarea class="form-control" name="description_tache" id="edit_description"></textarea>
 							<div id="charCount" class="mt-2 text-muted">0/100</div>
+						</div>
+						<div class="mb-3">
+							<label for="edit_importance_tache" class="form-label">Importance</label>
+							<select class="form-control" name="edit_importance_tache" id="edit_importance_tache" required>
+								<option value="Faible">Faible</option>
+								<option value="Modéré">Modéré</option>
+								<option value="Fort">Fort</option>
+							</select>
 						</div>
 						<div class="mb-3">
 							<label for="edit_echeance" class="form-label">Échéance</label>

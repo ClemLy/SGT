@@ -52,7 +52,7 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 									<button class="bi bi-three-dots btn btn-link ps-3 pe-1" data-bs-toggle="dropdown" aria-expanded="false"></button>
 									<ul class="dropdown-menu">
 										<li>
-											<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editTaskModal" onclick="loadTaskData(<?= $task['id_tache']; ?>, '<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">Modifier</a>
+											<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editTaskModal" onclick="loadTaskData(<?= $task['id_tache']; ?>, '<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['importance_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">Modifier</a>
 										</li>
 										<li>
 											<a class="dropdown-item" href="<?= site_url('tasks/complete/' . $task['id_tache']); ?>" >Marquer comme terminée</a>
@@ -64,7 +64,7 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 								</div>
 							</div>
 							<div style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#taskDetailModal"
-								onclick="loadTaskDetails('<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>', '<?= esc($task['id_tache']); ?>')">
+								onclick="loadTaskDetails('<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['importance_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>', '<?= esc($task['id_tache']); ?>')">
 								<h4 class="t-title card-title mb-2"><?= esc($task['titre']); ?></h4>
 								<p class="card-text"><?= html_entity_decode($task['description_tache']); ?></p>
 							</div>
