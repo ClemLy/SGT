@@ -168,3 +168,53 @@ td{
     margin: 0 10px;
     font-weight: bold;
 }
+
+
+
+
+
+
+
+
+/* Popup */
+
+.modal-header {
+    background-color: #f8f9fa;
+}
+
+.modal-title {
+    font-size: 1.2rem !important;
+    font-weight: 600;
+    color: #333;
+}
+
+.modal-body p {
+    font-size: 1rem !important;
+}
+
+.modal-body p strong {
+    font-weight: 600;
+    color: #333;
+}
+
+.modal-body p span {
+    font-size: 1.2vw !important;
+    color: #555;
+}
+
+.button-comment {
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.55rem 1rem;
+    margin-top: 5px;
+    font-size: 1rem;
+    font-weight: 400;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-comment:hover {
+    background-color: #0056b3;
+}
