@@ -17,6 +17,17 @@ span{
 
 }
 
+/* Navbar */
+.brand a span {
+    transition: color 0.3s ease;
+}
+
+.brand a:hover span {
+    color: #007bff;
+}
+
+
+
 .wrapper {
     display: flex;
     height: 100vh;
@@ -159,19 +170,59 @@ td{
     padding-left:2% !important;
 }
 
-.pagination button {
-    padding: 5px 10px;
-    border-radius: 5px;
+
+/* Tableur */
+.btn-ajoutTableur {
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.55rem 1rem;
+    margin-top: 5px;
+    margin-left: 95%;
+    font-size: 1rem;
+    font-weight: 400;
+    color: white;
     cursor: pointer;
-}
-.pagination span {
-    margin: 0 10px;
-    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
+.btn-ajoutTableur:hover {
+    background-color: #0056b3;
+}
 
+.perPageForm {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    color: #333;
+}
 
+.perPageForm label {
+    font-weight: 500;
+    margin-right: 0.5rem;
+}
 
+.perPageForm select {
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 0.4rem 0.6rem;
+    font-size: 1rem;
+    color: #333;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+}
+
+.perPageForm select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.perPageForm select:hover {
+    border-color: #6c757d;
+}
 
 
 

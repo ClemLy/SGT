@@ -2,7 +2,7 @@
 <?php $perPage = $perPage ?? 10; ?>
 <div id="tableTasksBody">
     <!-- Formulaire pour le nombre de tâches par page -->
-    <form id="perPageForm" method="get" action="<?= current_url(); ?>">
+    <form id="perPageForm" class="perPageForm" method="get" action="<?= current_url(); ?>">
         <label for="perPage">Tâches par page :</label>
         <select name="perPage" id="perPage">
             <option value="0" <?= $perPage == 0 ? 'selected' : '' ?>>Tout</option>
@@ -16,7 +16,7 @@
         <input type="hidden" name="searchQuery" value="<?= $searchQuery; ?>">
     </form>
 
-    <button class="btn" data-bs-toggle="modal" data-bs-target="#taskModal">+ (Ajouter tâche)</button>
+    <button class="btn-ajoutTableur" data-bs-toggle="modal" data-bs-target="#taskModal">+</button>
 
     <!-- Tableau des tâches -->
     <table class="table table-striped">
