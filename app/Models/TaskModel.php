@@ -17,8 +17,12 @@
             'id_categorie'
         ];
 
-        public function getTasksWithCategoriesByStatus($etatTache, $searchQuery = '')
+        public function getTasksWithCategoriesByStatus($etatTache, $criteria='date',$order='asc',$searchQuery = '')
         {
+            $validCriteria = ['titre', 'titre_categorie', 'echeance_tache','importance_tache']; // Critères valides
+            if (!in_array($criteria, $validCriteria)) {
+                $criteria = 'echeance_tache'; // Par défaut : tri par date
+            }
             $builder = $this->select('tache.*, categorie.titre_categorie')
                 ->join('categorie', 'tache.id_categorie = categorie.id_categorie', 'left')
                 ->where('etat_tache', $etatTache)
@@ -32,19 +36,23 @@
                     ->groupEnd();
             }
 
+            // Appliquer le tri
+            $builder->orderBy($criteria, $order);
+
+
             return $builder->findAll();
         }
 
-        public function getPaginatedTasks($perPage, $page, $searchQuery = '')
+        public function getPaginatedTasks($perPage, $page, $criteria = 'date', $order = 'asc', $searchQuery = '')
         {
-            $idUser = session()->get('id_user');
-            if (!$idUser) {
-                throw new \RuntimeException('Utilisateur non authentifié.');
+            $validCriteria = ['titre', 'titre_categorie', 'echeance_tache','importance_tache']; // Critères valides
+            if (!in_array($criteria, $validCriteria)) {
+                $criteria = 'echeance_tache'; // Par défaut : tri par date
             }
 
             $builder = $this->select('tache.*, categorie.titre_categorie')
                 ->join('categorie', 'tache.id_categorie = categorie.id_categorie', 'left')
-                ->where('tache.id_user', $idUser);
+                ->where('tache.id_user', session()->get('id_user'));
 
             if (!empty($searchQuery)) {
                 $builder->groupStart()
@@ -54,8 +62,11 @@
                     ->groupEnd();
             }
 
-            // Appel à paginate avec la page courante passée directement
-            return $this->paginate($perPage, 'default', $page);
+            // Appliquer le tri
+            $builder->orderBy($criteria, $order);
+
+            // Pagination
+            return $builder->paginate($perPage, 'default', $page);
         }
         
 

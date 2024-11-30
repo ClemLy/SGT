@@ -1,6 +1,11 @@
 <?php
 setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr');
 echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
+function cleanUrl($newParams = []) {
+    $queryParams = $_GET; // Récupère les paramètres actuels
+    $queryParams = array_merge($queryParams, $newParams); // Met à jour les nouveaux paramètres
+    return current_url() . '?' . http_build_query($queryParams); // Reconstruit l'URL proprement
+}
 ?>
 
 
@@ -19,15 +24,31 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
         </div>
         <div class="d-flex justify-content-between ">
             <h1 class="mb-5">Gestion des Tâches</h1>
-
             <div class="dropdown">
                 <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Trier par
                 </button>
                 <ul class="dropdown-menu">
-                    <li><button id="sortName" class="dropdown-item" onclick="toggleSort('name')">Name</button></li>
-                    <li><button id="sortCategory" class="dropdown-item" onclick="toggleSort('category')">Category</button></li>
-                    <li> <button id="sortDate" class="dropdown-item" onclick="toggleSort('date')">Date</button></li>
+                    <li>
+                        <a href="<?= cleanUrl(['criteria' => 'titre', 'order' => ($criteria === 'titre' && $order === 'asc') ? 'desc' : 'asc']); ?>">
+                            Trier par Titre
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= current_url() . '?' . http_build_query(array_merge($_GET, ['criteria' => 'echeance_tache', 'order' => ($criteria === 'echeance_tache' && $order === 'asc') ? 'desc' : 'asc'])); ?>" class="dropdown-item">
+                            Date <?= ($criteria === 'echeance_tache') ? ($order === 'asc' ? '↑' : '↓') : ''; ?>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= current_url() . '?' . http_build_query(array_merge($_GET, ['criteria' => 'titre_categorie', 'order' => ($criteria === 'titre_categorie' && $order === 'asc') ? 'desc' : 'asc'])); ?>" class="dropdown-item">
+                            Catégorie <?= ($criteria === 'titre_categorie') ? ($order === 'asc' ? '↑' : '↓') : ''; ?>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= current_url() . '?' . http_build_query(array_merge($_GET, ['criteria' => 'importance_tache', 'order' => ($criteria === 'importance_tache' && $order === 'asc') ? 'desc' : 'asc'])); ?>" class="dropdown-item">
+                            Importance <?= ($criteria === 'importance_tache') ? ($order === 'asc' ? '↑' : '↓') : ''; ?>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -244,6 +265,22 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
                     });
             }, 1000);
         }
+
+        function toggleSort(criteria) {
+            const url = new URL(window.location.href); // Récupère l'URL actuelle
+            const currentOrder = url.searchParams.get('order') || 'asc'; // Récupère l'ordre actuel
+
+            // Inverser l'ordre si le critère reste le même
+            const newOrder = (url.searchParams.get('criteria') === criteria && currentOrder === 'asc') ? 'desc' : 'asc';
+
+            // Mettre à jour les paramètres dans l'URL
+            url.searchParams.set('criteria', criteria);
+            url.searchParams.set('order', newOrder);
+
+            // Éviter de dupliquer les autres paramètres (comme `searchQuery` ou `perPage`)
+            window.location.href = url.toString(); // Redirige vers la nouvelle URL
+        }
+
 
 
     </script>

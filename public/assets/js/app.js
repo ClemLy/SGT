@@ -312,21 +312,27 @@ function updateTaskStatus(taskId, newStatusId)
 		.catch(error => console.error('Erreur AJAX :', error));
 }
 
-let currentSort = {
-	criteria: null,  // Critère de tri actif
-	order: 'asc'     // Ordre actuel : 'asc' ou 'desc'
-};
 
+
+let currentCriteria = 'echeance_tache'; // Critère par défaut
+let currentOrder = 'asc'; // Ordre par défaut
+let currentPage = 1; // Page par défaut
+let perPage = 10; // Nombre d'éléments par page par défaut
+// Changer le tri
 function toggleSort(criteria) {
-	if (currentSort.criteria === criteria) {
-		currentSort.order = currentSort.order === 'asc' ? 'desc' : 'asc';
+	// Bascule l'ordre si le critère est le même
+	if (currentCriteria === criteria) {
+		currentOrder = currentOrder === 'asc' ? 'desc' : 'asc';
 	} else {
-		currentSort.criteria = criteria;
-		currentSort.order = 'asc';
+		currentCriteria = criteria;
+		currentOrder = 'asc'; // Réinitialiser l'ordre à 'asc' pour un nouveau critère
 	}
-	sortTasks(currentSort.criteria, currentSort.order);
-	sortTableRows(currentSort.criteria, currentSort.order);
-	updateButtonStates();
+
+	// Mettre à jour l'URL sans recharger la page
+	updateUrl();
+
+	// Mettre à jour les tâches via AJAX
+	updateTasks();
 }
 
 function sortTasks(criteria, order) {
