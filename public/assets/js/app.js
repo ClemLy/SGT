@@ -192,13 +192,13 @@ function generatePaginationHTML(pager, id_tache)
     // Vérifier si une page précédente existe
     if (pager.previous)
 	{
-        html += `<button onclick="loadPaginatedComments(${id_tache}, ${pager.currentPage - 1})">Précédent</button>`;
+        html += `<button class="button-comment" onclick="loadPaginatedComments(${id_tache}, ${pager.currentPage - 1})">Précédent</button>`;
     }
 
     // Vérifier si une page suivante existe
     if (pager.next)
 	{
-        html += `<button onclick="loadPaginatedComments(${id_tache}, ${pager.currentPage + 1})">Suivant</button>`;
+        html += `<button class="button-comment" onclick="loadPaginatedComments(${id_tache}, ${pager.currentPage + 1})">Suivant</button>`;
     }
 
     html += '</div>';

@@ -366,7 +366,7 @@
 				));
 
 				$email = \Config\Services::email();
-				$email->setFrom('XtrayShow@yahoo.fr', 'SGT');
+				$email->setFrom('XtrayShow@yahoo.fr', 'TaskPlanner');
 				$email->setTo($user['email_user']); // Adresse e-mail de l'utilisateur
 				$email->setSubject('Rappel : Tâche à échéance dans 2 jours');
 				$email->setMessage("
