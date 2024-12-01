@@ -28,12 +28,12 @@ Avant d'installer l'application, assurez-vous d'avoir les éléments suivants :
    ```bash
     composer install
 
-4. **Configuration de l'environnement**
+3. **Configuration de l'environnement**
 
-  Créer un fichier `.env` directement dans le dossier `SGT`.
-  Ce fichier contiendra ceci :
-  
-  ```env
+   Créer un fichier `.env` directement dans le dossier `SGT`.
+   Ce fichier contiendra ceci :
+   
+   ```env
    #--------------------------------------------------------------------
    # DATABASE
    #--------------------------------------------------------------------
@@ -54,7 +54,7 @@ Avant d'installer l'application, assurez-vous d'avoir les éléments suivants :
    email_user=.....                      # Adresse email utilisée pour envoyer les emails (ex : votre-email@gmail.com)
    email_password=...                    # Mot de passe de l'email pour l'authentification SMTP
    email_port=587                        # Port pour l'envoi d'emails (587 est généralement utilisé pour TLS)
-  ```
+   ```
 
 4. **Exécuter l'environnement**
 
