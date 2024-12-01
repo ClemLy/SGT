@@ -24,10 +24,11 @@ Avant d'installer l'application, assurez-vous d'avoir les éléments suivants :
    cd SGT
 
 2. **Installer les dépendances**
+
    ```bash
     composer install
 
-3. **Configuration de l'environnement**
+4. **Configuration de l'environnement**
 
   Créer un fichier `.env` directement dans le dossier `SGT`.
   Ce fichier contiendra ceci :
@@ -56,12 +57,13 @@ Avant d'installer l'application, assurez-vous d'avoir les éléments suivants :
   ```
 
 4. **Exécuter l'environnement**
+
    Afin d'exécuter votre fichier `.env`, installez la bibliothèque vlucas/phpdotenv en exécutant cette commande dans le terminal SGT :
    ```cmd
     composer require vlucas/phpdotenv
    ```
 
-5. **Démarrer le serveur local**
+6. **Démarrer le serveur local**
   
   ```bash
     php spark serve
