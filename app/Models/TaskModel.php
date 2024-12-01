@@ -41,7 +41,6 @@
                 $builder->where('tache.etat_tache', $etatTache);
             }
 
-            // Ajouter la recherche si nécessaire
             if (!empty($searchQuery)) {
                 $builder->groupStart()
                     ->like('tache.titre', $searchQuery)
@@ -49,6 +48,7 @@
                     ->orLike('tache.description_tache', $searchQuery)
                     ->groupEnd();
             }
+
 
             // Appliquer le tri
             $builder->orderBy($criteria, $order);
@@ -132,14 +132,16 @@
 
         public function getTaskCount($status, $searchQuery = '')
         {
-            $builder = $this->builder()->where('etat_tache', $status);
-            $builder ->where('id_user', session()->get('id_user'));
+            $builder = $this->builder()
+                ->where('etat_tache', $status)
+                ->where('id_user', session()->get('id_user'))
+                ->join('categorie', 'tache.id_categorie = categorie.id_categorie', 'left');
 
             if (!empty($searchQuery)) {
                 $builder->groupStart()
                     ->like('titre', $searchQuery)
                     ->orLike('description_tache', $searchQuery)
-                    ->orLike('titre_categorie', $searchQuery)
+                    ->orLike('categorie.titre_categorie', $searchQuery)
                     ->groupEnd();
             }
 

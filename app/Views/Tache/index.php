@@ -217,51 +217,53 @@ function cleanUrl($newParams = []) {
         function searchTasks() {
             const searchValue = document.getElementById('taskSearchInput').value;
 
-            // Stocke la dernière valeur de recherche
-            lastSearchValue = searchValue;
-
-            // Annule tout timeout précédent
             clearTimeout(searchTimeout);
 
-            // Démarre un nouveau timeout
             searchTimeout = setTimeout(() => {
-                // Si une requête est déjà en cours, on attend qu'elle soit terminée
-                if (isFetching) {
-                    return;
-                }
+                if (isFetching) return;
 
-                // Indique qu'une requête est en cours
                 isFetching = true;
 
-                fetch(`<?= site_url('tasks/searchTasks'); ?>?search=${encodeURIComponent(lastSearchValue)}`, {
+                const url = new URL('<?= site_url('tasks/'); ?>');
+                const currentUrl = new URL(window.location.href);
+
+                url.searchParams.set('search', searchValue);
+                const criteria = currentUrl.searchParams.get('criteria');
+                const order = currentUrl.searchParams.get('order');
+
+                if (criteria) url.searchParams.set('criteria', criteria);
+                if (order) url.searchParams.set('order', order);
+
+                console.log('Requête envoyée : ', url.toString()); // Debug
+
+                fetch(url.toString(), {
                     method: 'GET',
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
                 })
-                    .then(response => response.json())
+                    .then(response => {
+                        console.log('Statut réponse : ', response.status); // Debug
+                        if (!response.ok) {
+                            throw new Error(`Erreur HTTP : ${response.status}`);
+                        }
+                        return response.json();
+                    })
                     .then(data => {
-                        // Mise à jour de la vue Kanban (tableau.php)
-                        const taskColumns = document.getElementById('taskColumns');
-                        if (data.kanban && taskColumns) {
-                            taskColumns.innerHTML = data.kanban; // Remplacement complet
+                        console.log('Données reçues : ', data); // Debug
+
+                        if (data.tasksTableau || data.tasksTableur) {
+                            const tableBody = document.getElementById('tableTasksBody');
+                            const taskColumns = document.getElementById('taskColumns');
+                            if (tableBody) {
+                                tableBody.innerHTML = data.tasksTableur;
+                                taskColumns.innerHTML = data.tasksTableau;
+                            }
                         }
 
-                        // Mise à jour de la vue Tableur (tableur.php)
-                        const tableBody = document.getElementById('tableTasksBody');
-                        if (data.table && tableBody) {
-                            tableBody.innerHTML = data.table; // Remplacement complet
-                        }
-
-                        // Réinitialise l'état une fois la requête terminée
                         isFetching = false;
-
-                        // Si la valeur de recherche a changé pendant la requête, relance la recherche
-                        if (lastSearchValue !== searchValue) {
-                            searchTasks();
-                        }
                     })
                     .catch(error => {
-                        console.error('Erreur:', error);
-                        isFetching = false; // Réinitialise même en cas d'erreur
+                        console.error('Erreur : ', error);
+                        isFetching = false;
                     });
             }, 1000);
         }
@@ -279,9 +281,47 @@ function cleanUrl($newParams = []) {
 
             // Éviter de dupliquer les autres paramètres (comme `searchQuery` ou `perPage`)
             window.location.href = url.toString(); // Redirige vers la nouvelle URL
+
         }
 
 
+        function updateTasks() {
+            const url = new URL(window.location.href);
+
+            fetch(url.toString(), {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }, // Identifie la requête comme AJAX
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erreur HTTP : ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Vérifie si la réponse contient les données attendues
+                    if (data.tasksTable) {
+                        document.getElementById('tableTasksBody').innerHTML = data.tasksTable;
+                    } else {
+                        console.error('Erreur : Aucune donnée de tâches reçue');
+                    }
+
+                    // Met à jour la pagination si elle est retournée
+                    const paginationContainer = document.getElementById('paginationContainer');
+                    if (data.pagerLinks && paginationContainer) {
+                        paginationContainer.innerHTML = data.pagerLinks;
+                    }
+
+                    // Réattache l'événement pour le champ `perPage`
+                    document.getElementById('perPage').addEventListener('change', function () {
+                        const url = new URL(window.location.href);
+                        url.searchParams.set('perPage', this.value);
+                        window.history.pushState({}, '', url);
+                        updateTasks();
+                    });
+                })
+                .catch(error => console.error('Erreur lors de la mise à jour des tâches :', error));
+        }
 
 
 

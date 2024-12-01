@@ -39,7 +39,7 @@
             $order = $this->request->getGet('order') ?? 'asc';                 // Ordre par défaut
 
             // Gestion de la recherche
-            $searchQuery = $this->request->getGet('searchQuery') ?? '';
+            $searchQuery = $this->request->getGet('search') ?? '';
 
             // Calcul des totaux par statut
             $totalTasksToDo = $taskModel->getTaskCount('À faire', $searchQuery);
@@ -89,7 +89,22 @@
             // Vérifier si la requête est AJAX
             if ($this->request->isAJAX()) {
                 // Générer le tableau des tâches (vue partielle)
-                $tasksTable = view('Tache/tableur', [
+                $tasksTableur = view('Tache/tableur', [
+                    'tasks' => $tasks,
+                    'currentPage' => $currentPage,
+                    'criteria' => $criteria,
+                    'order' => $order,
+                    'searchQuery' => $searchQuery,
+                    'pagerLinks' => $pagerLinks,
+                    'tasksToDo' => $tasksToDo,
+                    'tasksInProgress' => $tasksInProgress,
+                    'tasksCompleted' => $tasksCompleted,
+                    'categories' => $categories,
+                    'pager' => $pager,
+
+                ]);
+
+                $tasksTableau = view('Tache/tableau', [
                     'tasks' => $tasks,
                     'currentPage' => $currentPage,
                     'criteria' => $criteria,
@@ -105,8 +120,9 @@
                 ]);
 
                 return $this->response->setJSON([
-                    'tasksTable' => $tasksTable,
-                    'pagerLinks' => $pager->makeLinks($currentPage, $perPage, $totalTasks),
+                    'tasksTableau' => $tasksTableau ?? '<p>Aucune tâche trouvée.</p>',
+                    'tasksTableur' => $tasksTableur ?? '<p>Aucune tâche trouvée.</p>',
+                    'pagerLinks' => $pagerLinks ?? '',
                 ]);
             }
 
@@ -128,6 +144,8 @@
                 'pagerLinks' => $pagerLinks,
                 'pager' => $pager,
                 'totalTasks' => $totalTasks,
+
+
             ]);
         }
 		// Méthode pour enregistrer une nouvelle tâche

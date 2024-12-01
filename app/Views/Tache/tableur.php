@@ -1,5 +1,11 @@
 <?php setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr'); ?>
-<?php $perPage = $perPage ?? 0; ?>
+<?php
+$perPage = $perPage ?? 0;
+$criteria = $criteria ?? 'echeance_tache';
+$order = $order ?? 'asc';
+
+?>
+
 
 <div id="tableTasksBody">
     <!-- Formulaire pour le nombre de tâches par page -->
@@ -51,7 +57,15 @@
                 ?>
 
                 <tr class="<?= $isOverdue ? 'overdue' : '' ?>"
-                    onclick="handleRowClick(event, <?= $task['id_tache']; ?>, '<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">
+                    onclick="handleRowClick(event,
+                            '<?= $task['titre']; ?>',
+                            '<?= esc($task['description_tache']); ?>',
+                            '<?= esc($task['importance_tache']); ?>',
+                            '<?= esc($task['echeance_tache']); ?>',
+                            '<?= esc($task['etat_tache']); ?>',
+                            '<?= esc($task['titre_categorie']); ?>',
+                            '<?= esc ($task['id_tache']); ?>'
+                            )">
                     <td><?= esc($task['titre']); ?></td>
                     <td><?= esc($task['titre_categorie'] ?? ''); ?></td>
                     <td><?= esc($task['etat_tache']); ?></td>
@@ -81,9 +95,10 @@
         </tbody>
     </table>
 
+
     <!-- Pagination -->
     <div id="paginationContainer">
-        <?php if ($pager->getPageCount() > 1): ?>
+        <?php if (isset($pager) && $pager !== null && $pager->getPageCount() > 1): ?>
             <nav aria-label="Pagination">
                 <ul class="pagination">
                     <?php if ($pager->getPreviousPageURI()): ?>
@@ -146,33 +161,19 @@
     });
 
 
-    function updateTasks() {
-        const url = new URL(window.location.href);
+    function handleRowClick(event, titre, description, importance,echeance, etat, categorie,id_tache) {
+        if (event.target.closest('.no-click')) {
+            return; // Ignorer le clic
+        }
+        const taskDetailModal = new bootstrap.Modal(document.getElementById('taskDetailModal'));
+        taskDetailModal.show();
+        loadTaskDetails(titre, description, importance,echeance, etat, categorie,id_tache);
 
-        fetch(url.toString(), {
-            method: 'GET',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP : ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.tasksTable) {
-                    document.getElementById('tableTasksBody').innerHTML = data.tasksTable;
-
-                    // Réattache l'événement après mise à jour
-                    document.getElementById('perPage').addEventListener('change', function () {
-                        const url = new URL(window.location.href);
-                        url.searchParams.set('perPage', this.value);
-                        window.history.pushState({}, '', url);
-                        updateTasks();
-                    });
-                }
-            })
-            .catch(error => console.error('Erreur lors de la mise à jour des tâches :', error));
     }
+
+
+
+
+
 
 </script>
