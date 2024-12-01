@@ -37,8 +37,8 @@ Avant d'installer l'application, assurez-vous d'avoir les éléments suivants :
    # DATABASE
    #--------------------------------------------------------------------
    
-   CI_ENVIRONMENT=production          # Mode de l'application : 'development' ou 'production'
-   db_hostname=localhost                # Hôte de la base de données (souvent 'localhost')
+   CI_ENVIRONMENT=production             # Mode de l'application : 'development' ou 'production'
+   db_hostname=localhost                 # Hôte de la base de données (souvent 'localhost')
    db_username=..                        # Nom d'utilisateur pour la connexion à la base de données
    db_password=..                        # Mot de passe de l'utilisateur de la base de données
    db_DBDriver=Postgre                   # Type de base de données (PostgreSQL dans ce cas)
@@ -56,10 +56,10 @@ Avant d'installer l'application, assurez-vous d'avoir les éléments suivants :
   ```
 
 4. **Exécuter l'environnement**
-  Afin d'exécuter votre fichier `.env`, installez la bibliothèque vlucas/phpdotenv en exécutant cette commande dans le terminal SGT :
-  ```cmd
+   Afin d'exécuter votre fichier `.env`, installez la bibliothèque vlucas/phpdotenv en exécutant cette commande dans le terminal SGT :
+   ```cmd
     composer require vlucas/phpdotenv
-  ```
+   ```
 
 5. **Démarrer le serveur local**
   
