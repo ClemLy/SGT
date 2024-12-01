@@ -63,13 +63,13 @@ Avant d'installer l'application, assurez-vous d'avoir les éléments suivants :
     composer require vlucas/phpdotenv
    ```
 
-6. **Démarrer le serveur local**
+5. **Démarrer le serveur local**
   
-  ```bash
+   ```bash
     php spark serve
-  ```
-
-  L'application sera disponible à l'adresse : http://localhost:8080
+   ```
+   
+   L'application sera disponible à l'adresse : http://localhost:8080
 
 ---
 
