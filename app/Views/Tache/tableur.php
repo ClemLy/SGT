@@ -1,8 +1,9 @@
 <?php setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr'); ?>
-<?php $perPage = $perPage ?? 10; ?>
+<?php $perPage = $perPage ?? 0; ?>
+
 <div id="tableTasksBody">
     <!-- Formulaire pour le nombre de tâches par page -->
-    <form id="perPageForm" method="get" action="<?= current_url(); ?>">
+    <form id="perPageForm" class="perPageForm" method="get" action="<?= current_url(); ?>">
         <label for="perPage">Tâches par page :</label>
         <select name="perPage" id="perPage">
             <option value="0" <?= $perPage == 0 ? 'selected' : '' ?>>Tout</option>
@@ -16,7 +17,7 @@
         <input type="hidden" name="searchQuery" value="<?= $searchQuery; ?>">
     </form>
 
-    <button class="btn" data-bs-toggle="modal" data-bs-target="#taskModal">+ (Ajouter tâche)</button>
+    <button class="btn-ajoutTableur" data-bs-toggle="modal" data-bs-target="#taskModal">+</button>
 
     <!-- Tableau des tâches -->
     <table class="table table-striped">
@@ -123,29 +124,34 @@
 
 <script>
     document.getElementById('perPage').addEventListener('change', function () {
-        const url = new URL(window.location.href);
+        const url = new URL(window.location.href); // Récupère l'URL actuelle
 
-        // Mettre à jour le paramètre `perPage` dans l'URL
+        // Met à jour le paramètre `perPage` avec la nouvelle valeur
         url.searchParams.set('perPage', this.value);
-        url.searchParams.set('page', 1); // Réinitialise à la première page
 
-        // Mettre à jour l'URL visible sans recharger la page
-        window.history.pushState({}, '', url);
+        // Récupère les paramètres actuels de tri et les ajoute si présents
+        const criteria = url.searchParams.get('criteria');
+        const order = url.searchParams.get('order');
 
-        console.log('Nombre de tâches par page modifié : URL mise à jour :', url.toString());
+        if (criteria) {
+            url.searchParams.set('criteria', criteria); // Ajoute ou conserve le critère de tri
+        }
 
-        // Effectuer une requête AJAX pour mettre à jour les tâches
-        updateTasks();
+        if (order) {
+            url.searchParams.set('order', order); // Ajoute ou conserve l'ordre de tri
+        }
+
+        // Redirige vers l'URL mise à jour pour recharger les données paginées
+        window.location.href = url.toString();
     });
+
 
     function updateTasks() {
         const url = new URL(window.location.href);
 
-        console.log('Requête AJAX vers URL :', url.toString()); // Debug pour voir l'URL utilisée
-
         fetch(url.toString(), {
             method: 'GET',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }, // Signale une requête AJAX
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
         })
             .then(response => {
                 if (!response.ok) {
@@ -154,23 +160,16 @@
                 return response.json();
             })
             .then(data => {
-                console.log('Réponse JSON reçue :', data); // Vérifie le contenu de la réponse
-
-                // Mise à jour du tableau des tâches
                 if (data.tasksTable) {
                     document.getElementById('tableTasksBody').innerHTML = data.tasksTable;
-                } else {
-                    console.error('Erreur : tasksTable manquant dans la réponse');
-                }
 
-                // Mise à jour de la pagination
-                if (data.pagerLinks) {
-                    const paginationContainer = document.getElementById('paginationContainer');
-                    if (paginationContainer) {
-                        paginationContainer.innerHTML = data.pagerLinks;
-                    } else {
-                        console.error('Erreur : Conteneur de pagination introuvable');
-                    }
+                    // Réattache l'événement après mise à jour
+                    document.getElementById('perPage').addEventListener('change', function () {
+                        const url = new URL(window.location.href);
+                        url.searchParams.set('perPage', this.value);
+                        window.history.pushState({}, '', url);
+                        updateTasks();
+                    });
                 }
             })
             .catch(error => console.error('Erreur lors de la mise à jour des tâches :', error));

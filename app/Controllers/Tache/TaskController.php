@@ -28,7 +28,6 @@
 
             // Gestion des paramètres de pagination
             $perPage = (int) ($this->request->getGet('perPage') ?? 10);
-            $perPage = $perPage > 0 ? $perPage : 5; // Assure que la valeur est valide
 
             $currentPage = (int) ($this->request->getGet('page') ?? 1);
             $currentPage = $currentPage > 0 ? $currentPage : 1;
@@ -47,16 +46,29 @@
             $totalTasksCompleted = $taskModel->getTaskCount('Terminée', $searchQuery);
             $totalTasks = $totalTasksToDo + $totalTasksInProgress + $totalTasksCompleted;
 
-            // Récupération des tâches paginées avec tri et recherche
-            $tasks = $taskModel->getPaginatedTasks($perPage, $currentPage, $criteria, $order, $searchQuery);
+            if($perPage==0)
+            {
+                $tasks =$taskModel->getTasksWithCategoriesByStatus(null, $criteria,$order,$searchQuery);
+            }
 
-            // Génération des liens de pagination
-            $pagerLinks = $pager->makeLinks($currentPage, $perPage, $totalTasks);
+            else{
+                $tasks = $taskModel->getPaginatedTasks($perPage, $currentPage, $criteria, $order, $searchQuery);
+            }
+
+
+            if ($perPage > 0) {
+                // Génère les liens de pagination seulement si perPage est supérieur à 0
+                $pagerLinks = $pager->makeLinks($currentPage, $perPage, $totalTasks);
+            } else {
+                // Pas de pagination, car toutes les tâches sont affichées
+                $pagerLinks = '';
+            }
             // Récupération des catégories et tâches par statut (pour affichage classique)
             $categories = $categoryModel->findAll();
             $tasksToDo = $taskModel->getTasksWithCategoriesByStatus('À faire', $criteria,$order,$searchQuery);
             $tasksInProgress = $taskModel->getTasksWithCategoriesByStatus('En cours', $criteria,$order, $searchQuery);
             $tasksCompleted = $taskModel->getTasksWithCategoriesByStatus('Terminée', $criteria,$order, $searchQuery);
+
 
             // Vérifier si la requête est AJAX
             if ($this->request->isAJAX()) {
