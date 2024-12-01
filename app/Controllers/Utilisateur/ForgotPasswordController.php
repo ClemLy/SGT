@@ -27,7 +27,6 @@
 
 			// Dans la méthode sendResetLink du contrôleur ForgotPasswordController
 			$email = $this->request->getPost('email_user');
-			echo 'Adresse e-mail soumise : ' . $email;
 
 			if ($user)
 			{
@@ -51,23 +50,25 @@
 				
 				//envoi du mail
 				$emailService->setTo($email);
-				$emailService->setFrom('XtrayShow@yahoo.fr', 'SGT');
+				$emailService->setFrom('XtrayShow@yahoo.fr', 'TaskPlanner');
 				$emailService->setSubject('Réinitialisation de mot de passe');
 				$emailService->setMessage($message);
 				
 				if ($emailService->send())
 				{
-					echo ' | E-mail envoyé avec succès.';
+					session()->setFlashdata('success-password', 'E-mail envoyé avec succès. Veuillez vérifier votre boîte de réception.');
 				}
 				else
 				{
-					echo $emailService->printDebugger();
+					session()->setFlashdata('error-password', 'Une erreur est survenue lors de l\'envoi de l\'e-mail.');
 				}
-			} 
+			}
 			else
 			{
-				echo ' | Adresse e-mail non valide.';
+				session()->setFlashdata('error-password', 'Adresse e-mail non valide.');
 			}
+
+			echo view('Utilisateur/forgot_password');
 		}
 	}
 ?>

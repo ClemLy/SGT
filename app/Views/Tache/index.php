@@ -1,6 +1,6 @@
 <?php
 setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr');
-echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
+echo view('commun/header', ['pageTitle' => 'TaskPlanner | SGT']);
 function cleanUrl($newParams = []) {
     $queryParams = $_GET; // Récupère les paramètres actuels
     $queryParams = array_merge($queryParams, $newParams); // Met à jour les nouveaux paramètres
@@ -23,7 +23,7 @@ function cleanUrl($newParams = []) {
             <input type="text" id="taskSearchInput" class="form-control w-25" placeholder="Rechercher une tâche..." oninput="searchTasks()">
         </div>
         <div class="d-flex justify-content-between ">
-            <h1 class="mb-5">Gestion des Tâches</h1>
+            <h1 class="mb-5">TaskPlanner</h1>
             <div class="dropdown">
                 <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Trier par
