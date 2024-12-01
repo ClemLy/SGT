@@ -58,14 +58,16 @@ Avant d'installer l'application, assurez-vous d'avoir les éléments suivants :
 
 4. **Exécuter l'environnement**
 
-   Afin d'exécuter votre fichier `.env`, installez la bibliothèque vlucas/phpdotenv en exécutant cette commande dans le terminal SGT :
+   Afin d'exécuter votre fichier `.env`, installez la bibliothèque vlucas/phpdotenv en exécutant cette commande dans le terminal :
    ```cmd
+    cd SGT
     composer require vlucas/phpdotenv
    ```
 
 5. **Démarrer le serveur local**
   
    ```bash
+    cd SGT
     php spark serve
    ```
    
