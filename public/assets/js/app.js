@@ -67,12 +67,12 @@ function formatDate(dateString, includeTime = true) {
 function loadTaskDetails(titre, description, importance, echeance, etat, categorie, id_tache)
 {
 
-    document.getElementById('detail_titre').innerText       = htmlEntityDecode(titre);
-    document.getElementById('detail_description').innerText = htmlEntityDecode(description);
-    document.getElementById('detail_echeance').innerText    = formatDate(echeance, false);
-    document.getElementById('detail_etat').innerText        = etat;
-	document.getElementById('detail_importance').innerText        = importance;
-    document.getElementById('detail_categorie').innerText   = categorie;
+    document.getElementById('detail_titre').innerText       = htmlEntityDecode(titre) || 'Sans titre';
+    document.getElementById('detail_description').innerText = htmlEntityDecode(description) || 'Aucune description';
+    document.getElementById('detail_echeance').innerText    = formatDate(echeance, false) || 'Aucune échéance';
+    document.getElementById('detail_etat').innerText        = etat || 'Aucun statut';
+	document.getElementById('detail_importance').innerText  = importance || 'Non spécifiée';
+    document.getElementById('detail_categorie').innerText   = categorie || 'Aucune catégorie';
     document.getElementById('comment_task_id').value        = id_tache;
 
 	loadPaginatedComments(id_tache, 1); // Charger les commentaires de la première page

@@ -4,6 +4,7 @@
 	use App\Models\TaskModel;
 	use App\Models\UserModel;
 	use App\Models\CategoryModel;
+	use App\Models\CommentModel;
 	use App\Controllers\BaseController;
 	use Config\Pager;
 	use DateTime;
@@ -15,7 +16,6 @@
 		public function __construct()
 		{
 			$this->sendRemindersForTasksDueIn48Hours();
-			// $this->page();
 		}
 
 		// Méthode pour afficher les tâches
@@ -23,8 +23,9 @@
         {
             // Chargement des services et modèles
             $pager = \Config\Services::pager();
-            $taskModel = new TaskModel();
+            $taskModel     = new TaskModel();
             $categoryModel = new CategoryModel();
+			$commentModel  = new CommentModel();
 
             // Gestion des paramètres de pagination
             $perPage = (int) ($this->request->getGet('perPage') ?? 10);
@@ -69,6 +70,21 @@
             $tasksInProgress = $taskModel->getTasksWithCategoriesByStatus('En cours', $criteria,$order, $searchQuery);
             $tasksCompleted = $taskModel->getTasksWithCategoriesByStatus('Terminée', $criteria,$order, $searchQuery);
 
+			// Ajouter le nombre de commentaires pour chaque tâche
+			foreach ($tasksToDo as &$task)
+			{
+				$task['comment_count'] = $commentModel->getCommentCountByTask($task['id_tache']);
+			}
+
+			foreach ($tasksInProgress as &$task)
+			{
+				$task['comment_count'] = $commentModel->getCommentCountByTask($task['id_tache']);
+			}
+
+			foreach ($tasksCompleted as &$task)
+			{
+				$task['comment_count'] = $commentModel->getCommentCountByTask($task['id_tache']);
+			}
 
             // Vérifier si la requête est AJAX
             if ($this->request->isAJAX()) {
@@ -124,7 +140,7 @@
 			$validation->setRules([
 				'titre'             => 'required|min_length[3]|max_length[255]',
 				'description_tache' => 'permit_empty|max_length[500]',
-				'importance_tache'  => 'required|in_list[Faible,Modéré,Faible]',
+				'importance_tache'  => 'required|in_list[Faible,Modéré,Fort]',
 				'echeance_tache'    => 'required|valid_date',
 				'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',
 				'categorie'         => 'permit_empty|min_length[3]|max_length[255]',
@@ -200,7 +216,7 @@
 			$validation = \Config\Services::validation();
 			$validation->setRules([
 				'titre'             => 'required|min_length[3]|max_length[255]',
-				'importance_tache'  => 'required|in_list[Faible,Modéré,Faible]',
+				'importance_tache'  => 'required|in_list[Faible,Modéré,Fort]',
 				'description_tache' => 'permit_empty|max_length[100]',
 				'echeance_tache'    => 'required|valid_date',
 				'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',

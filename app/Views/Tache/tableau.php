@@ -66,6 +66,10 @@ function renderTaskColumn($title, $tasks, $statusId, $modalTarget)
 								onclick="loadTaskDetails('<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['importance_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>', '<?= esc($task['id_tache']); ?>')">
 								<h4 class="t-title card-title mb-2"><?= html_entity_decode($task['titre']); ?></h4>
 								<p class="card-text"><?= html_entity_decode($task['description_tache']); ?></p>
+
+								<p class="card-text mt-4 fw-bold text-muted">
+									<?= isset($task['comment_count']) && $task['comment_count'] > 0 ? "{$task['comment_count']} commentaire(s)" : 'Aucun commentaire' ?>
+								</p>
 							</div>
 						</div>
 					</div>

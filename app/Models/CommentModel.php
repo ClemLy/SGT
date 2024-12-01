@@ -22,5 +22,11 @@
 						->orderBy('date_commentaire', 'DESC')
 						->paginate($perPage, 'default', $page);
 		}
+
+		public function getCommentCountByTask($taskId)
+		{
+			return $this->where('id_tache', $taskId)->countAllResults();
+		}
+
 	}
 ?>
