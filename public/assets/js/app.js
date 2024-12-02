@@ -67,12 +67,12 @@ function formatDate(dateString, includeTime = true) {
 function loadTaskDetails(titre, description, importance, echeance, etat, categorie, id_tache)
 {
 
-    document.getElementById('detail_titre').innerText       = htmlEntityDecode(titre);
-    document.getElementById('detail_description').innerText = htmlEntityDecode(description);
-    document.getElementById('detail_echeance').innerText    = formatDate(echeance, false);
-    document.getElementById('detail_etat').innerText        = etat;
-	document.getElementById('detail_importance').innerText        = importance;
-    document.getElementById('detail_categorie').innerText   = categorie;
+    document.getElementById('detail_titre').innerText       = htmlEntityDecode(titre) || 'Sans titre';
+    document.getElementById('detail_description').innerText = htmlEntityDecode(description) || 'Aucune description';
+    document.getElementById('detail_echeance').innerText    = formatDate(echeance, false) || 'Aucune échéance';
+    document.getElementById('detail_etat').innerText        = etat || 'Aucun statut';
+	document.getElementById('detail_importance').innerText  = importance || 'Non spécifiée';
+    document.getElementById('detail_categorie').innerText   = categorie || 'Aucune catégorie';
     document.getElementById('comment_task_id').value        = id_tache;
 
 	loadPaginatedComments(id_tache, 1); // Charger les commentaires de la première page
@@ -192,13 +192,13 @@ function generatePaginationHTML(pager, id_tache)
     // Vérifier si une page précédente existe
     if (pager.previous)
 	{
-        html += `<button onclick="loadPaginatedComments(${id_tache}, ${pager.currentPage - 1})">Précédent</button>`;
+        html += `<button class="button-comment" onclick="loadPaginatedComments(${id_tache}, ${pager.currentPage - 1})">Précédent</button>`;
     }
 
     // Vérifier si une page suivante existe
     if (pager.next)
 	{
-        html += `<button onclick="loadPaginatedComments(${id_tache}, ${pager.currentPage + 1})">Suivant</button>`;
+        html += `<button class="button-comment" onclick="loadPaginatedComments(${id_tache}, ${pager.currentPage + 1})">Suivant</button>`;
     }
 
     html += '</div>';
@@ -312,21 +312,27 @@ function updateTaskStatus(taskId, newStatusId)
 		.catch(error => console.error('Erreur AJAX :', error));
 }
 
-let currentSort = {
-	criteria: null,  // Critère de tri actif
-	order: 'asc'     // Ordre actuel : 'asc' ou 'desc'
-};
 
+
+let currentCriteria = 'echeance_tache'; // Critère par défaut
+let currentOrder = 'asc'; // Ordre par défaut
+let currentPage = 1; // Page par défaut
+let perPage = 10; // Nombre d'éléments par page par défaut
+// Changer le tri
 function toggleSort(criteria) {
-	if (currentSort.criteria === criteria) {
-		currentSort.order = currentSort.order === 'asc' ? 'desc' : 'asc';
+	// Bascule l'ordre si le critère est le même
+	if (currentCriteria === criteria) {
+		currentOrder = currentOrder === 'asc' ? 'desc' : 'asc';
 	} else {
-		currentSort.criteria = criteria;
-		currentSort.order = 'asc';
+		currentCriteria = criteria;
+		currentOrder = 'asc'; // Réinitialiser l'ordre à 'asc' pour un nouveau critère
 	}
-	sortTasks(currentSort.criteria, currentSort.order);
-	sortTableRows(currentSort.criteria, currentSort.order);
-	updateButtonStates();
+
+	// Mettre à jour l'URL sans recharger la page
+	updateUrl();
+
+	// Mettre à jour les tâches via AJAX
+	updateTasks();
 }
 
 function sortTasks(criteria, order) {

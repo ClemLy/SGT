@@ -90,6 +90,39 @@ button[type="submit"]:hover {
 .container p a:hover {
 	color: #0056b3;
 }
+
+/* Conteneur des erreurs */
+.form-error {
+    background-color: #ffe6e6; /* Fond rouge clair pour attirer l'attention */
+    border: 1px solid #ff4d4d; /* Bordure rouge */
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    color: #a94442; /* Rouge foncé pour le texte */
+    font-size: 14px;
+	font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Liste des erreurs */
+.error-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Chaque élément d'erreur */
+.error-list li {
+    margin-bottom: 5px;
+    line-height: 1.5;
+}
+
+/* Icône ou décoration pour chaque erreur */
+.error-list li::before {
+    content: '⚠️'; /* Icône d'avertissement */
+    margin-right: 10px;
+    color: #ff4d4d;
+}
 </style>
 
 <div class="div-login">
@@ -97,8 +130,8 @@ button[type="submit"]:hover {
 		<h2>Inscription</h2>
 
 		<?php if(isset($validation)): ?>
-			<div class="alert alert-danger">
-				<ul>
+			<div class="form-error">
+				<ul class="error-list">
 					<?php foreach($validation->getErrors() as $error): ?>
 						<li><?= esc($error) ?></li>
 					<?php endforeach; ?>

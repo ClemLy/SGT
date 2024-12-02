@@ -30,7 +30,7 @@
 			}
 			else
 			{
-				return 'Lien de réinitialisation non valide.';
+				return 'Lien de réinitialisation non valide ou expiré.';
 			}
 		}
 
@@ -64,12 +64,14 @@
 							->where('email_user', $user['email_user']) // Utiliser l'email pour trouver l'enregistrement dans mdp
 							->update();
 		
-				return 'Mot de passe réinitialisé avec succès.';
+				session()->setFlashdata('success-reset', 'Mot de passe réinitialisé avec succès.');
 			}
 			else
 			{
-				return 'Erreur lors de la réinitialisation du mot de passe.';
+				session()->setFlashdata('error-reset', 'Les mots de passe ne correspondent pas.');
 			}
+
+			echo view('Utilisateur/reset_password', ['token' => $token]);
 		}
 	}
 ?>

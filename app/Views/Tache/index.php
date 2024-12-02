@@ -1,6 +1,11 @@
 <?php
 setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr');
-echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
+echo view('commun/header', ['pageTitle' => 'TaskPlanner | SGT']);
+function cleanUrl($newParams = []) {
+    $queryParams = $_GET; // Récupère les paramètres actuels
+    $queryParams = array_merge($queryParams, $newParams); // Met à jour les nouveaux paramètres
+    return current_url() . '?' . http_build_query($queryParams); // Reconstruit l'URL proprement
+}
 ?>
 
 
@@ -18,16 +23,32 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
             <input type="text" id="taskSearchInput" class="form-control w-25" placeholder="Rechercher une tâche..." oninput="searchTasks()">
         </div>
         <div class="d-flex justify-content-between ">
-            <h1 class="mb-5">Gestion des Tâches</h1>
-
+            <h1 class="mb-5">TaskPlanner</h1>
             <div class="dropdown">
                 <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Trier par
                 </button>
                 <ul class="dropdown-menu">
-                    <li><button id="sortName" class="dropdown-item" onclick="toggleSort('name')">Name</button></li>
-                    <li><button id="sortCategory" class="dropdown-item" onclick="toggleSort('category')">Category</button></li>
-                    <li> <button id="sortDate" class="dropdown-item" onclick="toggleSort('date')">Date</button></li>
+                    <li>
+                        <a href="<?= cleanUrl(['criteria' => 'titre', 'order' => ($criteria === 'titre' && $order === 'asc') ? 'desc' : 'asc']); ?>">
+                            Trier par Titre
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= current_url() . '?' . http_build_query(array_merge($_GET, ['criteria' => 'echeance_tache', 'order' => ($criteria === 'echeance_tache' && $order === 'asc') ? 'desc' : 'asc'])); ?>" class="dropdown-item">
+                            Date <?= ($criteria === 'echeance_tache') ? ($order === 'asc' ? '↑' : '↓') : ''; ?>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= current_url() . '?' . http_build_query(array_merge($_GET, ['criteria' => 'titre_categorie', 'order' => ($criteria === 'titre_categorie' && $order === 'asc') ? 'desc' : 'asc'])); ?>" class="dropdown-item">
+                            Catégorie <?= ($criteria === 'titre_categorie') ? ($order === 'asc' ? '↑' : '↓') : ''; ?>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= current_url() . '?' . http_build_query(array_merge($_GET, ['criteria' => 'importance_tache', 'order' => ($criteria === 'importance_tache' && $order === 'asc') ? 'desc' : 'asc'])); ?>" class="dropdown-item">
+                            Importance <?= ($criteria === 'importance_tache') ? ($order === 'asc' ? '↑' : '↓') : ''; ?>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -196,54 +217,112 @@ echo view('commun/header', ['pageTitle' => 'Gestion des Tâches']);
         function searchTasks() {
             const searchValue = document.getElementById('taskSearchInput').value;
 
-            // Stocke la dernière valeur de recherche
-            lastSearchValue = searchValue;
-
-            // Annule tout timeout précédent
             clearTimeout(searchTimeout);
 
-            // Démarre un nouveau timeout
             searchTimeout = setTimeout(() => {
-                // Si une requête est déjà en cours, on attend qu'elle soit terminée
-                if (isFetching) {
-                    return;
-                }
+                if (isFetching) return;
 
-                // Indique qu'une requête est en cours
                 isFetching = true;
 
-                fetch(`<?= site_url('tasks/searchTasks'); ?>?search=${encodeURIComponent(lastSearchValue)}`, {
+                const url = new URL('<?= site_url('tasks/'); ?>');
+                const currentUrl = new URL(window.location.href);
+
+                url.searchParams.set('search', searchValue);
+                const criteria = currentUrl.searchParams.get('criteria');
+                const order = currentUrl.searchParams.get('order');
+
+                if (criteria) url.searchParams.set('criteria', criteria);
+                if (order) url.searchParams.set('order', order);
+
+                console.log('Requête envoyée : ', url.toString()); // Debug
+
+                fetch(url.toString(), {
                     method: 'GET',
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
                 })
-                    .then(response => response.json())
+                    .then(response => {
+                        console.log('Statut réponse : ', response.status); // Debug
+                        if (!response.ok) {
+                            throw new Error(`Erreur HTTP : ${response.status}`);
+                        }
+                        return response.json();
+                    })
                     .then(data => {
-                        // Mise à jour de la vue Kanban (tableau.php)
-                        const taskColumns = document.getElementById('taskColumns');
-                        if (data.kanban && taskColumns) {
-                            taskColumns.innerHTML = data.kanban; // Remplacement complet
+                        console.log('Données reçues : ', data); // Debug
+
+                        if (data.tasksTableau || data.tasksTableur) {
+                            const tableBody = document.getElementById('tableTasksBody');
+                            const taskColumns = document.getElementById('taskColumns');
+                            if (tableBody) {
+                                tableBody.innerHTML = data.tasksTableur;
+                                taskColumns.innerHTML = data.tasksTableau;
+                            }
                         }
 
-                        // Mise à jour de la vue Tableur (tableur.php)
-                        const tableBody = document.getElementById('tableTasksBody');
-                        if (data.table && tableBody) {
-                            tableBody.innerHTML = data.table; // Remplacement complet
-                        }
-
-                        // Réinitialise l'état une fois la requête terminée
                         isFetching = false;
-
-                        // Si la valeur de recherche a changé pendant la requête, relance la recherche
-                        if (lastSearchValue !== searchValue) {
-                            searchTasks();
-                        }
                     })
                     .catch(error => {
-                        console.error('Erreur:', error);
-                        isFetching = false; // Réinitialise même en cas d'erreur
+                        console.error('Erreur : ', error);
+                        isFetching = false;
                     });
             }, 1000);
         }
+
+        function toggleSort(criteria) {
+            const url = new URL(window.location.href); // Récupère l'URL actuelle
+            const currentOrder = url.searchParams.get('order') || 'asc'; // Récupère l'ordre actuel
+
+            // Inverser l'ordre si le critère reste le même
+            const newOrder = (url.searchParams.get('criteria') === criteria && currentOrder === 'asc') ? 'desc' : 'asc';
+
+            // Mettre à jour les paramètres dans l'URL
+            url.searchParams.set('criteria', criteria);
+            url.searchParams.set('order', newOrder);
+
+            // Éviter de dupliquer les autres paramètres (comme `searchQuery` ou `perPage`)
+            window.location.href = url.toString(); // Redirige vers la nouvelle URL
+
+        }
+
+
+        function updateTasks() {
+            const url = new URL(window.location.href);
+
+            fetch(url.toString(), {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }, // Identifie la requête comme AJAX
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erreur HTTP : ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Vérifie si la réponse contient les données attendues
+                    if (data.tasksTable) {
+                        document.getElementById('tableTasksBody').innerHTML = data.tasksTable;
+                    } else {
+                        console.error('Erreur : Aucune donnée de tâches reçue');
+                    }
+
+                    // Met à jour la pagination si elle est retournée
+                    const paginationContainer = document.getElementById('paginationContainer');
+                    if (data.pagerLinks && paginationContainer) {
+                        paginationContainer.innerHTML = data.pagerLinks;
+                    }
+
+                    // Réattache l'événement pour le champ `perPage`
+                    document.getElementById('perPage').addEventListener('change', function () {
+                        const url = new URL(window.location.href);
+                        url.searchParams.set('perPage', this.value);
+                        window.history.pushState({}, '', url);
+                        updateTasks();
+                    });
+                })
+                .catch(error => console.error('Erreur lors de la mise à jour des tâches :', error));
+        }
+
 
 
     </script>

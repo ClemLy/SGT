@@ -85,11 +85,59 @@ button[type="submit"]:hover {
 .container p a:hover {
 	color: #0056b3;
 }
+
+a.return-link {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+a.return-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 16px;
+	font-weight: bold;
+    text-align: center;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
 </style>
 
 <div class="div-login">
 	<div class="container">
 		<h2>Réinitialisation du Mot de Passe</h2>
+
+		<?php if (session()->getFlashdata('success-reset')): ?>
+			<div class="alert alert-success">
+				<?= session()->getFlashdata('success-reset') ?>
+			</div>
+		<?php elseif (session()->getFlashdata('error-reset')): ?>
+			<div class="alert alert-danger">
+				<?= session()->getFlashdata('error-reset') ?>
+			</div>
+		<?php endif; ?>
 
 		<form action="<?= site_url('reset-password/update') ?>" method="post">
 			<input type="hidden" name="token" value="<?= $token ?>">
@@ -106,5 +154,7 @@ button[type="submit"]:hover {
 			
 			<button type="submit">Réinitialiser Mot de Passe</button>
 		</form>
+
+		<a href="/">Retour à la connexion</a>
 	</div>
 </div>

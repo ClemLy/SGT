@@ -4,6 +4,7 @@
 	use App\Models\TaskModel;
 	use App\Models\UserModel;
 	use App\Models\CategoryModel;
+	use App\Models\CommentModel;
 	use App\Controllers\BaseController;
 	use Config\Pager;
 	use DateTime;
@@ -15,7 +16,6 @@
 		public function __construct()
 		{
 			$this->sendRemindersForTasksDueIn48Hours();
-			// $this->page();
 		}
 
 		// Méthode pour afficher les tâches
@@ -23,47 +23,110 @@
         {
             // Chargement des services et modèles
             $pager = \Config\Services::pager();
-            $taskModel = new TaskModel();
+            $taskModel     = new TaskModel();
             $categoryModel = new CategoryModel();
+			$commentModel  = new CommentModel();
 
             // Gestion des paramètres de pagination
             $perPage = (int) ($this->request->getGet('perPage') ?? 10);
-            $currentPage = (int) ($this->request->getGet('page') ?? 1);
-            $perPage = $perPage > 0 ? $perPage : 10;
-            $currentPage = $currentPage > 0 ? $currentPage : 1;
-            $searchQuery = $this->request->getGet('searchQuery') ?? '';
 
+            $currentPage = (int) ($this->request->getGet('page') ?? 1);
+            $currentPage = $currentPage > 0 ? $currentPage : 1;
+
+
+            // Gestion des critères et de l'ordre de tri
+            $criteria = $this->request->getGet('criteria') ?? 'echeance_tache'; // Critère par défaut
+            $order = $this->request->getGet('order') ?? 'asc';                 // Ordre par défaut
+
+            // Gestion de la recherche
+            $searchQuery = $this->request->getGet('search') ?? '';
 
             // Calcul des totaux par statut
-            $totalTasksToDo = $taskModel->getTaskCount('À faire');
-            $totalTasksInProgress = $taskModel->getTaskCount('En cours');
-            $totalTasksCompleted = $taskModel->getTaskCount('Terminée');
+            $totalTasksToDo = $taskModel->getTaskCount('À faire', $searchQuery);
+            $totalTasksInProgress = $taskModel->getTaskCount('En cours', $searchQuery);
+            $totalTasksCompleted = $taskModel->getTaskCount('Terminée', $searchQuery);
             $totalTasks = $totalTasksToDo + $totalTasksInProgress + $totalTasksCompleted;
 
-            // Récupération des tâches paginées
-            $tasks = $taskModel->getPaginatedTasks($perPage, $currentPage, $searchQuery);
+            if($perPage==0)
+            {
+                $tasks =$taskModel->getTasksWithCategoriesByStatus(null, $criteria,$order,$searchQuery);
+            }
+
+            else{
+                $tasks = $taskModel->getPaginatedTasks($perPage, $currentPage, $criteria, $order, $searchQuery);
+            }
+
+
+            if ($perPage > 0) {
+                // Génère les liens de pagination seulement si perPage est supérieur à 0
+                $pagerLinks = $pager->makeLinks($currentPage, $perPage, $totalTasks);
+            } else {
+                // Pas de pagination, car toutes les tâches sont affichées
+                $pagerLinks = '';
+            }
+            // Récupération des catégories et tâches par statut (pour affichage classique)
+            $categories = $categoryModel->findAll();
+            $tasksToDo = $taskModel->getTasksWithCategoriesByStatus('À faire', $criteria,$order,$searchQuery);
+            $tasksInProgress = $taskModel->getTasksWithCategoriesByStatus('En cours', $criteria,$order, $searchQuery);
+            $tasksCompleted = $taskModel->getTasksWithCategoriesByStatus('Terminée', $criteria,$order, $searchQuery);
+
+			// Ajouter le nombre de commentaires pour chaque tâche
+			foreach ($tasksToDo as &$task)
+			{
+				$task['comment_count'] = $commentModel->getCommentCountByTask($task['id_tache']);
+			}
+
+			foreach ($tasksInProgress as &$task)
+			{
+				$task['comment_count'] = $commentModel->getCommentCountByTask($task['id_tache']);
+			}
+
+			foreach ($tasksCompleted as &$task)
+			{
+				$task['comment_count'] = $commentModel->getCommentCountByTask($task['id_tache']);
+			}
 
             // Vérifier si la requête est AJAX
             if ($this->request->isAJAX()) {
-                return $this->response->setJSON([
+                // Générer le tableau des tâches (vue partielle)
+                $tasksTableur = view('Tache/tableur', [
                     'tasks' => $tasks,
-                    'pager' => [
-                        'currentPage' => $currentPage,
-                        'perPage' => $perPage,
-                        'totalTasks' => $totalTasks,
-                        'totalPages' => ceil($totalTasks / $perPage),
-                    ],
+                    'currentPage' => $currentPage,
+                    'criteria' => $criteria,
+                    'order' => $order,
+                    'searchQuery' => $searchQuery,
+                    'pagerLinks' => $pagerLinks,
+                    'tasksToDo' => $tasksToDo,
+                    'tasksInProgress' => $tasksInProgress,
+                    'tasksCompleted' => $tasksCompleted,
+                    'categories' => $categories,
+                    'pager' => $pager,
+
+                ]);
+
+                $tasksTableau = view('Tache/tableau', [
+                    'tasks' => $tasks,
+                    'currentPage' => $currentPage,
+                    'criteria' => $criteria,
+                    'order' => $order,
+                    'searchQuery' => $searchQuery,
+                    'pagerLinks' => $pagerLinks,
+                    'tasksToDo' => $tasksToDo,
+                    'tasksInProgress' => $tasksInProgress,
+                    'tasksCompleted' => $tasksCompleted,
+                    'categories' => $categories,
+                    'pager' => $pager,
+
+                ]);
+
+                return $this->response->setJSON([
+                    'tasksTableau' => $tasksTableau ?? '<p>Aucune tâche trouvée.</p>',
+                    'tasksTableur' => $tasksTableur ?? '<p>Aucune tâche trouvée.</p>',
+                    'pagerLinks' => $pagerLinks ?? '',
                 ]);
             }
 
-            // Récupération des catégories et tâches par statut (pour affichage classique)
-            $categories = $categoryModel->findAll();
-            $tasksToDo = $taskModel->getTasksWithCategoriesByStatus('À faire');
-            $tasksInProgress = $taskModel->getTasksWithCategoriesByStatus('En cours');
-            $tasksCompleted = $taskModel->getTasksWithCategoriesByStatus('Terminée');
-            $pagerLinks = $totalTasks > 0 ? $pager->makeLinks($currentPage, $perPage, $totalTasks) : '';
-
-            // Chargement de la vue
+            // Chargement de la vue complète
             return view('Tache/index', [
                 'categories' => $categories,
                 'tasksToDo' => $tasksToDo,
@@ -72,11 +135,17 @@
                 'tasks' => $tasks,
                 'perPage' => $perPage,
                 'currentPage' => $currentPage,
+                'criteria' => $criteria,
+                'order' => $order,
+                'searchQuery' => $searchQuery,
                 'totalTasksToDo' => $totalTasksToDo,
                 'totalTasksInProgress' => $totalTasksInProgress,
                 'totalTasksCompleted' => $totalTasksCompleted,
                 'pagerLinks' => $pagerLinks,
-                'pager'=> $pager,
+                'pager' => $pager,
+                'totalTasks' => $totalTasks,
+
+
             ]);
         }
 		// Méthode pour enregistrer une nouvelle tâche
@@ -89,7 +158,7 @@
 			$validation->setRules([
 				'titre'             => 'required|min_length[3]|max_length[255]',
 				'description_tache' => 'permit_empty|max_length[500]',
-				'importance_tache'  => 'required|in_list[Faible,Modéré,Faible]',
+				'importance_tache'  => 'required|in_list[Faible,Modéré,Fort]',
 				'echeance_tache'    => 'required|valid_date',
 				'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',
 				'categorie'         => 'permit_empty|min_length[3]|max_length[255]',
@@ -165,7 +234,7 @@
 			$validation = \Config\Services::validation();
 			$validation->setRules([
 				'titre'             => 'required|min_length[3]|max_length[255]',
-				'importance_tache'  => 'required|in_list[Faible,Modéré,Faible]',
+				'importance_tache'  => 'required|in_list[Faible,Modéré,Fort]',
 				'description_tache' => 'permit_empty|max_length[100]',
 				'echeance_tache'    => 'required|valid_date',
 				'etat_tache'        => 'required|in_list[À faire,En cours,Terminée]',
@@ -331,7 +400,7 @@
 				));
 
 				$email = \Config\Services::email();
-				$email->setFrom('XtrayShow@yahoo.fr', 'SGT');
+				$email->setFrom('XtrayShow@yahoo.fr', 'TaskPlanner');
 				$email->setTo($user['email_user']); // Adresse e-mail de l'utilisateur
 				$email->setSubject('Rappel : Tâche à échéance dans 2 jours');
 				$email->setMessage("

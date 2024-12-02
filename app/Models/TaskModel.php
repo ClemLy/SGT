@@ -17,34 +17,29 @@
             'id_categorie'
         ];
 
-        public function getTasksWithCategoriesByStatus($etatTache, $searchQuery = '')
+        public function getTasksWithCategoriesByStatus($etatTache , $criteria = 'echeance_tache', $order = 'asc', $searchQuery = '')
         {
-            $builder = $this->select('tache.*, categorie.titre_categorie')
-                ->join('categorie', 'tache.id_categorie = categorie.id_categorie', 'left')
-                ->where('etat_tache', $etatTache)
-                ->where('id_user', session()->get('id_user'));
+            $validCriteria = ['titre', 'titre_categorie', 'echeance_tache', 'importance_tache'];
+            $validOrders = ['asc', 'desc'];
 
-            if (!empty($searchQuery)) {
-                $builder->groupStart()
-                    ->like('titre', $searchQuery)
-                    ->orLike('titre_categorie', $searchQuery)
-                    ->orLike('description_tache', $searchQuery)
-                    ->groupEnd();
+            // Validation des entrées
+            if (!in_array($criteria, $validCriteria)) {
+                $criteria = 'echeance_tache'; // Par défaut : tri par échéance
+            }
+            if (!in_array(strtolower($order), $validOrders)) {
+                $order = 'asc'; // Par défaut : ordre croissant
             }
 
-            return $builder->findAll();
-        }
-
-        public function getPaginatedTasks($perPage, $page, $searchQuery = '')
-        {
-            $idUser = session()->get('id_user');
-            if (!$idUser) {
-                throw new \RuntimeException('Utilisateur non authentifié.');
-            }
-
-            $builder = $this->select('tache.*, categorie.titre_categorie')
+            // Construction de la requête
+            $builder = $this->db->table('tache')
+                ->select('tache.*, categorie.titre_categorie')
                 ->join('categorie', 'tache.id_categorie = categorie.id_categorie', 'left')
-                ->where('tache.id_user', $idUser);
+                ->where('tache.id_user', session()->get('id_user'));
+
+            // Filtrer par état de tâche si spécifié
+            if (!is_null($etatTache)) {
+                $builder->where('tache.etat_tache', $etatTache);
+            }
 
             if (!empty($searchQuery)) {
                 $builder->groupStart()
@@ -54,8 +49,38 @@
                     ->groupEnd();
             }
 
-            // Appel à paginate avec la page courante passée directement
-            return $this->paginate($perPage, 'default', $page);
+
+            // Appliquer le tri
+            $builder->orderBy($criteria, $order);
+
+            // Exécuter et retourner les résultats
+            return $builder->get()->getResultArray();
+        }
+
+        public function getPaginatedTasks($perPage, $page, $criteria = 'date', $order = 'asc', $searchQuery = '')
+        {
+            $validCriteria = ['titre', 'titre_categorie', 'echeance_tache','importance_tache']; // Critères valides
+            if (!in_array($criteria, $validCriteria)) {
+                $criteria = 'echeance_tache'; // Par défaut : tri par date
+            }
+
+            $builder = $this->select('tache.*, categorie.titre_categorie')
+                ->join('categorie', 'tache.id_categorie = categorie.id_categorie', 'left')
+                ->where('tache.id_user', session()->get('id_user'));
+
+            if (!empty($searchQuery)) {
+                $builder->groupStart()
+                    ->like('tache.titre', $searchQuery)
+                    ->orLike('categorie.titre_categorie', $searchQuery)
+                    ->orLike('tache.description_tache', $searchQuery)
+                    ->groupEnd();
+            }
+
+            // Appliquer le tri
+            $builder->orderBy($criteria, $order);
+
+            // Pagination
+            return $builder->paginate($perPage, 'default', $page);
         }
         
 
@@ -107,14 +132,16 @@
 
         public function getTaskCount($status, $searchQuery = '')
         {
-            $builder = $this->builder()->where('etat_tache', $status);
-            $builder ->where('id_user', session()->get('id_user'));
+            $builder = $this->builder()
+                ->where('etat_tache', $status)
+                ->where('id_user', session()->get('id_user'))
+                ->join('categorie', 'tache.id_categorie = categorie.id_categorie', 'left');
 
             if (!empty($searchQuery)) {
                 $builder->groupStart()
                     ->like('titre', $searchQuery)
                     ->orLike('description_tache', $searchQuery)
-                    ->orLike('titre_categorie', $searchQuery)
+                    ->orLike('categorie.titre_categorie', $searchQuery)
                     ->groupEnd();
             }
 
