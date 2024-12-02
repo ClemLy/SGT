@@ -43,7 +43,7 @@
             }
             ?>
             <tr class="<?= $isOverdue ? 'overdue' : '' ?>"
-                onclick="handleRowClick(event, <?= $task['id_tache']; ?>, '<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">
+                onclick="handleRowClick(event, <?= $task['id_tache']; ?>, '<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['importance_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">
                 <td><?= esc($task['titre']); ?></td>
                 <td><?= esc($task['titre_categorie'] ?? ''); ?></td>
                 <td><?= esc($task['etat_tache']); ?></td>
@@ -85,13 +85,13 @@
 </div>
 
 <script>
-    function handleRowClick(event, id, title, description, dueDate, status, category) {
+    function handleRowClick(event, id, title, description, importance, dueDate, status, category) {
         if (event.target.closest('.no-click')) {
             return; // Ignorer le clic
         }
         const taskDetailModal = new bootstrap.Modal(document.getElementById('taskDetailModal'));
         taskDetailModal.show();
-        loadTaskDetails(title, description, dueDate, status, category, id);
+        loadTaskDetails(title, description, importance, dueDate, status, category, id);
         
     }
 </script>
