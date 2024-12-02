@@ -47,10 +47,11 @@
 				//paramètres du mail
 				$to = $this->request->getPost('to');
 				$subject = $this->request->getPost('subject');
+				$from = env('email_user', '');
 				
 				//envoi du mail
 				$emailService->setTo($email);
-				$emailService->setFrom('XtrayShow@yahoo.fr', 'TaskPlanner');
+				$emailService->setFrom($from, 'TaskPlanner');
 				$emailService->setSubject('Réinitialisation de mot de passe');
 				$emailService->setMessage($message);
 				

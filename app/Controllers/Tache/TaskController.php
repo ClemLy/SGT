@@ -399,8 +399,10 @@
 					(new DateTime($task['echeance_tache']))->getTimestamp()
 				));
 
+				$from = env('email_user', '');
+
 				$email = \Config\Services::email();
-				$email->setFrom('XtrayShow@yahoo.fr', 'TaskPlanner');
+				$email->setFrom($from, 'TaskPlanner');
 				$email->setTo($user['email_user']); // Adresse e-mail de l'utilisateur
 				$email->setSubject('Rappel : Tâche à échéance dans 2 jours');
 				$email->setMessage("

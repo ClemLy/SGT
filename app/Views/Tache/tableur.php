@@ -54,32 +54,6 @@ $order = $order ?? 'asc';
                         $isOverdue = false;
                     }
                 }
-<<<<<<< HEAD
-            }
-            ?>
-            <tr class="<?= $isOverdue ? 'overdue' : '' ?>"
-                onclick="handleRowClick(event, <?= $task['id_tache']; ?>, '<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['importance_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">
-                <td><?= esc($task['titre']); ?></td>
-                <td><?= esc($task['titre_categorie'] ?? ''); ?></td>
-                <td><?= esc($task['etat_tache']); ?></td>
-                <td><?= esc(strftime((date('Y') === (new DateTime($task['echeance_tache']))->format('Y') ? '%A %d %B' : '%A %d %B %Y'), (new DateTime($task['echeance_tache']))->getTimestamp())); ?></td>
-                <td class="no-click">
-                    <button class="bi bi-three-dots btn btn-link ps-3 pe-1" data-bs-toggle="dropdown" aria-expanded="false"></button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editTaskModal" onclick="loadTaskData(<?= $task['id_tache']; ?>, '<?= esc($task['titre']); ?>', '<?= esc($task['description_tache']); ?>', '<?= esc($task['echeance_tache']); ?>', '<?= esc($task['etat_tache']); ?>', '<?= esc($task['titre_categorie']); ?>')">Modifier</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="<?= site_url('tasks/complete/' . $task['id_tache']); ?>">Marquer comme terminée</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="<?= site_url('tasks/delete/' . $task['id_tache']); ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?');">Supprimer</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-=======
                 ?>
 
                 <tr class="<?= $isOverdue ? 'overdue' : '' ?>"
@@ -113,7 +87,6 @@ $order = $order ?? 'asc';
                     </td>
                 </tr>
             <?php endforeach; ?>
->>>>>>> 368ee05da15e3f98a05f74651cbbe793c316fd75
         <?php else: ?>
             <tr>
                 <td colspan="5" class="text-center">Aucune tâche trouvée</td>
@@ -165,9 +138,6 @@ $order = $order ?? 'asc';
 </div>
 
 <script>
-<<<<<<< HEAD
-    function handleRowClick(event, id, title, description, importance, dueDate, status, category) {
-=======
     document.getElementById('perPage').addEventListener('change', function () {
         const url = new URL(window.location.href); // Récupère l'URL actuelle
 
@@ -192,19 +162,13 @@ $order = $order ?? 'asc';
 
 
     function handleRowClick(event, titre, description, importance,echeance, etat, categorie,id_tache) {
->>>>>>> 368ee05da15e3f98a05f74651cbbe793c316fd75
         if (event.target.closest('.no-click')) {
             return; // Ignorer le clic
         }
         const taskDetailModal = new bootstrap.Modal(document.getElementById('taskDetailModal'));
         taskDetailModal.show();
-<<<<<<< HEAD
-        loadTaskDetails(title, description, importance, dueDate, status, category, id);
-        
-=======
         loadTaskDetails(titre, description, importance,echeance, etat, categorie,id_tache);
 
->>>>>>> 368ee05da15e3f98a05f74651cbbe793c316fd75
     }
 
 

@@ -72,10 +72,11 @@
 				];
 
 				$userModel->save($data);
+				$from = env('email_user', '');
 
 				// Envoyer l'email
 				$email = \Config\Services::email();
-				$email->setFrom('XtrayShow@yahoo.fr', 'TaskPlanner');
+				$email->setFrom($from, 'TaskPlanner');
 				$email->setTo($data['email_user']);
 				$email->setSubject('Activation du compte');
 				$email->setMessage('Cliquez sur ce lien pour activer votre compte : ' . site_url('activate/' . $data['activation_code']));
